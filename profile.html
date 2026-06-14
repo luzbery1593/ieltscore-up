@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>My Profile — IELTScoreUp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="navbar.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#1B3F6E;--blue-light:#2558A0;--green:#0D9E72;--bg:#F4F6FA;--white:#FFFFFF;--dark:#0F1C2E;--muted:#5A6A7E;--border:#E2E8F0;--radius:12px;--radius-lg:20px;--red:#DC2626;--gold:#C9A84C;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webkit-font-smoothing:antialiased;min-height:100vh}
+.page{max-width:800px;margin:0 auto;padding:36px 24px}
+.page-title{font-size:24px;font-weight:900;color:var(--dark);letter-spacing:-0.5px;margin-bottom:6px}
+.page-sub{font-size:14px;color:var(--muted);margin-bottom:28px}
+.card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:24px;margin-bottom:16px}
+.card-title{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:4px}
+.card-sub{font-size:13px;color:var(--muted);margin-bottom:20px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:580px){.form-row{grid-template-columns:1fr}}
+.form-group{margin-bottom:14px}
+.form-label{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;display:block}
+.form-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:11px 14px;font-family:'Inter',sans-serif;font-size:14px;color:var(--dark);outline:none;transition:border-color .15s;background:var(--white)}
+.form-input:focus{border-color:var(--blue)}
+.form-select{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:11px 14px;font-family:'Inter',sans-serif;font-size:14px;color:var(--dark);outline:none;background:var(--white);cursor:pointer;appearance:none}
+.form-select:focus{border-color:var(--blue)}
+.save-btn{background:var(--blue);color:white;border:none;padding:11px 24px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s;display:flex;align-items:center;gap:8px}
+.save-btn:hover{background:var(--blue-light)}
+.save-btn:disabled{opacity:.5;cursor:not-allowed}
+.spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.save-btn.loading .spinner{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.alert{padding:11px 14px;border-radius:var(--radius);font-size:13px;font-weight:500;margin-bottom:14px;display:none}
+.alert.visible{display:block}
+.alert-success{background:rgba(13,158,114,.08);border:1px solid rgba(13,158,114,.2);color:#065f46}
+.alert-error{background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.2);color:var(--red)}
+.divider{height:1px;background:var(--border);margin:20px 0}
+
+/* PLAN CARDS */
+.plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+@media(max-width:600px){.plan-grid{grid-template-columns:1fr}}
+.plan-card{border:2px solid var(--border);border-radius:var(--radius-lg);padding:18px;cursor:pointer;transition:all .2s;position:relative}
+.plan-card:hover{border-color:var(--blue)}
+.plan-card.current{border-color:var(--green);background:rgba(13,158,114,.04)}
+.plan-card.popular{border-color:var(--blue)}
+.plan-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;padding:3px 12px;border-radius:100px;white-space:nowrap}
+.badge-green{background:var(--green);color:white}
+.badge-blue{background:var(--blue);color:white}
+.plan-name{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px}
+.plan-price{font-size:28px;font-weight:900;color:var(--dark);letter-spacing:-1px;line-height:1}
+.plan-period{font-size:12px;color:var(--muted);margin-bottom:4px}
+.plan-annual{font-size:11px;color:var(--green);font-weight:600;margin-bottom:12px}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:6px}
+.plan-features li{font-size:12px;color:var(--muted);display:flex;align-items:flex-start;gap:6px;line-height:1.4}
+.plan-features li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0}
+.plan-features li.no::before{content:'✗';color:var(--border)}
+.plan-features li.no{color:#CBD5E0}
+.current-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 10px;border-radius:100px;background:rgba(13,158,114,.1);color:var(--green);margin-top:10px}
+
+/* BILLING TOGGLE */
+.billing-toggle{display:flex;align-items:center;gap:12px;margin-bottom:20px;background:var(--bg);border-radius:100px;padding:4px;width:fit-content}
+.billing-opt{padding:7px 18px;border-radius:100px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;border:none;background:none}
+.billing-opt.active{background:white;color:var(--dark);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.save-chip{font-size:11px;font-weight:700;background:rgba(13,158,114,.1);color:var(--green);padding:2px 8px;border-radius:100px}
+
+/* DANGER ZONE */
+.danger-btn{background:rgba(220,38,38,.08);color:var(--red);border:1.5px solid rgba(220,38,38,.2);padding:10px 20px;border-radius:var(--radius);font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.danger-btn:hover{background:var(--red);color:white}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+@media(max-width:600px){.stats-row{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--bg);border-radius:var(--radius);padding:14px;text-align:center}
+.stat-val{font-size:24px;font-weight:900;color:var(--blue);letter-spacing:-1px}
+.stat-label{font-size:11px;color:var(--muted);font-weight:600;margin-top:3px;text-transform:uppercase;letter-spacing:0.05em}
+
+/* AVATAR LARGE */
+.profile-hero{display:flex;align-items:center;gap:20px;margin-bottom:24px}
+.avatar-large{width:72px;height:72px;border-radius:50%;background:var(--blue);color:white;font-size:28px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.profile-info .name{font-size:20px;font-weight:800;color:var(--dark);letter-spacing:-0.3px}
+.profile-info .email{font-size:14px;color:var(--muted);margin-top:2px}
+.profile-info .plan-pill{display:inline-block;font-size:12px;font-weight:700;padding:3px 12px;border-radius:100px;background:rgba(27,63,110,.08);color:var(--blue);margin-top:6px}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="profile-hero">
+    <div class="avatar-large" id="avatarLarge">?</div>
+    <div class="profile-info">
+      <div class="name" id="profileName">Loading...</div>
+      <div class="email" id="profileEmail">—</div>
+      <div class="plan-pill" id="profilePlan">Free Plan</div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat"><div class="stat-val" id="statSessions">0</div><div class="stat-label">Sessions</div></div>
+    <div class="stat"><div class="stat-val" id="statBand">—</div><div class="stat-label">Best band</div></div>
+    <div class="stat"><div class="stat-val" id="statCerts">0</div><div class="stat-label">Certificates</div></div>
+    <div class="stat"><div class="stat-val" id="statDays">0</div><div class="stat-label">Days active</div></div>
+  </div>
+
+  <!-- PERSONAL INFO -->
+  <div class="card">
+    <div class="card-title">Personal information</div>
+    <div class="card-sub">Update your name and study preferences.</div>
+    <div class="alert alert-success" id="profileAlert"></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Full name</label>
+        <input type="text" class="form-input" id="fullName" placeholder="Your name"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email address</label>
+        <input type="email" class="form-input" id="emailField" placeholder="you@email.com" disabled style="background:var(--bg);color:var(--muted)"/>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Target band score</label>
+        <select class="form-select" id="targetBand">
+          <option value="6.0">Band 6.0</option>
+          <option value="6.5">Band 6.5</option>
+          <option value="7.0" selected>Band 7.0</option>
+          <option value="7.5">Band 7.5</option>
+          <option value="8.0">Band 8.0</option>
+          <option value="8.5">Band 8.5</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Test type</label>
+        <select class="form-select" id="examType">
+          <option value="Academic">Academic</option>
+          <option value="General">General Training</option>
+          <option value="Both">Both</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Exam date (optional)</label>
+      <input type="date" class="form-input" id="examDate"/>
+    </div>
+    <button class="save-btn" id="saveProfileBtn" onclick="saveProfile()">
+      <div class="spinner"></div>
+      <span>Save changes</span>
+    </button>
+  </div>
+
+  <!-- CHANGE PASSWORD -->
+  <div class="card">
+    <div class="card-title">Change password</div>
+    <div class="card-sub">Leave blank if you don't want to change your password.</div>
+    <div class="alert alert-success" id="pwAlert"></div>
+    <div class="form-group">
+      <label class="form-label">New password</label>
+      <input type="password" class="form-input" id="newPassword" placeholder="Min. 8 characters"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Confirm new password</label>
+      <input type="password" class="form-input" id="confirmPassword" placeholder="Repeat new password"/>
+    </div>
+    <button class="save-btn" id="savePwBtn" onclick="changePassword()">
+      <div class="spinner"></div>
+      <span>Update password</span>
+    </button>
+  </div>
+
+  <!-- BILLING / PLAN -->
+  <div class="card" id="billing">
+    <div class="card-title">Your plan</div>
+    <div class="card-sub">Upgrade to unlock unlimited practice and AI-generated content.</div>
+
+    <div class="billing-toggle">
+      <button class="billing-opt active" id="btnMonthly" onclick="setBilling('monthly')">Monthly</button>
+      <button class="billing-opt" id="btnAnnual" onclick="setBilling('annual')">Annual <span class="save-chip">Save 30%</span></button>
+    </div>
+
+    <div class="plan-grid">
+      <div class="plan-card current" id="planFree">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">$0</div>
+        <div class="plan-period">forever</div>
+        <div class="plan-annual">&nbsp;</div>
+        <ul class="plan-features">
+          <li>5 Writing evals/month</li>
+          <li>3 Reading exercises</li>
+          <li>Grammar B1 only</li>
+          <li class="no">Listening & Speaking</li>
+          <li class="no">Mock exams</li>
+          <li class="no">Certificates</li>
+        </ul>
+        <div class="current-badge" id="freeBadge">Current plan</div>
+      </div>
+
+      <div class="plan-card popular" id="planPro">
+        <div class="plan-badge badge-blue">Most popular</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price" id="priceProDisplay">$17</div>
+        <div class="plan-period" id="periodProDisplay">per month</div>
+        <div class="plan-annual" id="annualProDisplay">&nbsp;</div>
+        <ul class="plan-features">
+          <li>Unlimited Writing & Speaking</li>
+          <li>Full Reading & Listening</li>
+          <li>Infinite AI content</li>
+          <li>2 Mock exams/month</li>
+          <li>Module certificates</li>
+          <li>Progress dashboard</li>
+        </ul>
+        <button class="save-btn" id="upgradeProBtn" onclick="upgradePlan('pro')" style="margin-top:14px;width:100%;justify-content:center">
+          <div class="spinner"></div>
+          <span>Upgrade to Pro</span>
+        </button>
+      </div>
+
+      <div class="plan-card" id="planIntensive">
+        <div class="plan-name">Intensive</div>
+        <div class="plan-price" id="priceIntDisplay">$29</div>
+        <div class="plan-period" id="periodIntDisplay">per month</div>
+        <div class="plan-annual" id="annualIntDisplay">&nbsp;</div>
+        <ul class="plan-features">
+          <li>Everything in Pro</li>
+          <li>Unlimited mock exams</li>
+          <li>Voice speaking analysis</li>
+          <li>Personalised study plan</li>
+          <li>Overall certificate</li>
+        </ul>
+        <button class="save-btn" id="upgradeIntBtn" onclick="upgradePlan('intensive')" style="margin-top:14px;width:100%;justify-content:center;background:var(--green)">
+          <div class="spinner"></div>
+          <span>Upgrade to Intensive</span>
+        </button>
+      </div>
+    </div>
+
+    <div style="font-size:12px;color:var(--muted);line-height:1.6">
+      💳 Payments processed securely via Stripe. Cancel anytime — no questions asked. Your data is always yours.
+    </div>
+  </div>
+
+  <!-- DANGER ZONE -->
+  <div class="card">
+    <div class="card-title" style="color:var(--red)">Danger zone</div>
+    <div class="card-sub">Permanently delete your account and all data. This cannot be undone.</div>
+    <button class="danger-btn" onclick="confirmDelete()">Delete my account</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="navbar.js"></script>
+<script>
+var sb, userToken, userId, billingCycle='monthly';
+
+async function init(){
+  userToken=await requireLogin();
+  if(!userToken) return;
+  sb=getSupabase();
+  var {data}=await sb.auth.getSession();
+  var user=data.session.user;
+  userId=user.id;
+
+  // Set email (read only)
+  document.getElementById('emailField').value=user.email;
+
+  // Load profile
+  var {data:profile}=await sb.from('profiles').select('*').eq('id',userId).single();
+  if(profile){
+    document.getElementById('fullName').value=profile.full_name||'';
+    document.getElementById('targetBand').value=profile.target_band||'7.0';
+    document.getElementById('examType').value=profile.exam_type||'Academic';
+    if(profile.exam_date) document.getElementById('examDate').value=profile.exam_date;
+
+    var name=profile.full_name||user.email.split('@')[0];
+    document.getElementById('avatarLarge').textContent=name.charAt(0).toUpperCase();
+    document.getElementById('profileName').textContent=name;
+    document.getElementById('profileEmail').textContent=user.email;
+
+    var planLabel=profile.plan==='pro'?'⚡ Pro Plan':profile.plan==='intensive'?'🚀 Intensive Plan':'🆓 Free Plan';
+    document.getElementById('profilePlan').textContent=planLabel;
+
+    // Mark current plan
+    updatePlanUI(profile.plan||'free');
+  }
+
+  // Load stats
+  var {data:sessions}=await sb.from('sessions').select('*').eq('user_id',userId);
+  if(sessions){
+    document.getElementById('statSessions').textContent=sessions.length;
+    var bands=sessions.filter(s=>s.band).map(s=>parseFloat(s.band));
+    if(bands.length>0) document.getElementById('statBand').textContent=Math.max(...bands).toFixed(1);
+    var days=new Set(sessions.map(s=>s.created_at?.split('T')[0])).size;
+    document.getElementById('statDays').textContent=days;
+  }
+  var {data:certs}=await sb.from('certificates').select('id').eq('user_id',userId);
+  if(certs) document.getElementById('statCerts').textContent=certs.length;
+}
+
+function updatePlanUI(plan){
+  document.querySelectorAll('.current-badge').forEach(b=>b.remove());
+  document.querySelectorAll('.plan-card').forEach(c=>c.classList.remove('current'));
+  var card=document.getElementById('plan'+plan.charAt(0).toUpperCase()+plan.slice(1));
+  if(card){
+    card.classList.add('current');
+    var badge=document.createElement('div');
+    badge.className='current-badge';
+    badge.textContent='✓ Current plan';
+    card.appendChild(badge);
+  }
+  // Hide upgrade buttons for current plan
+  if(plan==='pro'){document.getElementById('upgradeProBtn').style.display='none';}
+  if(plan==='intensive'){document.getElementById('upgradeIntBtn').style.display='none';}
+}
+
+function setBilling(cycle){
+  billingCycle=cycle;
+  document.getElementById('btnMonthly').classList.toggle('active',cycle==='monthly');
+  document.getElementById('btnAnnual').classList.toggle('active',cycle==='annual');
+
+  if(cycle==='annual'){
+    document.getElementById('priceProDisplay').textContent='$11.90';
+    document.getElementById('periodProDisplay').textContent='per month';
+    document.getElementById('annualProDisplay').textContent='Billed $143/year — save 30%';
+    document.getElementById('priceIntDisplay').textContent='$20.30';
+    document.getElementById('periodIntDisplay').textContent='per month';
+    document.getElementById('annualIntDisplay').textContent='Billed $244/year — save 30%';
+  } else {
+    document.getElementById('priceProDisplay').textContent='$17';
+    document.getElementById('periodProDisplay').textContent='per month';
+    document.getElementById('annualProDisplay').textContent='or $11.90/mo billed annually';
+    document.getElementById('priceIntDisplay').textContent='$29';
+    document.getElementById('periodIntDisplay').textContent='per month';
+    document.getElementById('annualIntDisplay').textContent='or $20.30/mo billed annually';
+  }
+}
+
+async function saveProfile(){
+  var btn=document.getElementById('saveProfileBtn');
+  btn.classList.add('loading');btn.disabled=true;
+  try{
+    var name=document.getElementById('fullName').value.trim();
+    var target=document.getElementById('targetBand').value;
+    var examType=document.getElementById('examType').value;
+    var examDate=document.getElementById('examDate').value;
+    await sb.from('profiles').update({full_name:name,target_band:parseFloat(target),exam_type:examType,exam_date:examDate||null}).eq('id',userId);
+    showAlert('profileAlert','Profile updated successfully!','success');
+    document.getElementById('profileName').textContent=name;
+    document.getElementById('avatarLarge').textContent=name.charAt(0).toUpperCase();
+  }catch(e){showAlert('profileAlert','Error: '+e.message,'error');}
+  finally{btn.classList.remove('loading');btn.disabled=false;}
+}
+
+async function changePassword(){
+  var pw=document.getElementById('newPassword').value;
+  var confirm=document.getElementById('confirmPassword').value;
+  if(!pw){showAlert('pwAlert','Please enter a new password.','error');return;}
+  if(pw.length<8){showAlert('pwAlert','Password must be at least 8 characters.','error');return;}
+  if(pw!==confirm){showAlert('pwAlert','Passwords do not match.','error');return;}
+  var btn=document.getElementById('savePwBtn');
+  btn.classList.add('loading');btn.disabled=true;
+  try{
+    var {error}=await sb.auth.updateUser({password:pw});
+    if(error) throw error;
+    showAlert('pwAlert','Password updated successfully!','success');
+    document.getElementById('newPassword').value='';
+    document.getElementById('confirmPassword').value='';
+  }catch(e){showAlert('pwAlert','Error: '+e.message,'error');}
+  finally{btn.classList.remove('loading');btn.disabled=false;}
+}
+
+function upgradePlan(plan){
+  // When Stripe is integrated, this redirects to Stripe checkout
+  // For now show coming soon message
+  alert('Payment integration coming soon! Plan: '+plan+' ('+billingCycle+')\n\nWe will send you an email when payments are ready.');
+}
+
+function confirmDelete(){
+  if(confirm('Are you sure you want to permanently delete your account? This cannot be undone.')){
+    if(confirm('Last confirmation: all your progress, certificates and data will be deleted forever.')){
+      deleteAccount();
+    }
+  }
+}
+
+async function deleteAccount(){
+  try{
+    await sb.from('sessions').delete().eq('user_id',userId);
+    await sb.from('certificates').delete().eq('user_id',userId);
+    await sb.from('profiles').delete().eq('id',userId);
+    await sb.auth.signOut();
+    window.location.href='index.html';
+  }catch(e){alert('Error deleting account: '+e.message);}
+}
+
+function showAlert(id,msg,type){
+  var el=document.getElementById(id);
+  el.textContent=msg;
+  el.className='alert alert-'+type+' visible';
+  setTimeout(()=>el.classList.remove('visible'),4000);
+}
+
+// Check if coming from billing anchor
+if(window.location.hash==='#billing'){
+  setTimeout(()=>document.getElementById('billing').scrollIntoView({behavior:'smooth'}),500);
+}
+
+init();
+</script>
+</body>
+</html>

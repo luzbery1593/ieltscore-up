@@ -116,6 +116,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 .reset-btn.visible{display:block}
 .reset-btn:hover{border-color:var(--blue);color:var(--blue)}
 </style>
+<link rel="stylesheet" href="navbar.css"/>
 </head>
 <body>
 
@@ -461,5 +462,8 @@ function nextPassage(){currentIdx=(currentIdx+1)%passages.length;renderPassage()
 
 renderPassage();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="navbar.js"></script>
 </body>
 </html>

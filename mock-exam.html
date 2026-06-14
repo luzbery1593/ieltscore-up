@@ -194,6 +194,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 .loading-text{color:rgba(255,255,255,.8);font-size:16px;font-weight:500}
 .loading-sub{color:rgba(255,255,255,.45);font-size:13px}
 </style>
+<link rel="stylesheet" href="navbar.css"/>
 </head>
 <body>
 
@@ -919,5 +920,8 @@ function resetExam(){showScreen('intro');document.getElementById('topTimerPill')
 
 window.speechSynthesis.onvoiceschanged=function(){};
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="navbar.js"></script>
 </body>
 </html>

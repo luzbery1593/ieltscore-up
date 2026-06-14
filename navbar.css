@@ -1,0 +1,48 @@
+/* IELTScoreUp Shared Navbar */
+.isu-nav {
+  position: fixed; top: 0; left: 0; right: 0; height: 64px;
+  background: rgba(255,255,255,0.97); backdrop-filter: blur(12px);
+  border-bottom: 1px solid #E2E8F0; z-index: 1000;
+  font-family: 'Inter', sans-serif;
+}
+.isu-nav-inner {
+  max-width: 1280px; margin: 0 auto; padding: 0 20px;
+  height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.isu-logo { font-size: 16px; font-weight: 900; color: #0F1C2E; text-decoration: none; white-space: nowrap; }
+.isu-logo span { color: #0D9E72; }
+.isu-nav-left { display: flex; align-items: center; gap: 10px; }
+.isu-hamburger { display: none; background: none; border: none; font-size: 20px; cursor: pointer; color: #0F1C2E; }
+.isu-nav-links { display: flex; align-items: center; gap: 2px; flex: 1; justify-content: center; }
+.isu-link { font-size: 13px; font-weight: 500; color: #5A6A7E; text-decoration: none; padding: 6px 10px; border-radius: 8px; transition: all .15s; white-space: nowrap; }
+.isu-link:hover { background: #F4F6FA; color: #0F1C2E; }
+.isu-link.active { background: rgba(27,63,110,.08); color: #1B3F6E; font-weight: 700; }
+.isu-nav-right { position: relative; flex-shrink: 0; }
+
+/* User pill */
+.isu-user-wrap { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; border-radius: 100px; border: 1px solid #E2E8F0; background: white; transition: all .15s; user-select: none; }
+.isu-user-wrap:hover { border-color: #1B3F6E; background: #F4F6FA; }
+.isu-avatar { width: 30px; height: 30px; border-radius: 50%; background: #1B3F6E; color: white; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.isu-uname { font-size: 13px; font-weight: 600; color: #0F1C2E; }
+.isu-chevron { font-size: 10px; color: #5A6A7E; }
+
+/* Dropdown */
+.isu-dropdown { position: absolute; top: calc(100% + 10px); right: 0; width: 220px; background: white; border: 1px solid #E2E8F0; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,.12); overflow: hidden; display: none; z-index: 200; }
+.isu-dropdown.open { display: block; }
+.isu-dd-header { padding: 14px 16px; background: #F4F6FA; border-bottom: 1px solid #E2E8F0; }
+.isu-dd-name { font-size: 14px; font-weight: 700; color: #0F1C2E; margin-bottom: 2px; }
+.isu-dd-email { font-size: 11px; color: #5A6A7E; margin-bottom: 6px; }
+.isu-dd-plan { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 10px; border-radius: 100px; background: rgba(27,63,110,.08); color: #1B3F6E; }
+.isu-dd-item { display: block; padding: 11px 16px; font-size: 13px; color: #0F1C2E; text-decoration: none; transition: background .1s; cursor: pointer; background: none; border: none; width: 100%; text-align: left; font-family: 'Inter', sans-serif; }
+.isu-dd-item:hover { background: #F4F6FA; }
+.isu-dd-sep { height: 1px; background: #E2E8F0; }
+.isu-dd-out { color: #DC2626; font-weight: 600; }
+
+/* Mobile menu */
+.isu-mob { display: none; flex-direction: column; background: white; border-top: 1px solid #E2E8F0; box-shadow: 0 8px 24px rgba(0,0,0,.1); }
+.isu-mob.open { display: flex; }
+.isu-mob a { padding: 13px 24px; font-size: 14px; font-weight: 500; color: #0F1C2E; text-decoration: none; }
+.isu-mob a:hover { background: #F4F6FA; }
+.isu-mob-sep { height: 1px; background: #E2E8F0; margin: 4px 0; }
+
+@media (max-width: 960px) { .isu-nav-links { display: none; } .isu-hamburger { display: block; } }
