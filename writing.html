@@ -5,494 +5,210 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Writing Practice — IELTScoreUp</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --blue:#1B3F6E;--blue-light:#2558A0;--green:#0D9E72;--green-light:#0FBF8A;
-  --bg:#F4F6FA;--white:#FFFFFF;--dark:#0F1C2E;--muted:#5A6A7E;
-  --border:#E2E8F0;--radius:12px;--radius-lg:20px;
-  --red:#E53E3E;--amber:#D97706;
-}
-html{scroll-behavior:smooth}
+:root{--blue:#1B3F6E;--blue-light:#2558A0;--green:#0D9E72;--bg:#F4F6FA;--white:#FFFFFF;--dark:#0F1C2E;--muted:#5A6A7E;--border:#E2E8F0;--radius:12px;--radius-lg:20px;--red:#DC2626;}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webkit-font-smoothing:antialiased;min-height:100vh}
-
-/* TOPBAR */
 .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-.logo{font-size:16px;font-weight:800;color:var(--dark);text-decoration:none;letter-spacing:-0.3px}
-.logo span{color:var(--green)}
-.back-link{font-size:13px;color:var(--muted);text-decoration:none;display:flex;align-items:center;gap:6px;font-weight:500}
-.back-link:hover{color:var(--dark)}
-.topbar-right{display:flex;align-items:center;gap:16px}
-.word-counter{font-size:13px;color:var(--muted);font-weight:500}
-.word-counter strong{color:var(--dark)}
-
-/* LAYOUT */
-.layout{max-width:1200px;margin:0 auto;padding:32px 24px;display:grid;grid-template-columns:1fr 420px;gap:24px;align-items:start}
+.logo{font-size:16px;font-weight:800;color:var(--dark);text-decoration:none}.logo span{color:var(--green)}
+.back-link{font-size:13px;color:var(--muted);text-decoration:none;font-weight:500}
+.layout{max-width:1200px;margin:0 auto;padding:32px 24px;display:grid;grid-template-columns:1fr 420px;gap:24px}
 @media(max-width:900px){.layout{grid-template-columns:1fr}}
-
-/* LEFT PANEL */
 .panel{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden}
-.panel-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:gap}
+.panel-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .panel-title{font-size:15px;font-weight:700;color:var(--dark)}
 .panel-body{padding:24px}
-
-/* TASK TYPE SELECTOR */
 .type-tabs{display:flex;gap:8px;margin-bottom:20px}
-.type-tab{flex:1;padding:10px;border-radius:var(--radius);border:1.5px solid var(--border);background:var(--bg);font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s;text-align:center}
+.type-tab{flex:1;padding:10px;border-radius:var(--radius);border:1.5px solid var(--border);background:var(--bg);font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s;text-align:center;font-family:'Inter',sans-serif}
 .type-tab.active{border-color:var(--blue);background:rgba(27,63,110,.06);color:var(--blue)}
-
-.test-type-pills{display:flex;gap:8px;margin-bottom:20px}
-.pill{padding:6px 14px;border-radius:100px;border:1.5px solid var(--border);background:var(--white);font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s}
+.pills{display:flex;gap:8px;margin-bottom:20px}
+.pill{padding:6px 14px;border-radius:100px;border:1.5px solid var(--border);background:var(--white);font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
 .pill.active{border-color:var(--green);background:rgba(13,158,114,.08);color:var(--green)}
-
-/* PROMPT BOX */
-.prompt-box{background:var(--bg);border-radius:var(--radius);padding:18px;margin-bottom:20px;border-left:3px solid var(--blue)}
+.gen-btn{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);padding:9px 16px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;gap:6px;margin-bottom:16px;width:100%;justify-content:center}
+.gen-btn:hover{border-color:var(--blue);color:var(--blue)}
+.gen-btn:disabled{opacity:.5;cursor:not-allowed}
+.prompt-box{background:var(--bg);border-radius:var(--radius);padding:18px;margin-bottom:20px;border-left:3px solid var(--blue);min-height:80px}
 .prompt-label{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
 .prompt-text{font-size:14px;color:var(--dark);line-height:1.7}
-.prompt-time{display:inline-flex;align-items:center;gap:5px;margin-top:10px;font-size:12px;color:var(--muted);font-weight:500}
-
-/* TEXTAREA */
-.essay-area{width:100%;min-height:280px;border:1.5px solid var(--border);border-radius:var(--radius);padding:16px;font-family:'Inter',sans-serif;font-size:15px;color:var(--dark);line-height:1.8;resize:vertical;outline:none;transition:border-color .15s;background:var(--white)}
+.prompt-meta{font-size:12px;color:var(--muted);margin-top:8px}
+.essay-area{width:100%;min-height:280px;border:1.5px solid var(--border);border-radius:var(--radius);padding:16px;font-family:'Inter',sans-serif;font-size:15px;color:var(--dark);line-height:1.8;resize:vertical;outline:none;transition:border-color .15s}
 .essay-area:focus{border-color:var(--blue)}
-.essay-area::placeholder{color:var(--muted)}
 .area-footer{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
-.wc-bar{display:flex;align-items:center;gap:10px}
-.wc-text{font-size:13px;color:var(--muted)}
-.wc-num{font-weight:700;color:var(--dark)}
-.wc-min{font-size:11px;color:var(--muted)}
-.wc-ok{color:var(--green)}
-
-.submit-btn{background:var(--blue);color:white;border:none;padding:13px 28px;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:8px;font-family:'Inter',sans-serif}
-.submit-btn:hover:not(:disabled){background:var(--blue-light);transform:translateY(-1px)}
-.submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.submit-btn .spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.wc{font-size:13px;color:var(--muted)}
+.submit-btn{background:var(--blue);color:white;border:none;padding:12px 24px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;gap:8px}
+.submit-btn:hover:not(:disabled){background:var(--blue-light)}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed}
+.spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:none}
 .submit-btn.loading .spinner{display:block}
-.submit-btn.loading .btn-text{opacity:.7}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* RIGHT PANEL - FEEDBACK */
-.feedback-panel{display:flex;flex-direction:column;gap:16px}
-
-.api-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px}
-.api-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
-.api-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-family:'Inter',sans-serif;font-size:13px;color:var(--dark);outline:none;transition:border-color .15s;background:var(--bg)}
-.api-input:focus{border-color:var(--blue);background:var(--white)}
-.api-note{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5}
-.api-note a{color:var(--blue);text-decoration:none}
-
 .result-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;display:none}
 .result-card.visible{display:block}
-
 .band-hero{background:var(--blue);padding:24px;text-align:center}
-.band-hero-label{font-size:12px;font-weight:600;color:rgba(255,255,255,.6);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
-.band-hero-score{font-size:64px;font-weight:900;color:white;letter-spacing:-3px;line-height:1}
-.band-hero-sub{font-size:14px;color:rgba(255,255,255,.65);margin-top:6px}
-
+.band-score{font-size:64px;font-weight:900;color:white;letter-spacing:-3px;line-height:1}
+.band-desc{font-size:14px;color:rgba(255,255,255,.65);margin-top:6px}
 .criteria-grid{padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .criterion{background:var(--bg);border-radius:var(--radius);padding:12px}
-.criterion-name{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:4px}
-.criterion-score{font-size:24px;font-weight:900;color:var(--blue);letter-spacing:-1px}
-.criterion-bar{height:4px;background:var(--border);border-radius:100px;margin-top:6px;overflow:hidden}
-.criterion-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:100px;transition:width .8s cubic-bezier(.16,1,.3,1)}
-
-.feedback-sections{padding:0 20px 20px;display:flex;flex-direction:column;gap:16px}
-.feedback-section{border-top:1px solid var(--border);padding-top:16px}
-.feedback-section:first-child{border-top:none;padding-top:0}
-.fs-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
-.fs-content{font-size:14px;color:var(--dark);line-height:1.7}
-.highlight-green{background:rgba(13,158,114,.1);color:#065f46;border-radius:4px;padding:1px 5px;font-weight:500}
-.highlight-red{background:rgba(229,62,62,.1);color:#991b1b;border-radius:4px;padding:1px 5px;font-weight:500}
-
-/* EMPTY STATE */
-.empty-state{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:48px 24px;text-align:center}
-.empty-icon{font-size:40px;margin-bottom:16px}
-.empty-title{font-size:16px;font-weight:700;color:var(--dark);margin-bottom:8px}
-.empty-sub{font-size:14px;color:var(--muted);line-height:1.6}
-
-/* LOADING STATE */
+.crit-name{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px}
+.crit-score{font-size:24px;font-weight:900;color:var(--blue);letter-spacing:-1px}
+.crit-bar{height:4px;background:var(--border);border-radius:100px;margin-top:6px;overflow:hidden}
+.crit-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:100px;transition:width .8s}
+.fb-sections{padding:0 20px 20px;display:flex;flex-direction:column;gap:14px}
+.fb-sec{border-top:1px solid var(--border);padding-top:14px}
+.fb-sec:first-child{border-top:none;padding-top:0}
+.fb-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
+.fb-text{font-size:14px;color:var(--dark);line-height:1.7}
+.fb-example{background:var(--bg);border-radius:8px;padding:12px;font-size:14px;font-style:italic;color:var(--dark);line-height:1.7}
+.empty{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:48px 24px;text-align:center}
 .loading-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:40px 24px;text-align:center;display:none}
 .loading-card.visible{display:block}
-.loading-dots{display:flex;justify-content:center;gap:6px;margin-bottom:20px}
-.loading-dots span{width:8px;height:8px;background:var(--blue);border-radius:50%;animation:bounce 1.2s infinite}
-.loading-dots span:nth-child(2){animation-delay:.2s}
-.loading-dots span:nth-child(3){animation-delay:.4s}
+.dots{display:flex;justify-content:center;gap:6px;margin-bottom:16px}
+.dots span{width:8px;height:8px;background:var(--blue);border-radius:50%;animation:bounce 1.2s infinite}
+.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
 @keyframes bounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
-.loading-text{font-size:14px;color:var(--muted);font-weight:500}
-
-/* PROMPTS DATA */
-.prompt-nav{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.prompt-nav-btn{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
-.prompt-nav-btn:hover{border-color:var(--blue);color:var(--blue)}
-.prompt-counter{font-size:12px;color:var(--muted);flex:1;text-align:center}
+.cert-banner{background:rgba(201,168,76,.1);border:1.5px solid rgba(201,168,76,.4);border-radius:var(--radius);padding:12px 16px;margin-top:12px;display:none;align-items:center;gap:10px}
+.cert-banner.visible{display:flex}
+.cert-link{background:var(--blue);color:white;font-size:12px;font-weight:700;padding:6px 14px;border-radius:8px;text-decoration:none;white-space:nowrap;margin-left:auto}
 </style>
 </head>
 <body>
-
 <div class="topbar">
-  <a href="index.html" class="logo">IELTS<span>Score</span>Up</a>
-  <div class="topbar-right">
-    <span class="word-counter">Words: <strong id="topWc">0</strong></span>
-    <a href="index.html" class="back-link">← Dashboard</a>
+  <a href="dashboard.html" class="logo">IELTS<span>Score</span>Up</a>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-size:13px;color:var(--muted)">Words: <strong id="topWc">0</strong></span>
+    <a href="dashboard.html" class="back-link">← Dashboard</a>
   </div>
 </div>
-
 <div class="layout">
-
-  <!-- LEFT: WRITING AREA -->
   <div>
     <div class="panel">
       <div class="panel-header">
         <span class="panel-title">Writing Practice</span>
-        <div style="display:flex;gap:6px;align-items:center">
-          <span id="testTypeBadge" style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;background:rgba(13,158,114,.1);color:var(--green)">Academic</span>
-        </div>
+        <span id="badge" style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;background:rgba(13,158,114,.1);color:var(--green)">Academic</span>
       </div>
       <div class="panel-body">
-
-        <!-- Task type -->
         <div class="type-tabs">
           <div class="type-tab active" onclick="setTask(1,this)">Task 1</div>
           <div class="type-tab" onclick="setTask(2,this)">Task 2</div>
         </div>
-
-        <!-- Test type -->
-        <div class="test-type-pills">
-          <div class="pill active" onclick="setTestType('Academic',this)">Academic</div>
-          <div class="pill" onclick="setTestType('General',this)">General Training</div>
+        <div class="pills">
+          <div class="pill active" onclick="setType('Academic',this)">Academic</div>
+          <div class="pill" onclick="setType('General Training',this)">General Training</div>
         </div>
-
-        <!-- Prompt -->
-        <div class="prompt-nav">
-          <button class="prompt-nav-btn" onclick="prevPrompt()">← Prev</button>
-          <span class="prompt-counter" id="promptCounter">Prompt 1 of 3</span>
-          <button class="prompt-nav-btn" onclick="nextPrompt()">Next →</button>
-        </div>
-
+        <button class="gen-btn" id="genBtn" onclick="generatePrompt()">✨ Generate new prompt with AI</button>
         <div class="prompt-box">
           <div class="prompt-label" id="promptLabel">Task 1 — Academic</div>
-          <div class="prompt-text" id="promptText">Loading prompt...</div>
-          <div class="prompt-time">⏱ Suggested time: <strong id="promptTime">20 minutes</strong> &nbsp;·&nbsp; Min words: <strong id="promptMinWords">150</strong></div>
+          <div class="prompt-text" id="promptText">Click "Generate new prompt" to get a fresh AI-generated IELTS writing task.</div>
+          <div class="prompt-meta" id="promptMeta">⏱ 20 minutes &nbsp;·&nbsp; Min 150 words</div>
         </div>
-
-        <!-- Essay textarea -->
-        <textarea
-          class="essay-area"
-          id="essayArea"
-          placeholder="Write your answer here. The AI will evaluate your band score across all four IELTS criteria..."
-          oninput="updateWordCount()"
-        ></textarea>
-
+        <textarea class="essay-area" id="essay" placeholder="Write your answer here..." oninput="updateWC()"></textarea>
         <div class="area-footer">
-          <div class="wc-bar">
-            <span class="wc-text">Word count: <span class="wc-num" id="wcNum">0</span></span>
-            <span class="wc-min" id="wcMin">/ min 150</span>
-          </div>
-          <button class="submit-btn" id="submitBtn" onclick="evaluateEssay()" disabled>
-            <div class="spinner"></div>
-            <span class="btn-text">Evaluate with AI →</span>
+          <span class="wc">Words: <strong id="wc" style="color:var(--dark)">0</strong> <span id="wcMin" style="font-size:11px;color:var(--muted)">/min 150</span></span>
+          <button class="submit-btn" id="submitBtn" onclick="evaluate()" disabled>
+            <div class="spinner"></div><span>Evaluate with AI →</span>
           </button>
         </div>
-
+        <div class="cert-banner" id="certBanner">
+          <span>🏆</span>
+          <span style="font-size:13px;font-weight:600;color:var(--dark)">Band 6.0+ reached — claim your Writing certificate!</span>
+          <a href="certificates.html" class="cert-link">Claim →</a>
+        </div>
       </div>
     </div>
   </div>
-
-  <!-- RIGHT: FEEDBACK -->
-  <div class="feedback-panel">
-
-    <!-- API Key -->
-    <div class="api-card">
-      <div class="api-label">Anthropic API Key</div>
-      <input type="password" class="api-input" id="apiKey" placeholder="sk-ant-..." oninput="checkReady()"/>
-      <div class="api-note">Your key is never stored. Get yours free at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></div>
+  <div>
+    <div class="empty" id="emptyState">
+      <div style="font-size:40px;margin-bottom:16px">✍️</div>
+      <div style="font-size:16px;font-weight:700;color:var(--dark);margin-bottom:8px">Your feedback appears here</div>
+      <div style="font-size:14px;color:var(--muted);line-height:1.6">Generate a prompt, write your essay, and get instant AI feedback.</div>
     </div>
-
-    <!-- Empty state -->
-    <div class="empty-state" id="emptyState">
-      <div class="empty-icon">✍️</div>
-      <div class="empty-title">Your feedback appears here</div>
-      <div class="empty-sub">Write your essay and click "Evaluate with AI" to get your band score and detailed feedback across all four IELTS criteria.</div>
-    </div>
-
-    <!-- Loading -->
     <div class="loading-card" id="loadingCard">
-      <div class="loading-dots"><span></span><span></span><span></span></div>
-      <div class="loading-text">Analysing your essay...<br/>This takes about 10 seconds.</div>
+      <div class="dots"><span></span><span></span><span></span></div>
+      <div style="font-size:14px;color:var(--muted)">Analysing your essay...<br/>About 10 seconds.</div>
     </div>
-
-    <!-- Result -->
     <div class="result-card" id="resultCard">
       <div class="band-hero">
-        <div class="band-hero-label">Overall Band Score</div>
-        <div class="band-hero-score" id="overallBand">—</div>
-        <div class="band-hero-sub" id="bandDesc">—</div>
+        <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,.6);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Overall Band Score</div>
+        <div class="band-score" id="bandScore">—</div>
+        <div class="band-desc" id="bandDesc">—</div>
       </div>
       <div class="criteria-grid">
-        <div class="criterion">
-          <div class="criterion-name">Task Achievement</div>
-          <div class="criterion-score" id="scoreTA">—</div>
-          <div class="criterion-bar"><div class="criterion-fill" id="barTA" style="width:0%"></div></div>
-        </div>
-        <div class="criterion">
-          <div class="criterion-name">Coherence &amp; Cohesion</div>
-          <div class="criterion-score" id="scoreCC">—</div>
-          <div class="criterion-bar"><div class="criterion-fill" id="barCC" style="width:0%"></div></div>
-        </div>
-        <div class="criterion">
-          <div class="criterion-name">Lexical Resource</div>
-          <div class="criterion-score" id="scoreLR">—</div>
-          <div class="criterion-bar"><div class="criterion-fill" id="barLR" style="width:0%"></div></div>
-        </div>
-        <div class="criterion">
-          <div class="criterion-name">Grammatical Range</div>
-          <div class="criterion-score" id="scoreGR">—</div>
-          <div class="criterion-bar"><div class="criterion-fill" id="barGR" style="width:0%"></div></div>
-        </div>
+        <div class="criterion"><div class="crit-name">Task Achievement</div><div class="crit-score" id="sTA">—</div><div class="crit-bar"><div class="crit-fill" id="bTA" style="width:0%"></div></div></div>
+        <div class="criterion"><div class="crit-name">Coherence & Cohesion</div><div class="crit-score" id="sCC">—</div><div class="crit-bar"><div class="crit-fill" id="bCC" style="width:0%"></div></div></div>
+        <div class="criterion"><div class="crit-name">Lexical Resource</div><div class="crit-score" id="sLR">—</div><div class="crit-bar"><div class="crit-fill" id="bLR" style="width:0%"></div></div></div>
+        <div class="criterion"><div class="crit-name">Grammatical Range</div><div class="crit-score" id="sGR">—</div><div class="crit-bar"><div class="crit-fill" id="bGR" style="width:0%"></div></div></div>
       </div>
-      <div class="feedback-sections">
-        <div class="feedback-section">
-          <div class="fs-label">What you did well</div>
-          <div class="fs-content" id="feedbackStrengths">—</div>
-        </div>
-        <div class="feedback-section">
-          <div class="fs-label">What to improve</div>
-          <div class="fs-content" id="feedbackImprovements">—</div>
-        </div>
-        <div class="feedback-section">
-          <div class="fs-label">Corrected example</div>
-          <div class="fs-content" id="feedbackExample" style="background:var(--bg);border-radius:8px;padding:12px;font-style:italic">—</div>
-        </div>
-        <div class="feedback-section">
-          <div class="fs-label">Next steps</div>
-          <div class="fs-content" id="feedbackNext">—</div>
-        </div>
+      <div class="fb-sections">
+        <div class="fb-sec"><div class="fb-label">What you did well</div><div class="fb-text" id="fbS">—</div></div>
+        <div class="fb-sec"><div class="fb-label">What to improve</div><div class="fb-text" id="fbI">—</div></div>
+        <div class="fb-sec"><div class="fb-label">Corrected example</div><div class="fb-example" id="fbE">—</div></div>
+        <div class="fb-sec"><div class="fb-label">Next steps</div><div class="fb-text" id="fbN">—</div></div>
       </div>
     </div>
-
   </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
 <script>
-var currentTask=1, currentTestType='Academic', currentPromptIdx=0;
-
-var prompts={
-  1:{
-    Academic:[
-      {text:"The graph below shows the percentage of households in owned and rented accommodation in England and Wales between 1918 and 2011.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.",time:"20 minutes",minWords:150},
-      {text:"The diagram below shows the water cycle, which is the continuous movement of water on, above and below the surface of the Earth.\n\nSummarise the information by selecting and reporting the main features.",time:"20 minutes",minWords:150},
-      {text:"The bar chart below shows the number of university graduates in Canada from 1992 to 2007.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.",time:"20 minutes",minWords:150}
-    ],
-    General:[
-      {text:"You recently stayed at a hotel and were unhappy with the service. Write a letter to the hotel manager.\n\nIn your letter:\n• describe what happened\n• explain how the poor service affected you\n• say what action you would like the hotel to take",time:"20 minutes",minWords:150},
-      {text:"A friend has asked you to help organise a surprise birthday party for a mutual friend.\n\nWrite a letter to your friend.\n\nIn your letter:\n• say whether you can help\n• suggest what you can do to help\n• ask about the arrangements",time:"20 minutes",minWords:150},
-      {text:"You have seen an advertisement for a part-time job working in a local library. Write a letter to the library manager.\n\nIn your letter:\n• explain why you want the job\n• describe your relevant experience\n• say when you are available to work",time:"20 minutes",minWords:150}
-    ]
-  },
-  2:{
-    Academic:[
-      {text:"Some people believe that it is best to accept a bad situation, such as an unsatisfactory job or shortage of money. Others argue that it is better to try and improve such situations.\n\nDiscuss both these views and give your own opinion.",time:"40 minutes",minWords:250},
-      {text:"In many countries, the number of animals and plants is declining. Why do you think this is happening? How can this issue be addressed?\n\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.",time:"40 minutes",minWords:250},
-      {text:"Some people say that the best way to improve public health is by increasing the number of sports facilities. Others, however, say that this would have little effect on public health and that other measures are required.\n\nDiscuss both views and give your opinion.",time:"40 minutes",minWords:250}
-    ],
-    General:[
-      {text:"Some people think that children should begin their formal education at a very early age and should spend most of their time on school studies. Others believe that young children should spend most of their time playing.\n\nCompare these two views and give your own opinion.",time:"40 minutes",minWords:250},
-      {text:"Today, the high sales of popular consumer goods reflect the power of advertising and not the real needs of the society in which they are sold.\n\nTo what extent do you agree or disagree?",time:"40 minutes",minWords:250},
-      {text:"Many people believe that social networking sites (such as Facebook) have had a huge negative impact on both individuals and society.\n\nTo what extent do you agree or disagree with this statement?",time:"40 minutes",minWords:250}
-    ]
-  }
-};
-
-function getPromptList(){return prompts[currentTask][currentTestType]}
-function getCurrentPrompt(){var l=getPromptList();return l[currentPromptIdx%l.length]}
-
-function renderPrompt(){
-  var p=getCurrentPrompt();
-  var list=getPromptList();
-  document.getElementById('promptLabel').textContent='Task '+currentTask+' — '+currentTestType;
-  document.getElementById('promptText').textContent=p.text;
-  document.getElementById('promptTime').textContent=p.time;
-  document.getElementById('promptMinWords').textContent=p.minWords;
-  document.getElementById('wcMin').textContent='/ min '+p.minWords;
-  document.getElementById('promptCounter').textContent='Prompt '+(currentPromptIdx%list.length+1)+' of '+list.length;
-  document.getElementById('essayArea').value='';
-  updateWordCount();
-  hideResult();
+var task=1,testType='Academic',prompt=null,token=null;
+async function init(){token=await requireLogin();if(token)generatePrompt();}
+function setTask(t,el){task=t;document.querySelectorAll('.type-tab').forEach(x=>x.classList.remove('active'));el.classList.add('active');document.getElementById('wcMin').textContent='/min '+(t===1?150:250);generatePrompt();}
+function setType(t,el){testType=t;document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));el.classList.add('active');document.getElementById('badge').textContent=t;generatePrompt();}
+async function generatePrompt(){
+  var btn=document.getElementById('genBtn');btn.disabled=true;btn.textContent='⏳ Generating...';
+  try{
+    var r=await apiCall('/api/writing/generate-prompt',{taskType:'Task '+task,testType},token);
+    prompt=r;
+    document.getElementById('promptLabel').textContent='Task '+task+' — '+testType;
+    document.getElementById('promptText').textContent=r.prompt;
+    document.getElementById('promptMeta').textContent='⏱ '+(r.time||'20 minutes')+' · Min '+(r.minWords||150)+' words';
+    document.getElementById('wcMin').textContent='/min '+(r.minWords||150);
+    document.getElementById('essay').value='';
+    updateWC();
+    document.getElementById('emptyState').style.display='block';
+    document.getElementById('resultCard').classList.remove('visible');
+    document.getElementById('certBanner').classList.remove('visible');
+  }catch(e){document.getElementById('promptText').textContent='Could not generate prompt. Check your connection.';}
+  finally{btn.disabled=false;btn.textContent='✨ Generate new prompt with AI';}
 }
-
-function setTask(t,el){
-  currentTask=t;currentPromptIdx=0;
-  document.querySelectorAll('.type-tab').forEach(function(x){x.classList.remove('active')});
-  el.classList.add('active');
-  renderPrompt();
-}
-
-function setTestType(t,el){
-  currentTestType=t;currentPromptIdx=0;
-  document.querySelectorAll('.pill').forEach(function(x){x.classList.remove('active')});
-  el.classList.add('active');
-  document.getElementById('testTypeBadge').textContent=t;
-  renderPrompt();
-}
-
-function prevPrompt(){
-  var l=getPromptList();
-  currentPromptIdx=(currentPromptIdx-1+l.length)%l.length;
-  renderPrompt();
-}
-function nextPrompt(){
-  var l=getPromptList();
-  currentPromptIdx=(currentPromptIdx+1)%l.length;
-  renderPrompt();
-}
-
-function countWords(text){
-  return text.trim()===''?0:text.trim().split(/\s+/).length;
-}
-
-function updateWordCount(){
-  var text=document.getElementById('essayArea').value;
-  var wc=countWords(text);
-  var minW=getCurrentPrompt().minWords;
-  document.getElementById('wcNum').textContent=wc;
+function updateWC(){
+  var text=document.getElementById('essay').value;
+  var wc=text.trim()===''?0:text.trim().split(/\s+/).length;
+  var min=prompt?.minWords||(task===1?150:250);
+  document.getElementById('wc').textContent=wc;
   document.getElementById('topWc').textContent=wc;
-  var wcEl=document.getElementById('wcNum');
-  wcEl.style.color=wc>=minW?'var(--green)':'var(--dark)';
-  checkReady();
+  document.getElementById('wc').style.color=wc>=min?'var(--green)':'var(--dark)';
+  document.getElementById('submitBtn').disabled=!(token&&wc>=min&&prompt);
 }
-
-function checkReady(){
-  var key=document.getElementById('apiKey').value.trim();
-  var text=document.getElementById('essayArea').value;
-  var wc=countWords(text);
-  var minW=getCurrentPrompt().minWords;
-  document.getElementById('submitBtn').disabled=!(key.startsWith('sk-ant-')&&wc>=minW);
-}
-
-function hideResult(){
-  document.getElementById('emptyState').style.display='block';
-  document.getElementById('loadingCard').classList.remove('visible');
-  document.getElementById('resultCard').classList.remove('visible');
-}
-
-function showLoading(){
+function bw(b){return((parseFloat(b)-1)/8*100).toFixed(1)+'%'}
+function bd(b){var n=parseFloat(b);return n>=8.5?'Expert':n>=7.5?'Very good':n>=6.5?'Competent':n>=5.5?'Modest':n>=4.5?'Limited':'Below basic';}
+async function evaluate(){
+  var essay=document.getElementById('essay').value.trim();
+  var btn=document.getElementById('submitBtn');btn.classList.add('loading');btn.disabled=true;
   document.getElementById('emptyState').style.display='none';
   document.getElementById('loadingCard').classList.add('visible');
   document.getElementById('resultCard').classList.remove('visible');
-}
-
-function showResult(){
-  document.getElementById('emptyState').style.display='none';
-  document.getElementById('loadingCard').classList.remove('visible');
-  document.getElementById('resultCard').classList.add('visible');
-}
-
-function bandToWidth(b){return((parseFloat(b)-1)/8*100).toFixed(1)+'%'}
-
-function bandDesc(b){
-  var n=parseFloat(b);
-  if(n>=8.5)return'Expert user';
-  if(n>=7.5)return'Very good user';
-  if(n>=6.5)return'Competent user';
-  if(n>=5.5)return'Modest user';
-  if(n>=4.5)return'Limited user';
-  return'Below basic user';
-}
-
-async function evaluateEssay(){
-  var key=document.getElementById('apiKey').value.trim();
-  var essay=document.getElementById('essayArea').value.trim();
-  var prompt=getCurrentPrompt();
-  var btn=document.getElementById('submitBtn');
-
-  btn.classList.add('loading');
-  btn.disabled=true;
-  showLoading();
-
-  var systemPrompt=`You are an expert IELTS examiner with 15+ years of experience. You must evaluate IELTS Writing ${currentTask === 1 ? 'Task 1' : 'Task 2'} (${currentTestType}) essays and return ONLY a JSON object — no markdown, no explanation outside the JSON.
-
-Return exactly this structure:
-{
-  "overall": "7.0",
-  "task_achievement": "7.0",
-  "coherence_cohesion": "6.5",
-  "lexical_resource": "7.0",
-  "grammatical_range": "6.5",
-  "strengths": "2-3 sentences about what the student did well, specific to their essay.",
-  "improvements": "2-3 sentences about specific weaknesses with examples from the essay.",
-  "corrected_example": "Take one weak sentence from the essay and rewrite it, showing the improvement.",
-  "next_steps": "2-3 actionable steps the student should focus on next."
-}
-
-Band scores must be one of: 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0
-Be honest and accurate — do not inflate scores. Be specific and refer to the actual essay content.`;
-
-  var userMessage=`IELTS Writing Task ${currentTask} (${currentTestType})
-
-QUESTION:
-${prompt.text}
-
-STUDENT ESSAY:
-${essay}
-
-Evaluate this essay and return only the JSON.`;
-
   try{
-    var res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-6',
-        max_tokens:1000,
-        system:systemPrompt,
-        messages:[{role:'user',content:userMessage}]
-      })
-    });
-
-    if(!res.ok){
-      var err=await res.json();
-      throw new Error(err.error?.message||'API error');
-    }
-
-    var data=await res.json();
-    var raw=data.content[0].text.trim();
-    var clean=raw.replace(/```json|```/g,'').trim();
-    var result=JSON.parse(clean);
-
-    document.getElementById('overallBand').textContent=result.overall;
-    document.getElementById('bandDesc').textContent=bandDesc(result.overall);
-    document.getElementById('scoreTA').textContent=result.task_achievement;
-    document.getElementById('scoreCC').textContent=result.coherence_cohesion;
-    document.getElementById('scoreLR').textContent=result.lexical_resource;
-    document.getElementById('scoreGR').textContent=result.grammatical_range;
-
-    setTimeout(function(){
-      document.getElementById('barTA').style.width=bandToWidth(result.task_achievement);
-      document.getElementById('barCC').style.width=bandToWidth(result.coherence_cohesion);
-      document.getElementById('barLR').style.width=bandToWidth(result.lexical_resource);
-      document.getElementById('barGR').style.width=bandToWidth(result.grammatical_range);
-    },100);
-
-    document.getElementById('feedbackStrengths').textContent=result.strengths;
-    document.getElementById('feedbackImprovements').textContent=result.improvements;
-    document.getElementById('feedbackExample').textContent=result.corrected_example;
-    document.getElementById('feedbackNext').textContent=result.next_steps;
-
-    showResult();
-    document.getElementById('resultCard').scrollIntoView({behavior:'smooth',block:'start'});
-
-  }catch(e){
-    alert('Error: '+e.message+'\n\nMake sure your API key is correct and you have credits available.');
-    hideResult();
-  }finally{
-    btn.classList.remove('loading');
-    btn.disabled=false;
-    checkReady();
-  }
+    var r=await apiCall('/api/writing/evaluate',{essay,prompt:prompt?.prompt||'',taskType:'Task '+task,testType},token);
+    document.getElementById('bandScore').textContent=r.overall;
+    document.getElementById('bandDesc').textContent=bd(r.overall);
+    document.getElementById('sTA').textContent=r.task_achievement;
+    document.getElementById('sCC').textContent=r.coherence_cohesion;
+    document.getElementById('sLR').textContent=r.lexical_resource;
+    document.getElementById('sGR').textContent=r.grammatical_range;
+    setTimeout(()=>{document.getElementById('bTA').style.width=bw(r.task_achievement);document.getElementById('bCC').style.width=bw(r.coherence_cohesion);document.getElementById('bLR').style.width=bw(r.lexical_resource);document.getElementById('bGR').style.width=bw(r.grammatical_range);},100);
+    document.getElementById('fbS').textContent=r.strengths;
+    document.getElementById('fbI').textContent=r.improvements;
+    document.getElementById('fbE').textContent=r.corrected_example;
+    document.getElementById('fbN').textContent=r.next_steps;
+    document.getElementById('loadingCard').classList.remove('visible');
+    document.getElementById('resultCard').classList.add('visible');
+    document.getElementById('resultCard').scrollIntoView({behavior:'smooth'});
+    if(parseFloat(r.overall)>=6.0)document.getElementById('certBanner').classList.add('visible');
+  }catch(e){alert('Error: '+e.message);document.getElementById('emptyState').style.display='block';document.getElementById('loadingCard').classList.remove('visible');}
+  finally{btn.classList.remove('loading');updateWC();}
 }
-
-renderPrompt();
+init();
 </script>
 </body>
 </html>
