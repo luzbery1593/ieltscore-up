@@ -210,10 +210,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
   </nav>
   <div class="sidebar-footer">
     <div class="sb-user">
-      <div class="sb-avatar">JS</div>
+      <div class="sb-avatar" id="sbAvatar">?</div>
       <div class="sb-user-info">
-        <div class="sb-user-name">John Student</div>
-        <div class="sb-user-plan">Pro Plan</div>
+        <div class="sb-user-name" id="sbUserName">Loading...</div>
+        <div class="sb-user-plan" id="sbUserPlan">Free Plan</div>
       </div>
     </div>
   </div>
@@ -226,9 +226,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
       <button class="menu-btn" onclick="toggleSidebar()">☰</button>
       <span class="page-title">Dashboard</span>
     </div>
-    <div class="topbar-right">
-      </div>
-    </div>
+    <div class="topbar-right"></div>
   </div>
 
   <div class="page">
@@ -599,6 +597,43 @@ window.saveModuleProgress=function(module, data){
 
 
 
+// Load user info into sidebar
+async function loadUser(){
+  try{
+    var SURL='https://ystwgkfwydyrefbqjcjd.supabase.co';
+    var SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk';
+    var sb=supabase.createClient(SURL,SKEY);
+    var {data}=await sb.auth.getSession();
+    if(!data.session){window.location.href='auth.html';return;}
+    var user=data.session.user;
+    var name=user.user_metadata?.full_name||user.email.split('@')[0];
+    var initial=name.charAt(0).toUpperCase();
+    // Update sidebar user info
+    var nameEl=document.getElementById('sbUserName');
+    var avatarEl=document.getElementById('sbAvatar');
+    var greetEl=document.getElementById('greeting');
+    if(nameEl) nameEl.textContent=name;
+    if(avatarEl) avatarEl.textContent=initial;
+    if(greetEl){var h=new Date().getHours();greetEl.textContent=(h<12?'Good morning':'h<17'?'Good afternoon':'Good evening')+' 👋';}
+    // Load plan
+    var {data:profile}=await sb.from('profiles').select('plan,full_name').eq('id',user.id).single();
+    if(profile){
+      var planEl=document.getElementById('sbUserPlan');
+      if(planEl) planEl.textContent=profile.plan==='pro'?'Pro Plan':profile.plan==='intensive'?'Intensive Plan':'Free Plan';
+      if(profile.full_name&&nameEl) nameEl.textContent=profile.full_name;
+    }
+  }catch(e){console.log('User load error:',e);}
+}
+
+// Sign out
+function signOut(){
+  var SURL='https://ystwgkfwydyrefbqjcjd.supabase.co';
+  var SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk';
+  var sb=supabase.createClient(SURL,SKEY);
+  sb.auth.signOut().then(function(){window.location.href='index.html';});
+}
+
+loadUser();
 renderDashboard();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
