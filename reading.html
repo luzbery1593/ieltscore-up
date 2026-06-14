@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Reading Practice — IELTScoreUp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1B3F6E;--blue-light:#2558A0;--green:#0D9E72;--green-light:#0FBF8A;
+  --bg:#F4F6FA;--white:#FFFFFF;--dark:#0F1C2E;--muted:#5A6A7E;
+  --border:#E2E8F0;--radius:12px;--radius-lg:20px;
+  --red:#DC2626;--amber:#D97706;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webkit-font-smoothing:antialiased;min-height:100vh}
+
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.logo{font-size:16px;font-weight:800;color:var(--dark);text-decoration:none}
+.logo span{color:var(--green)}
+.timer-box{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 14px}
+.timer-icon{font-size:14px}
+.timer-val{font-size:15px;font-weight:700;color:var(--dark);font-variant-numeric:tabular-nums}
+.timer-val.warning{color:var(--red)}
+.back-link{font-size:13px;color:var(--muted);text-decoration:none;font-weight:500}
+.back-link:hover{color:var(--dark)}
+
+.layout{max-width:1280px;margin:0 auto;padding:28px 24px;display:grid;grid-template-columns:1fr 400px;gap:24px;align-items:start}
+@media(max-width:960px){.layout{grid-template-columns:1fr}}
+
+/* PASSAGE */
+.passage-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden}
+.passage-header{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.passage-meta{display:flex;align-items:center;gap:10px}
+.passage-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px}
+.badge-academic{background:rgba(27,63,110,.1);color:var(--blue)}
+.badge-general{background:rgba(13,158,114,.1);color:var(--green)}
+.passage-nav{display:flex;gap:6px}
+.nav-btn{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.nav-btn:hover{border-color:var(--blue);color:var(--blue)}
+.passage-title{font-size:18px;font-weight:800;color:var(--dark);padding:20px 24px 8px;letter-spacing:-0.3px}
+.passage-body{padding:0 24px 24px;font-size:15px;color:var(--dark);line-height:1.85;max-height:420px;overflow-y:auto}
+.passage-body p{margin-bottom:14px}
+.passage-body p:last-child{margin-bottom:0}
+.para-label{font-weight:700;color:var(--blue);margin-right:8px}
+
+/* QUESTIONS PANEL */
+.questions-panel{display:flex;flex-direction:column;gap:16px}
+
+.api-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:18px}
+.api-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
+.api-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:9px 13px;font-family:'Inter',sans-serif;font-size:13px;color:var(--dark);outline:none;transition:border-color .15s;background:var(--bg)}
+.api-input:focus{border-color:var(--blue);background:var(--white)}
+.api-note{font-size:11px;color:var(--muted);margin-top:5px}
+.api-note a{color:var(--blue);text-decoration:none}
+
+.questions-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden}
+.questions-header{padding:16px 20px;border-bottom:1px solid var(--border)}
+.questions-title{font-size:14px;font-weight:700;color:var(--dark)}
+.questions-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.questions-body{padding:20px;display:flex;flex-direction:column;gap:20px}
+
+/* QUESTION ITEM */
+.q-item{display:flex;flex-direction:column;gap:8px}
+.q-num{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase}
+.q-text{font-size:14px;color:var(--dark);line-height:1.6;font-weight:500}
+.q-options{display:flex;flex-direction:column;gap:6px}
+.q-option{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);cursor:pointer;transition:all .15s;font-size:13px;color:var(--dark)}
+.q-option:hover{border-color:var(--blue);background:rgba(27,63,110,.03)}
+.q-option.selected{border-color:var(--blue);background:rgba(27,63,110,.06);color:var(--blue)}
+.q-option.correct{border-color:var(--green);background:rgba(13,158,114,.08);color:#065f46}
+.q-option.wrong{border-color:var(--red);background:rgba(220,38,38,.06);color:var(--red)}
+.q-option input[type=radio]{accent-color:var(--blue);width:14px;height:14px;flex-shrink:0}
+
+/* TF/NG */
+.tfng-options{display:flex;gap:6px}
+.tfng-btn{flex:1;padding:8px 4px;border-radius:8px;border:1.5px solid var(--border);font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;text-align:center;transition:all .15s;background:var(--white)}
+.tfng-btn:hover{border-color:var(--blue);color:var(--blue)}
+.tfng-btn.selected{border-color:var(--blue);background:rgba(27,63,110,.06);color:var(--blue)}
+.tfng-btn.correct{border-color:var(--green);background:rgba(13,158,114,.08);color:#065f46}
+.tfng-btn.wrong{border-color:var(--red);background:rgba(220,38,38,.06);color:var(--red)}
+
+/* FILL IN BLANK */
+.fill-input{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Inter',sans-serif;font-size:14px;color:var(--dark);outline:none;transition:border-color .15s}
+.fill-input:focus{border-color:var(--blue)}
+.fill-input.correct{border-color:var(--green);background:rgba(13,158,114,.06)}
+.fill-input.wrong{border-color:var(--red);background:rgba(220,38,38,.05)}
+
+/* SUBMIT + RESULTS */
+.submit-row{padding:0 20px 20px}
+.submit-btn{width:100%;background:var(--blue);color:white;border:none;padding:13px;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.submit-btn:hover:not(:disabled){background:var(--blue-light)}
+.submit-btn:disabled{opacity:.45;cursor:not-allowed}
+.spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.submit-btn.loading .spinner{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.score-banner{margin:0 20px 16px;background:var(--bg);border-radius:var(--radius);padding:16px;text-align:center;display:none}
+.score-banner.visible{display:block}
+.score-big{font-size:36px;font-weight:900;color:var(--blue);letter-spacing:-1.5px}
+.score-label{font-size:13px;color:var(--muted);margin-top:2px}
+
+/* AI EXPLANATIONS */
+.explanations{margin:0 20px 20px;display:flex;flex-direction:column;gap:10px;display:none}
+.explanations.visible{display:flex}
+.explanation-item{background:var(--bg);border-radius:var(--radius);padding:12px 14px;border-left:3px solid var(--blue)}
+.exp-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.exp-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px}
+.exp-correct{background:rgba(13,158,114,.15);color:#065f46}
+.exp-wrong{background:rgba(220,38,38,.12);color:var(--red)}
+.exp-text{font-size:13px;color:var(--dark);line-height:1.65}
+
+.reset-btn{width:calc(100% - 40px);margin:0 20px 20px;background:var(--bg);color:var(--muted);border:1px solid var(--border);padding:10px;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:none}
+.reset-btn.visible{display:block}
+.reset-btn:hover{border-color:var(--blue);color:var(--blue)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html" class="logo">IELTS<span>Score</span>Up</a>
+  <div class="timer-box">
+    <span class="timer-icon">⏱</span>
+    <span class="timer-val" id="timerVal">20:00</span>
+  </div>
+  <a href="index.html" class="back-link">← Dashboard</a>
+</div>
+
+<div class="layout">
+
+  <!-- PASSAGE -->
+  <div class="passage-card">
+    <div class="passage-header">
+      <div class="passage-meta">
+        <span class="passage-badge badge-academic" id="passageBadge">Academic</span>
+        <span style="font-size:13px;font-weight:600;color:var(--muted)" id="passageCounter">Passage 1 of 3</span>
+      </div>
+      <div class="passage-nav">
+        <button class="nav-btn" onclick="prevPassage()">← Prev</button>
+        <button class="nav-btn" onclick="nextPassage()">Next →</button>
+      </div>
+    </div>
+    <div class="passage-title" id="passageTitle"></div>
+    <div class="passage-body" id="passageBody"></div>
+  </div>
+
+  <!-- QUESTIONS -->
+  <div class="questions-panel">
+
+    <div class="api-card">
+      <div class="api-label">Anthropic API Key</div>
+      <input type="password" class="api-input" id="apiKey" placeholder="sk-ant-..."/>
+      <div class="api-note">Never stored. <a href="https://console.anthropic.com" target="_blank">Get yours free →</a></div>
+    </div>
+
+    <div class="questions-card">
+      <div class="questions-header">
+        <div class="questions-title" id="qTitle">Questions 1–5</div>
+        <div class="questions-sub" id="qSub">Answer all questions based on the passage.</div>
+      </div>
+
+      <div class="score-banner" id="scoreBanner">
+        <div class="score-big" id="scoreDisplay">—</div>
+        <div class="score-label" id="scoreLabel">—</div>
+      </div>
+
+      <div class="questions-body" id="questionsBody"></div>
+
+      <div class="submit-row">
+        <button class="submit-btn" id="submitBtn" onclick="submitAnswers()" disabled>
+          <div class="spinner"></div>
+          <span class="btn-text">Check answers with AI →</span>
+        </button>
+      </div>
+
+      <div class="explanations" id="explanationsBox"></div>
+      <button class="reset-btn" id="resetBtn" onclick="resetPassage()">Try another passage →</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+var passages=[
+  {
+    type:'Academic',
+    title:'The Science of Sleep',
+    body:`<p><span class="para-label">A</span>Sleep is one of the most fundamental biological processes, yet it remains one of the least understood. Scientists have long debated why humans — and indeed most animals — need to spend roughly a third of their lives in an unconscious state. Recent advances in neuroscience, however, are beginning to shed light on this mystery.</p>
+<p><span class="para-label">B</span>During sleep, the brain cycles through several distinct stages, each serving a different purpose. The first stage is a light sleep from which people can be easily awakened. This is followed by deeper stages in which the body repairs tissues, strengthens the immune system, and consolidates memories. The final stage, known as REM (Rapid Eye Movement) sleep, is when most dreaming occurs and emotional memories are processed.</p>
+<p><span class="para-label">C</span>One of the most significant recent discoveries is the role of sleep in clearing toxic waste from the brain. A system of channels, known as the glymphatic system, becomes particularly active during sleep, flushing out harmful proteins that accumulate during waking hours. Researchers believe this process may be crucial in preventing neurodegenerative diseases such as Alzheimer's.</p>
+<p><span class="para-label">D</span>Despite its importance, sleep deprivation has become increasingly common in modern societies. Studies suggest that adults in industrialised countries sleep significantly less than their counterparts did a century ago. The widespread use of artificial lighting and electronic devices before bedtime is thought to be a major contributing factor, as these emit blue light that suppresses the production of melatonin, the hormone that regulates sleep.</p>
+<p><span class="para-label">E</span>The consequences of chronic sleep deprivation are far-reaching. Beyond the obvious effects of fatigue and impaired concentration, insufficient sleep has been linked to a higher risk of obesity, diabetes, cardiovascular disease, and mental health disorders. Economists have estimated that sleep deprivation costs the United States alone over $400 billion annually in lost productivity.</p>`,
+    questions:[
+      {type:'tfng',text:'Scientists fully understand why humans need sleep.',answer:'FALSE'},
+      {type:'tfng',text:'The glymphatic system helps remove harmful substances from the brain during sleep.',answer:'TRUE'},
+      {type:'tfng',text:'People today sleep more than people did one hundred years ago.',answer:'FALSE'},
+      {type:'mcq',text:'According to the passage, what happens during REM sleep?',options:['The body repairs damaged tissues','The immune system is strengthened','Emotional memories are processed','Toxic waste is cleared from the brain'],answer:'C'},
+      {type:'fill',text:'Blue light from electronic devices suppresses the production of _____, which regulates sleep.',answer:'melatonin'}
+    ]
+  },
+  {
+    type:'Academic',
+    title:'Urban Farming: Growing Food in the City',
+    body:`<p><span class="para-label">A</span>As the world's population continues to migrate towards cities, a growing movement is challenging the traditional separation between urban environments and food production. Urban farming — the practice of cultivating, processing, and distributing food in or around urban areas — has expanded rapidly over the past decade, taking many different forms across diverse cultural contexts.</p>
+<p><span class="para-label">B</span>Rooftop gardens, vertical farms, community allotments, and hydroponic greenhouses are all expressions of this trend. Proponents argue that urban agriculture can reduce food miles — the distance food travels from production to consumer — thereby lowering carbon emissions associated with transportation. In cities like Singapore and Tokyo, where land is extremely scarce and expensive, vertical farms that stack growing layers on top of one another have emerged as a particularly innovative solution.</p>
+<p><span class="para-label">C</span>Beyond environmental benefits, advocates point to significant social advantages. Community gardens, in particular, have been shown to strengthen neighbourhood bonds, provide therapeutic benefits, and give urban residents a tangible connection to the food they eat. In lower-income areas, they can also improve access to fresh produce that might otherwise be unavailable or unaffordable.</p>
+<p><span class="para-label">D</span>Critics, however, question whether urban farming can ever produce food at a scale sufficient to meaningfully feed city populations. They note that even the most productive urban farms currently supply only a tiny fraction of a city's total food needs. Furthermore, the energy required to power artificial lighting and climate control systems in indoor vertical farms can, in some cases, exceed the environmental savings made by reducing transportation.</p>
+<p><span class="para-label">E</span>Nevertheless, most experts agree that urban farming should be seen not as a replacement for conventional agriculture, but as a complement to it. Its true value may lie less in the quantity of food produced and more in its capacity to educate communities, increase resilience in food supply chains, and contribute to greener, more liveable cities.</p>`,
+    questions:[
+      {type:'mcq',text:'What does the term "food miles" refer to in the passage?',options:['The total area used to grow food in cities','The distance food travels from production to consumer','The number of urban farms in a city','The cost of transporting food'],answer:'B'},
+      {type:'tfng',text:'Vertical farms are used in cities where land is limited.',answer:'TRUE'},
+      {type:'tfng',text:'Urban farming currently supplies the majority of food needs in most cities.',answer:'FALSE'},
+      {type:'fill',text:'Most experts view urban farming as a _____ to conventional agriculture, not a replacement.',answer:'complement'},
+      {type:'tfng',text:'Community gardens have been shown to have therapeutic benefits.',answer:'TRUE'}
+    ]
+  },
+  {
+    type:'General',
+    title:'Working from Home: Benefits and Challenges',
+    body:`<p><span class="para-label">A</span>The concept of working from home, once considered a privilege enjoyed by a select few, has been dramatically accelerated by global events in recent years. What began as a temporary measure for many organisations has evolved into a permanent feature of the modern workplace, prompting employers and employees alike to reconsider long-held assumptions about how and where work should be done.</p>
+<p><span class="para-label">B</span>For many workers, the benefits of remote work are substantial. The elimination of daily commuting saves both time and money, while the flexibility to structure one's own working day can lead to improved work-life balance. Studies have shown that remote workers often report higher levels of job satisfaction and, in many cases, increased productivity — particularly when performing tasks that require sustained concentration.</p>
+<p><span class="para-label">C</span>However, working from home is not without its difficulties. The boundary between professional and personal life can become blurred, leading some employees to work longer hours than they would in an office setting. Social isolation is another concern: the informal interactions that occur naturally in a shared workplace — brief conversations by the coffee machine, impromptu meetings in corridors — play an important role in building team cohesion and sharing knowledge.</p>
+<p><span class="para-label">D</span>Managers, too, face new challenges in a remote environment. Traditional methods of supervision, which rely on the physical presence of employees, are no longer applicable. Trust becomes a more critical component of the manager-employee relationship, and leaders must develop new skills to maintain team engagement, communicate effectively across digital platforms, and identify when team members may be struggling.</p>
+<p><span class="para-label">E</span>Many organisations are now settling on hybrid models that combine remote and in-office work, attempting to capture the benefits of both approaches. While no single solution suits every organisation or individual, it is clear that the rigid nine-to-five, office-based model that dominated the twentieth century is unlikely to return in its original form.</p>`,
+    questions:[
+      {type:'tfng',text:'Working from home was already common before recent global events.',answer:'FALSE'},
+      {type:'mcq',text:'According to the passage, which of the following is a benefit of remote work?',options:['Stronger team cohesion','More informal workplace interactions','Higher job satisfaction','Clearer work-life boundaries'],answer:'C'},
+      {type:'tfng',text:'Remote workers always work fewer hours than office-based employees.',answer:'NOT GIVEN'},
+      {type:'fill',text:'Many organisations are adopting _____ models that combine remote and in-office work.',answer:'hybrid'},
+      {type:'tfng',text:'Traditional supervision methods work well in remote environments.',answer:'FALSE'}
+    ]
+  }
+];
+
+var currentIdx=0, answered=false, timerInterval=null, timeLeft=1200;
+
+function startTimer(){
+  clearInterval(timerInterval);
+  timeLeft=1200;
+  updateTimerDisplay();
+  timerInterval=setInterval(function(){
+    timeLeft--;
+    updateTimerDisplay();
+    if(timeLeft<=0){clearInterval(timerInterval);alert('Time is up!');}
+  },1000);
+}
+
+function updateTimerDisplay(){
+  var m=Math.floor(timeLeft/60),s=timeLeft%60;
+  var el=document.getElementById('timerVal');
+  el.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  el.className='timer-val'+(timeLeft<=120?' warning':'');
+}
+
+function renderPassage(){
+  var p=passages[currentIdx];
+  document.getElementById('passageTitle').textContent=p.title;
+  document.getElementById('passageBody').innerHTML=p.body;
+  document.getElementById('passageBadge').textContent=p.type;
+  document.getElementById('passageBadge').className='passage-badge '+(p.type==='Academic'?'badge-academic':'badge-general');
+  document.getElementById('passageCounter').textContent='Passage '+(currentIdx+1)+' of '+passages.length;
+  renderQuestions(p);
+  answered=false;
+  document.getElementById('scoreBanner').classList.remove('visible');
+  document.getElementById('explanationsBox').classList.remove('visible');
+  document.getElementById('explanationsBox').innerHTML='';
+  document.getElementById('resetBtn').classList.remove('visible');
+  document.getElementById('submitBtn').disabled=false;
+  document.getElementById('submitBtn').querySelector('.btn-text').textContent='Check answers with AI →';
+  startTimer();
+}
+
+function renderQuestions(p){
+  var body=document.getElementById('questionsBody');
+  body.innerHTML='';
+  p.questions.forEach(function(q,i){
+    var div=document.createElement('div');
+    div.className='q-item';
+    div.id='q'+i;
+    var numEl=document.createElement('div');
+    numEl.className='q-num';
+    numEl.textContent='Question '+(i+1);
+    var textEl=document.createElement('div');
+    textEl.className='q-text';
+    textEl.textContent=q.text;
+    div.appendChild(numEl);
+    div.appendChild(textEl);
+    if(q.type==='mcq'){
+      var opts=document.createElement('div');
+      opts.className='q-options';
+      q.options.forEach(function(opt,j){
+        var label=document.createElement('label');
+        label.className='q-option';
+        label.id='opt_'+i+'_'+j;
+        var inp=document.createElement('input');
+        inp.type='radio';inp.name='q'+i;inp.value=String.fromCharCode(65+j);
+        inp.onchange=function(){
+          document.querySelectorAll('[id^="opt_'+i+'_"]').forEach(function(x){x.classList.remove('selected')});
+          label.classList.add('selected');
+          checkAllAnswered();
+        };
+        label.appendChild(inp);
+        label.appendChild(document.createTextNode(String.fromCharCode(65+j)+'. '+opt));
+        opts.appendChild(label);
+      });
+      div.appendChild(opts);
+    } else if(q.type==='tfng'){
+      var tfDiv=document.createElement('div');
+      tfDiv.className='tfng-options';
+      ['TRUE','FALSE','NOT GIVEN'].forEach(function(val){
+        var btn=document.createElement('button');
+        btn.className='tfng-btn';btn.textContent=val;
+        btn.dataset.q=i;btn.dataset.val=val;
+        btn.onclick=function(){
+          document.querySelectorAll('[data-q="'+i+'"]').forEach(function(x){x.classList.remove('selected')});
+          btn.classList.add('selected');
+          checkAllAnswered();
+        };
+        tfDiv.appendChild(btn);
+      });
+      div.appendChild(tfDiv);
+    } else if(q.type==='fill'){
+      var inp=document.createElement('input');
+      inp.type='text';inp.className='fill-input';inp.placeholder='Type your answer...';
+      inp.id='fill_'+i;
+      inp.oninput=checkAllAnswered;
+      div.appendChild(inp);
+    }
+    body.appendChild(div);
+  });
+}
+
+function checkAllAnswered(){
+  var p=passages[currentIdx];
+  var allDone=p.questions.every(function(q,i){
+    if(q.type==='mcq') return document.querySelector('input[name="q'+i+'"]:checked');
+    if(q.type==='tfng') return document.querySelector('[data-q="'+i+'"].selected');
+    if(q.type==='fill') return document.getElementById('fill_'+i).value.trim().length>0;
+  });
+  document.getElementById('submitBtn').disabled=!allDone;
+}
+
+function getUserAnswers(){
+  var p=passages[currentIdx];
+  return p.questions.map(function(q,i){
+    if(q.type==='mcq'){var el=document.querySelector('input[name="q'+i+'"]:checked');return el?el.value:'';}
+    if(q.type==='tfng'){var el=document.querySelector('[data-q="'+i+'"].selected');return el?el.dataset.val:'';}
+    if(q.type==='fill') return document.getElementById('fill_'+i).value.trim();
+  });
+}
+
+function markAnswers(userAnswers){
+  var p=passages[currentIdx];
+  var correct=0;
+  p.questions.forEach(function(q,i){
+    var ua=userAnswers[i];
+    var isCorrect;
+    if(q.type==='fill'){
+      isCorrect=ua.toLowerCase().trim()===q.answer.toLowerCase().trim();
+    } else {
+      isCorrect=ua===q.answer;
+    }
+    if(isCorrect) correct++;
+
+    if(q.type==='mcq'){
+      q.options.forEach(function(opt,j){
+        var el=document.getElementById('opt_'+i+'_'+j);
+        if(!el) return;
+        el.querySelector('input').disabled=true;
+        var letter=String.fromCharCode(65+j);
+        if(letter===q.answer) el.classList.add('correct');
+        else if(letter===ua) el.classList.add('wrong');
+      });
+    } else if(q.type==='tfng'){
+      document.querySelectorAll('[data-q="'+i+'"]').forEach(function(btn){
+        btn.disabled=true;
+        if(btn.dataset.val===q.answer) btn.classList.add('correct');
+        else if(btn.classList.contains('selected')) btn.classList.add('wrong');
+        btn.classList.remove('selected');
+      });
+    } else if(q.type==='fill'){
+      var el=document.getElementById('fill_'+i);
+      el.disabled=true;
+      el.classList.add(isCorrect?'correct':'wrong');
+    }
+  });
+  return correct;
+}
+
+async function submitAnswers(){
+  var key=document.getElementById('apiKey').value.trim();
+  if(!key.startsWith('sk-ant-')){alert('Please enter a valid Anthropic API key.');return;}
+  var p=passages[currentIdx];
+  var userAnswers=getUserAnswers();
+  var correct=markAnswers(userAnswers);
+
+  var btn=document.getElementById('submitBtn');
+  btn.classList.add('loading');btn.disabled=true;
+  btn.querySelector('.btn-text').textContent='Getting AI explanations...';
+  clearInterval(timerInterval);
+
+  var scoreBanner=document.getElementById('scoreBanner');
+  scoreBanner.classList.add('visible');
+  document.getElementById('scoreDisplay').textContent=correct+'/'+p.questions.length;
+  var pct=Math.round(correct/p.questions.length*100);
+  document.getElementById('scoreLabel').textContent=pct+'% correct — '+
+    (pct>=80?'Excellent!':pct>=60?'Good effort. Review the explanations below.':'Keep practising — read the explanations carefully.');
+
+  var questionsText=p.questions.map(function(q,i){
+    return 'Q'+(i+1)+': '+q.text+
+      (q.type==='mcq'?'\nOptions: '+q.options.map(function(o,j){return String.fromCharCode(65+j)+'. '+o}).join(', '):'')+
+      '\nCorrect answer: '+q.answer+
+      '\nStudent answer: '+userAnswers[i]+
+      '\nResult: '+(userAnswers[i]===q.answer||(q.type==='fill'&&userAnswers[i].toLowerCase()===q.answer.toLowerCase())?'CORRECT':'WRONG');
+  }).join('\n\n');
+
+  try{
+    var res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:1200,
+        system:`You are an expert IELTS Reading tutor. For each question, provide a short, clear explanation of why the correct answer is correct, referencing the passage. Return ONLY a JSON array — no markdown, no extra text.
+
+Format: [{"q": 1, "correct": true, "explanation": "..."}, ...]
+
+Keep each explanation to 2 sentences maximum. Reference the specific paragraph (A, B, C, etc.) when relevant.`,
+        messages:[{role:'user',content:'Passage title: '+p.title+'\n\nPassage text:\n'+p.body.replace(/<[^>]+>/g,'')+'\n\nQuestions and results:\n'+questionsText}]
+      })
+    });
+    var data=await res.json();
+    var raw=data.content[0].text.trim().replace(/```json|```/g,'').trim();
+    var explanations=JSON.parse(raw);
+    var box=document.getElementById('explanationsBox');
+    box.innerHTML='<div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin:0 20px 10px;padding:0 0 0 0">AI Explanations</div>';
+    explanations.forEach(function(e){
+      var div=document.createElement('div');
+      div.className='explanation-item';
+      div.style.margin='0 20px 8px';
+      div.innerHTML='<div class="exp-header"><span class="exp-badge '+(e.correct?'exp-correct':'exp-wrong')+'">Q'+e.q+' — '+(e.correct?'Correct':'Incorrect')+'</span></div><div class="exp-text">'+e.explanation+'</div>';
+      box.appendChild(div);
+    });
+    box.classList.add('visible');
+  }catch(err){
+    console.error(err);
+  }finally{
+    btn.classList.remove('loading');
+    document.getElementById('resetBtn').classList.add('visible');
+    answered=true;
+  }
+}
+
+function resetPassage(){
+  nextPassage();
+}
+function prevPassage(){currentIdx=(currentIdx-1+passages.length)%passages.length;renderPassage();}
+function nextPassage(){currentIdx=(currentIdx+1)%passages.length;renderPassage();}
+
+renderPassage();
+</script>
+</body>
+</html>

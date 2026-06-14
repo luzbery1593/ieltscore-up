@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Listening Practice — IELTScoreUp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1B3F6E;--blue-light:#2558A0;--green:#0D9E72;--green-light:#0FBF8A;
+  --bg:#F4F6FA;--white:#FFFFFF;--dark:#0F1C2E;--muted:#5A6A7E;
+  --border:#E2E8F0;--radius:12px;--radius-lg:20px;--red:#DC2626;--amber:#D97706;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webkit-font-smoothing:antialiased;min-height:100vh}
+
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.logo{font-size:16px;font-weight:800;color:var(--dark);text-decoration:none}
+.logo span{color:var(--green)}
+.timer-box{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 14px}
+.timer-val{font-size:15px;font-weight:700;color:var(--dark);font-variant-numeric:tabular-nums}
+.timer-val.warning{color:var(--red)}
+.back-link{font-size:13px;color:var(--muted);text-decoration:none;font-weight:500}
+.back-link:hover{color:var(--dark)}
+
+.page{max-width:900px;margin:0 auto;padding:32px 24px}
+
+/* SECTION SELECTOR */
+.section-tabs{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.section-tab{flex:1;min-width:120px;padding:10px 8px;border-radius:var(--radius);border:1.5px solid var(--border);background:var(--white);font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;text-align:center;transition:all .15s;font-family:'Inter',sans-serif}
+.section-tab.active{border-color:var(--blue);background:rgba(27,63,110,.06);color:var(--blue)}
+.section-tab.done{border-color:var(--green);background:rgba(13,158,114,.06);color:var(--green)}
+
+/* AUDIO PLAYER */
+.audio-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:24px;margin-bottom:20px}
+.audio-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.audio-meta{}
+.audio-section-label{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px}
+.audio-title{font-size:20px;font-weight:800;color:var(--dark);letter-spacing:-0.3px}
+.audio-desc{font-size:13px;color:var(--muted);margin-top:4px;line-height:1.5}
+.audio-badge{font-size:11px;font-weight:700;padding:4px 12px;border-radius:100px;background:rgba(27,63,110,.08);color:var(--blue);white-space:nowrap;align-self:flex-start}
+
+/* CUSTOM PLAYER */
+.player{background:var(--bg);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;gap:12px}
+.player-controls{display:flex;align-items:center;gap:12px}
+.play-btn{width:44px;height:44px;border-radius:50%;background:var(--blue);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.play-btn:hover{background:var(--blue-light)}
+.play-btn svg{width:18px;height:18px;fill:white;margin-left:2px}
+.play-btn.playing svg.play-icon{display:none}
+.play-btn .pause-icon{display:none}
+.play-btn.playing .pause-icon{display:block}
+.play-btn.playing .play-icon{display:none}
+.progress-wrap{flex:1;display:flex;flex-direction:column;gap:4px}
+.progress-bar{width:100%;height:6px;background:var(--border);border-radius:100px;cursor:pointer;position:relative;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:100px;width:0%;transition:width .1s linear}
+.time-row{display:flex;justify-content:space-between}
+.time-txt{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;font-weight:500}
+.volume-wrap{display:flex;align-items:center;gap:6px}
+.vol-icon{font-size:14px;color:var(--muted)}
+.vol-slider{width:70px;accent-color:var(--blue)}
+
+.tts-note{background:rgba(27,63,110,.06);border-radius:var(--radius);padding:12px 14px;font-size:13px;color:var(--muted);line-height:1.6;border-left:3px solid var(--blue)}
+.tts-note strong{color:var(--blue)}
+
+/* TRANSCRIPT TOGGLE */
+.transcript-toggle{display:flex;align-items:center;justify-content:space-between;margin-top:14px;cursor:pointer;padding:10px 14px;background:var(--bg);border-radius:var(--radius);border:1px solid var(--border);transition:border-color .15s}
+.transcript-toggle:hover{border-color:var(--blue)}
+.transcript-label{font-size:13px;font-weight:600;color:var(--muted)}
+.transcript-arrow{font-size:12px;color:var(--muted);transition:transform .2s}
+.transcript-arrow.open{transform:rotate(180deg)}
+.transcript-box{background:var(--bg);border-radius:var(--radius);padding:16px;margin-top:8px;font-size:14px;color:var(--dark);line-height:1.8;border:1px solid var(--border);display:none;max-height:200px;overflow-y:auto}
+.transcript-box.visible{display:block}
+.speaker{font-weight:700;color:var(--blue)}
+
+/* QUESTIONS */
+.questions-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;margin-bottom:20px}
+.questions-header{padding:18px 22px;border-bottom:1px solid var(--border)}
+.questions-title{font-size:15px;font-weight:700;color:var(--dark)}
+.questions-sub{font-size:12px;color:var(--muted);margin-top:3px}
+.questions-body{padding:22px;display:flex;flex-direction:column;gap:22px}
+
+.q-item{display:flex;flex-direction:column;gap:8px}
+.q-num{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase}
+.q-text{font-size:14px;color:var(--dark);line-height:1.6;font-weight:500}
+.q-options{display:flex;flex-direction:column;gap:6px}
+.q-option{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);cursor:pointer;transition:all .15s;font-size:13px;color:var(--dark)}
+.q-option:hover{border-color:var(--blue);background:rgba(27,63,110,.03)}
+.q-option.selected{border-color:var(--blue);background:rgba(27,63,110,.06);color:var(--blue)}
+.q-option.correct{border-color:var(--green);background:rgba(13,158,114,.08);color:#065f46}
+.q-option.wrong{border-color:var(--red);background:rgba(220,38,38,.06);color:var(--red)}
+.q-option input[type=radio]{accent-color:var(--blue);width:14px;height:14px;flex-shrink:0}
+.fill-input{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Inter',sans-serif;font-size:14px;color:var(--dark);outline:none;transition:border-color .15s}
+.fill-input:focus{border-color:var(--blue)}
+.fill-input.correct{border-color:var(--green);background:rgba(13,158,114,.06)}
+.fill-input.wrong{border-color:var(--red);background:rgba(220,38,38,.05)}
+
+/* BOTTOM ROW */
+.bottom-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.api-mini{flex:1;min-width:200px}
+.api-mini input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-family:'Inter',sans-serif;font-size:13px;color:var(--dark);outline:none;transition:border-color .15s;background:var(--white)}
+.api-mini input:focus{border-color:var(--blue)}
+.submit-btn{background:var(--blue);color:white;border:none;padding:11px 24px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.submit-btn:hover:not(:disabled){background:var(--blue-light)}
+.submit-btn:disabled{opacity:.45;cursor:not-allowed}
+.spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.submit-btn.loading .spinner{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* SCORE + EXPLANATIONS */
+.score-banner{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px;text-align:center;margin-bottom:16px;display:none}
+.score-banner.visible{display:block}
+.score-big{font-size:40px;font-weight:900;color:var(--blue);letter-spacing:-2px}
+.score-label{font-size:13px;color:var(--muted);margin-top:4px}
+
+.explanations{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px;display:none;flex-direction:column;gap:10px}
+.explanations.visible{display:flex}
+.exp-title{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px}
+.exp-item{background:var(--bg);border-radius:var(--radius);padding:12px 14px;border-left:3px solid var(--blue)}
+.exp-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;margin-bottom:6px}
+.exp-correct{background:rgba(13,158,114,.15);color:#065f46}
+.exp-wrong{background:rgba(220,38,38,.12);color:var(--red)}
+.exp-text{font-size:13px;color:var(--dark);line-height:1.65}
+
+.next-btn{background:var(--bg);color:var(--blue);border:1.5px solid var(--blue);padding:11px 24px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:none;width:100%;margin-top:8px}
+.next-btn.visible{display:block}
+.next-btn:hover{background:var(--blue);color:white}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html" class="logo">IELTS<span>Score</span>Up</a>
+  <div class="timer-box">⏱ <span class="timer-val" id="timerVal">30:00</span></div>
+  <a href="index.html" class="back-link">← Dashboard</a>
+</div>
+
+<div class="page">
+
+  <div class="section-tabs">
+    <button class="section-tab active" onclick="goSection(0,this)" id="tab0">Section 1</button>
+    <button class="section-tab" onclick="goSection(1,this)" id="tab1">Section 2</button>
+    <button class="section-tab" onclick="goSection(2,this)" id="tab2">Section 3</button>
+    <button class="section-tab" onclick="goSection(3,this)" id="tab3">Section 4</button>
+  </div>
+
+  <!-- AUDIO CARD -->
+  <div class="audio-card">
+    <div class="audio-header">
+      <div class="audio-meta">
+        <div class="audio-section-label" id="sectionLabel">Section 1</div>
+        <div class="audio-title" id="audioTitle">—</div>
+        <div class="audio-desc" id="audioDesc">—</div>
+      </div>
+      <span class="audio-badge" id="audioBadge">—</span>
+    </div>
+
+    <div class="player">
+      <div class="player-controls">
+        <button class="play-btn" id="playBtn" onclick="togglePlay()">
+          <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <svg class="pause-icon" viewBox="0 0 24 24" style="display:none;fill:white"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+        <div class="progress-wrap">
+          <div class="progress-bar" id="progressBar" onclick="seekAudio(event)">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div class="time-row">
+            <span class="time-txt" id="currentTime">0:00</span>
+            <span class="time-txt" id="duration">—</span>
+          </div>
+        </div>
+        <div class="volume-wrap">
+          <span class="vol-icon">🔊</span>
+          <input type="range" class="vol-slider" min="0" max="1" step="0.05" value="1" oninput="setVolume(this.value)"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="tts-note" id="ttsNote" style="margin-top:14px">
+      <strong>Audio generated by browser text-to-speech.</strong> In the full platform, these will be replaced with professional IELTS-style recordings. Press play to listen, then answer the questions below.
+    </div>
+
+    <div class="transcript-toggle" onclick="toggleTranscript()">
+      <span class="transcript-label">Show transcript (available after attempting)</span>
+      <span class="transcript-arrow" id="transcriptArrow">▼</span>
+    </div>
+    <div class="transcript-box" id="transcriptBox"></div>
+  </div>
+
+  <!-- QUESTIONS -->
+  <div class="questions-card">
+    <div class="questions-header">
+      <div class="questions-title" id="qTitle">Questions</div>
+      <div class="questions-sub">Listen carefully, then answer all questions.</div>
+    </div>
+    <div class="questions-body" id="questionsBody"></div>
+  </div>
+
+  <div class="score-banner" id="scoreBanner">
+    <div class="score-big" id="scoreDisplay">—</div>
+    <div class="score-label" id="scoreLabel">—</div>
+  </div>
+
+  <div class="bottom-row">
+    <div class="api-mini">
+      <input type="password" id="apiKey" placeholder="Anthropic API key (sk-ant-...)"/>
+    </div>
+    <button class="submit-btn" id="submitBtn" onclick="submitAnswers()" disabled>
+      <div class="spinner"></div>
+      <span class="btn-text">Check answers →</span>
+    </button>
+  </div>
+
+  <div class="explanations" id="explanationsBox">
+    <div class="exp-title">AI Explanations</div>
+  </div>
+  <button class="next-btn" id="nextBtn" onclick="nextSection()">Continue to next section →</button>
+
+</div>
+
+<script>
+var sections=[
+  {
+    label:'Section 1',
+    title:'Accommodation Enquiry',
+    desc:'A conversation between two people in an everyday social context.',
+    badge:'Everyday conversation · 2 speakers',
+    transcript:`<span class="speaker">Agent:</span> Good morning, Sunshine Rentals, how can I help you?<br><br>
+<span class="speaker">Caller:</span> Oh hello, yes. I'm looking for a flat to rent in the city centre. My name's Daniel Carter.<br><br>
+<span class="speaker">Agent:</span> Of course, Mr Carter. What sort of property are you looking for?<br><br>
+<span class="speaker">Caller:</span> Well, I need at least two bedrooms. I work from home so I need a separate study space.<br><br>
+<span class="speaker">Agent:</span> And what's your monthly budget?<br><br>
+<span class="speaker">Caller:</span> I'd like to stay under eight hundred pounds if possible.<br><br>
+<span class="speaker">Agent:</span> Right. We do have a two-bedroom flat on Maple Street. It's on the third floor, no lift I'm afraid, and it comes with a small balcony. The rent is seven fifty per month, bills not included.<br><br>
+<span class="speaker">Caller:</span> That sounds interesting. Is parking available?<br><br>
+<span class="speaker">Agent:</span> There's street parking nearby but no dedicated space with the flat, I'm afraid.<br><br>
+<span class="speaker">Caller:</span> And when would it be available?<br><br>
+<span class="speaker">Agent:</span> It's available from the first of March. We'd need one month's deposit plus the first month's rent upfront.<br><br>
+<span class="speaker">Caller:</span> Could I arrange a viewing?<br><br>
+<span class="speaker">Agent:</span> Absolutely. I can book you in for this Saturday at eleven. Could I take your phone number?<br><br>
+<span class="speaker">Caller:</span> Yes, it's 07732 489 012.`,
+    questions:[
+      {type:'fill',text:"The caller's name is Daniel _____.",answer:'Carter'},
+      {type:'fill',text:'The flat has _____ bedrooms.',answer:'two'},
+      {type:'mcq',text:'What is the monthly rent for the flat?',options:['£700','£750','£800','£850'],answer:'B'},
+      {type:'fill',text:'The flat is available from the first of _____ .',answer:'March'},
+      {type:'mcq',text:'What does the caller want to arrange?',options:['A phone call','A video tour','A viewing','A deposit payment'],answer:'C'}
+    ]
+  },
+  {
+    label:'Section 2',
+    title:'City Library Induction',
+    desc:'A monologue in an everyday social context.',
+    badge:'Monologue · 1 speaker',
+    transcript:`<span class="speaker">Speaker:</span> Good afternoon, everyone, and welcome to the Westfield Public Library. I'm going to give you a quick overview of our facilities and membership options.<br><br>
+The ground floor houses our main lending collection — fiction, non-fiction, and children's books. The first floor is our quiet study area, which is open from seven in the morning until ten at night, seven days a week. We ask that you keep noise to a minimum up there and switch your phones to silent.<br><br>
+In terms of membership, our standard membership is completely free and allows you to borrow up to eight books at a time for a period of three weeks. If you need more time, you can renew online or by phone up to three times, as long as no one else has reserved the item.<br><br>
+We also offer a premium digital membership for four pounds fifty a month. This gives you unlimited access to our e-book collection and over twenty online newspapers and magazines.<br><br>
+Finally, I'd like to mention our community events programme. This month we have a writing workshop every Wednesday evening at half past six and a children's storytelling session on Saturday mornings at ten o'clock. All events are free to attend and no booking is required.<br><br>
+If you have any questions, please speak to a member of staff at the information desk, which is just to your left as you come in through the main entrance.`,
+    questions:[
+      {type:'mcq',text:'Where is the quiet study area located?',options:['Ground floor','First floor','Second floor','Basement'],answer:'B'},
+      {type:'fill',text:'Standard membership allows borrowing up to _____ books at a time.',answer:'eight'},
+      {type:'fill',text:'The digital membership costs £_____ per month.',answer:'4.50'},
+      {type:'mcq',text:'When is the writing workshop held?',options:['Tuesday evenings','Wednesday evenings','Thursday evenings','Saturday mornings'],answer:'B'},
+      {type:'fill',text:'The information desk is to your _____ as you enter the main entrance.',answer:'left'}
+    ]
+  },
+  {
+    label:'Section 3',
+    title:'University Assignment Discussion',
+    desc:'A conversation between two or more people in an educational context.',
+    badge:'Academic conversation · 2 speakers',
+    transcript:`<span class="speaker">Tutor:</span> So, James, Sarah — how are you getting on with the group project on renewable energy?<br><br>
+<span class="speaker">Sarah:</span> We've made a good start actually. We've divided it into three parts — solar, wind, and tidal power. James is covering solar, and I'm looking at wind energy.<br><br>
+<span class="speaker">Tutor:</span> Good. And who's covering tidal?<br><br>
+<span class="speaker">James:</span> That was supposed to be Marcus, but he's had some problems accessing the journal articles. The university database seems to be blocking his access from home.<br><br>
+<span class="speaker">Tutor:</span> Right, he should contact the IT helpdesk — they can set up remote access for him. Now, have you decided on your main argument?<br><br>
+<span class="speaker">Sarah:</span> We want to argue that offshore wind is currently the most cost-effective renewable option for the UK, given the recent drop in installation costs.<br><br>
+<span class="speaker">Tutor:</span> That's a strong position, but make sure you're using data from the last two years — the figures have changed quite dramatically. What sources are you using?<br><br>
+<span class="speaker">James:</span> Mostly government reports and a few peer-reviewed journals. We found a really useful paper by Professor Hartley on solar panel efficiency.<br><br>
+<span class="speaker">Tutor:</span> Excellent. What's your word count target?<br><br>
+<span class="speaker">Sarah:</span> Four thousand words, excluding references. We're aiming to submit by Thursday, two days before the actual deadline.<br><br>
+<span class="speaker">Tutor:</span> Good thinking. That gives you time for a final proofread.`,
+    questions:[
+      {type:'fill',text:'James is covering _____ energy in the project.',answer:'solar'},
+      {type:'mcq',text:"Why is Marcus having problems with the project?",options:["He lost his notes","He can't access journal articles","He missed the briefing","He's ill"],answer:'B'},
+      {type:'fill',text:"The group's main argument is that offshore wind is the most _____ renewable option.",answer:'cost-effective'},
+      {type:'mcq',text:'What is the word count target for the project?',options:['3,000 words','3,500 words','4,000 words','4,500 words'],answer:'C'},
+      {type:'fill',text:'The group plans to submit _____ days before the actual deadline.',answer:'two'}
+    ]
+  },
+  {
+    label:'Section 4',
+    title:'Lecture: The History of Coffee',
+    desc:'A monologue in an academic context.',
+    badge:'Academic lecture · 1 speaker',
+    transcript:`<span class="speaker">Lecturer:</span> Good morning. Today I want to talk about something most of you probably consumed before coming to this lecture — coffee. It's one of the most traded commodities in the world, second only to oil in terms of value. But how much do you actually know about its history?<br><br>
+The story of coffee begins in Ethiopia, where, according to legend, a goat herder named Kaldi noticed his goats behaving unusually energetically after eating berries from a particular tree. Whether or not this story is true, what we do know is that coffee cultivation and trading began in Yemen in the fifteenth century, where Sufi monks used it to stay awake during evening prayers.<br><br>
+From Yemen, coffee spread rapidly across the Arab world. By the sixteenth century, coffeehouses — known as qahveh khaneh — had become important social and intellectual hubs in cities like Constantinople, Cairo, and Mecca. They were places where people met to discuss business, politics, and philosophy.<br><br>
+Coffee reached Europe in the seventeenth century, initially meeting with resistance from religious authorities who associated it with Islamic culture. Pope Clement the Eighth was reportedly urged to ban it, but after tasting it himself, he gave it papal approval instead.<br><br>
+Today, Finland consumes more coffee per capita than any other country, followed by Norway and Iceland. The global coffee industry employs over 125 million people worldwide and is worth an estimated 200 billion dollars annually. Not bad for a drink that started with some restless goats.`,
+    questions:[
+      {type:'mcq',text:'Where did coffee cultivation and trading first begin?',options:['Ethiopia','Egypt','Turkey','Yemen'],answer:'D'},
+      {type:'fill',text:'Coffeehouses in the Arab world were known as _____ khaneh.',answer:'qahveh'},
+      {type:'mcq',text:'How did Pope Clement the Eighth respond to coffee?',options:['He banned it','He approved it after tasting it','He ignored the controversy','He taxed it heavily'],answer:'B'},
+      {type:'fill',text:'_____ consumes more coffee per capita than any other country.',answer:'Finland'},
+      {type:'fill',text:'The global coffee industry is worth an estimated _____ billion dollars annually.',answer:'200'}
+    ]
+  }
+];
+
+var currentSection=0, synth=window.speechSynthesis, utterance=null, isPlaying=false, timerInterval=null, timeLeft=1800, audioProgress=0, audioDuration=0, progressInterval=null;
+
+function goSection(idx, el){
+  currentSection=idx;
+  document.querySelectorAll('.section-tab').forEach(function(t){t.classList.remove('active')});
+  el.classList.add('active');
+  stopAudio();
+  renderSection();
+}
+
+function renderSection(){
+  var s=sections[currentSection];
+  document.getElementById('sectionLabel').textContent=s.label;
+  document.getElementById('audioTitle').textContent=s.title;
+  document.getElementById('audioDesc').textContent=s.desc;
+  document.getElementById('audioBadge').textContent=s.badge;
+  document.getElementById('transcriptBox').innerHTML=s.transcript;
+  document.getElementById('transcriptBox').classList.remove('visible');
+  document.getElementById('transcriptArrow').classList.remove('open');
+  document.getElementById('progressFill').style.width='0%';
+  document.getElementById('currentTime').textContent='0:00';
+  document.getElementById('duration').textContent='—';
+  document.getElementById('playBtn').classList.remove('playing');
+  isPlaying=false; audioProgress=0;
+  document.getElementById('scoreBanner').classList.remove('visible');
+  document.getElementById('explanationsBox').innerHTML='<div class="exp-title">AI Explanations</div>';
+  document.getElementById('explanationsBox').classList.remove('visible');
+  document.getElementById('nextBtn').classList.remove('visible');
+  document.getElementById('submitBtn').disabled=true;
+  document.getElementById('submitBtn').querySelector('.btn-text').textContent='Check answers →';
+  renderQuestions(s);
+}
+
+function renderQuestions(s){
+  var body=document.getElementById('questionsBody');
+  body.innerHTML='';
+  document.getElementById('qTitle').textContent='Questions 1–'+s.questions.length;
+  s.questions.forEach(function(q,i){
+    var div=document.createElement('div');
+    div.className='q-item';
+    var num=document.createElement('div');num.className='q-num';num.textContent='Question '+(i+1);
+    var txt=document.createElement('div');txt.className='q-text';txt.textContent=q.text;
+    div.appendChild(num);div.appendChild(txt);
+    if(q.type==='mcq'){
+      var opts=document.createElement('div');opts.className='q-options';
+      q.options.forEach(function(opt,j){
+        var label=document.createElement('label');label.className='q-option';label.id='opt_'+i+'_'+j;
+        var inp=document.createElement('input');inp.type='radio';inp.name='q'+i;inp.value=String.fromCharCode(65+j);
+        inp.onchange=function(){
+          document.querySelectorAll('[id^="opt_'+i+'_"]').forEach(function(x){x.classList.remove('selected')});
+          label.classList.add('selected');checkAllAnswered();
+        };
+        label.appendChild(inp);label.appendChild(document.createTextNode(String.fromCharCode(65+j)+'. '+opt));
+        opts.appendChild(label);
+      });
+      div.appendChild(opts);
+    } else {
+      var inp=document.createElement('input');inp.type='text';inp.className='fill-input';inp.id='fill_'+i;
+      inp.placeholder='Type your answer...';inp.oninput=checkAllAnswered;
+      div.appendChild(inp);
+    }
+    body.appendChild(div);
+  });
+}
+
+function checkAllAnswered(){
+  var s=sections[currentSection];
+  var all=s.questions.every(function(q,i){
+    if(q.type==='mcq') return document.querySelector('input[name="q'+i+'"]:checked');
+    return document.getElementById('fill_'+i)&&document.getElementById('fill_'+i).value.trim().length>0;
+  });
+  document.getElementById('submitBtn').disabled=!all;
+}
+
+function toggleTranscript(){
+  var box=document.getElementById('transcriptBox');
+  var arrow=document.getElementById('transcriptArrow');
+  box.classList.toggle('visible');
+  arrow.classList.toggle('open');
+}
+
+function togglePlay(){
+  if(isPlaying){stopAudio();}else{playAudio();}
+}
+
+function playAudio(){
+  if(synth.speaking) synth.cancel();
+  var s=sections[currentSection];
+  var text=s.transcript.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  utterance=new SpeechSynthesisUtterance(text);
+  utterance.rate=0.92;utterance.pitch=1;utterance.volume=parseFloat(document.querySelector('.vol-slider').value);
+  var voices=synth.getVoices();
+  var preferred=voices.find(function(v){return v.lang==='en-GB'&&v.name.toLowerCase().includes('female')});
+  if(!preferred) preferred=voices.find(function(v){return v.lang==='en-GB'});
+  if(!preferred) preferred=voices.find(function(v){return v.lang.startsWith('en')});
+  if(preferred) utterance.voice=preferred;
+  var estDuration=text.split(' ').length*0.55;
+  audioDuration=estDuration;
+  document.getElementById('duration').textContent=formatTime(Math.round(estDuration));
+  var startTime=Date.now()-audioProgress*1000;
+  clearInterval(progressInterval);
+  progressInterval=setInterval(function(){
+    var elapsed=(Date.now()-startTime)/1000;
+    audioProgress=elapsed;
+    var pct=Math.min(elapsed/estDuration*100,100);
+    document.getElementById('progressFill').style.width=pct+'%';
+    document.getElementById('currentTime').textContent=formatTime(Math.round(elapsed));
+    if(elapsed>=estDuration){clearInterval(progressInterval);stopAudio(true);}
+  },200);
+  utterance.onend=function(){stopAudio(true);};
+  utterance.onerror=function(){stopAudio(false);};
+  synth.speak(utterance);
+  isPlaying=true;
+  document.getElementById('playBtn').classList.add('playing');
+}
+
+function stopAudio(finished){
+  synth.cancel();clearInterval(progressInterval);
+  isPlaying=false;
+  document.getElementById('playBtn').classList.remove('playing');
+  if(finished){
+    document.getElementById('progressFill').style.width='100%';
+    audioProgress=audioDuration;
+  }
+}
+
+function seekAudio(e){
+  var bar=document.getElementById('progressBar');
+  var pct=e.offsetX/bar.offsetWidth;
+  audioProgress=pct*audioDuration;
+  if(isPlaying){stopAudio(false);playAudio();}
+  document.getElementById('progressFill').style.width=(pct*100)+'%';
+  document.getElementById('currentTime').textContent=formatTime(Math.round(audioProgress));
+}
+
+function setVolume(v){if(utterance){utterance.volume=parseFloat(v);}}
+function formatTime(s){var m=Math.floor(s/60);return m+':'+(s%60<10?'0':'')+s%60;}
+
+function getUserAnswers(){
+  return sections[currentSection].questions.map(function(q,i){
+    if(q.type==='mcq'){var el=document.querySelector('input[name="q'+i+'"]:checked');return el?el.value:'';}
+    var el=document.getElementById('fill_'+i);return el?el.value.trim():'';
+  });
+}
+
+function markAnswers(userAnswers){
+  var s=sections[currentSection];var correct=0;
+  s.questions.forEach(function(q,i){
+    var ua=userAnswers[i];
+    var isCorrect=q.type==='fill'?ua.toLowerCase()===q.answer.toLowerCase():ua===q.answer;
+    if(isCorrect)correct++;
+    if(q.type==='mcq'){
+      q.options.forEach(function(opt,j){
+        var el=document.getElementById('opt_'+i+'_'+j);if(!el)return;
+        el.querySelector('input').disabled=true;
+        var letter=String.fromCharCode(65+j);
+        if(letter===q.answer)el.classList.add('correct');
+        else if(letter===ua)el.classList.add('wrong');
+      });
+    } else {
+      var el=document.getElementById('fill_'+i);if(el){el.disabled=true;el.classList.add(isCorrect?'correct':'wrong');}
+    }
+  });
+  return correct;
+}
+
+async function submitAnswers(){
+  var key=document.getElementById('apiKey').value.trim();
+  if(!key.startsWith('sk-ant-')){alert('Please enter a valid Anthropic API key.');return;}
+  var s=sections[currentSection];
+  var userAnswers=getUserAnswers();
+  var correct=markAnswers(userAnswers);
+  var btn=document.getElementById('submitBtn');
+  btn.classList.add('loading');btn.disabled=true;
+  btn.querySelector('.btn-text').textContent='Getting AI feedback...';
+
+  var banner=document.getElementById('scoreBanner');
+  banner.classList.add('visible');
+  document.getElementById('scoreDisplay').textContent=correct+'/'+s.questions.length;
+  var pct=Math.round(correct/s.questions.length*100);
+  document.getElementById('scoreLabel').textContent=pct+'% correct — '+(pct>=80?'Excellent listening!':pct>=60?'Good effort — review the explanations.':'Review the transcript and try again.');
+
+  var qText=s.questions.map(function(q,i){
+    var ua=userAnswers[i];
+    var isC=q.type==='fill'?ua.toLowerCase()===q.answer.toLowerCase():ua===q.answer;
+    return 'Q'+(i+1)+': '+q.text+'\nCorrect: '+q.answer+'\nStudent: '+ua+'\nResult: '+(isC?'CORRECT':'WRONG');
+  }).join('\n\n');
+
+  try{
+    var res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',max_tokens:1000,
+        system:'You are an IELTS Listening tutor. For each question, give a short explanation (2 sentences max) referencing the audio transcript. Return ONLY a JSON array: [{"q":1,"correct":true,"explanation":"..."}]',
+        messages:[{role:'user',content:'Audio transcript:\n'+s.transcript.replace(/<[^>]+>/g,'')+'\n\nResults:\n'+qText}]
+      })
+    });
+    var data=await res.json();
+    var raw=data.content[0].text.trim().replace(/```json|```/g,'').trim();
+    var exps=JSON.parse(raw);
+    var box=document.getElementById('explanationsBox');
+    box.innerHTML='<div class="exp-title">AI Explanations</div>';
+    exps.forEach(function(e){
+      var d=document.createElement('div');d.className='exp-item';
+      d.innerHTML='<span class="exp-badge '+(e.correct?'exp-correct':'exp-wrong')+'">Q'+e.q+' — '+(e.correct?'Correct':'Incorrect')+'</span><div class="exp-text">'+e.explanation+'</div>';
+      box.appendChild(d);
+    });
+    box.classList.add('visible');
+    document.getElementById('nextBtn').classList.add('visible');
+    document.getElementById('tab'+currentSection).classList.add('done');
+  }catch(err){console.error(err);}
+  finally{btn.classList.remove('loading');}
+}
+
+function nextSection(){
+  var next=(currentSection+1)%sections.length;
+  goSection(next,document.getElementById('tab'+next));
+}
+
+function startTimer(){
+  clearInterval(timerInterval);timeLeft=1800;
+  timerInterval=setInterval(function(){
+    timeLeft--;
+    var m=Math.floor(timeLeft/60),s=timeLeft%60;
+    var el=document.getElementById('timerVal');
+    el.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    el.className='timer-val'+(timeLeft<=120?' warning':'');
+    if(timeLeft<=0)clearInterval(timerInterval);
+  },1000);
+}
+
+window.speechSynthesis.onvoiceschanged=function(){};
+renderSection();
+startTimer();
+</script>
+</body>
+</html>

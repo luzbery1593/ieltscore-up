@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sign in — IELTScoreUp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1B3F6E;--blue-light:#2558A0;--green:#0D9E72;--green-light:#0FBF8A;
+  --bg:#F4F6FA;--white:#FFFFFF;--dark:#0F1C2E;--muted:#5A6A7E;
+  --border:#E2E8F0;--radius:12px;--radius-lg:20px;--red:#DC2626;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+
+.split{display:grid;grid-template-columns:1fr 480px;min-height:100vh;width:100%;max-width:1100px;margin:0 auto;gap:0}
+@media(max-width:800px){.split{grid-template-columns:1fr;min-height:auto}}
+
+/* LEFT PANEL */
+.left-panel{background:var(--blue);border-radius:var(--radius-lg) 0 0 var(--radius-lg);padding:48px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+@media(max-width:800px){.left-panel{display:none}}
+.left-panel::before{content:'';position:absolute;right:-80px;top:-80px;width:300px;height:300px;background:rgba(255,255,255,.04);border-radius:50%}
+.left-panel::after{content:'';position:absolute;left:-60px;bottom:-60px;width:240px;height:240px;background:rgba(13,158,114,.1);border-radius:50%}
+.lp-logo{font-size:20px;font-weight:900;color:white;letter-spacing:-0.3px;position:relative;z-index:1}
+.lp-logo span{color:var(--green-light)}
+.lp-content{position:relative;z-index:1}
+.lp-title{font-size:36px;font-weight:900;color:white;letter-spacing:-1.5px;line-height:1.1;margin-bottom:16px}
+.lp-title span{color:var(--green-light)}
+.lp-sub{font-size:15px;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:32px}
+.lp-features{display:flex;flex-direction:column;gap:12px}
+.lp-feat{display:flex;align-items:center;gap:12px;font-size:14px;color:rgba(255,255,255,.75)}
+.lp-feat-icon{width:32px;height:32px;border-radius:8px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.lp-bottom{position:relative;z-index:1}
+.lp-quote{font-size:14px;color:rgba(255,255,255,.45);font-style:italic;line-height:1.6}
+
+/* RIGHT PANEL */
+.right-panel{background:var(--white);border-radius:0 var(--radius-lg) var(--radius-lg) 0;padding:48px 40px;display:flex;flex-direction:column;justify-content:center}
+@media(max-width:800px){.right-panel{border-radius:var(--radius-lg);padding:32px 24px}}
+
+.mobile-logo{display:none;font-size:18px;font-weight:900;color:var(--dark);margin-bottom:28px}
+.mobile-logo span{color:var(--green)}
+@media(max-width:800px){.mobile-logo{display:block}}
+
+/* TABS */
+.auth-tabs{display:flex;background:var(--bg);border-radius:var(--radius);padding:4px;margin-bottom:28px}
+.auth-tab{flex:1;padding:9px;border-radius:8px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;text-align:center;transition:all .15s;border:none;background:none;font-family:'Inter',sans-serif}
+.auth-tab.active{background:var(--white);color:var(--dark);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+
+/* FORMS */
+.form-title{font-size:22px;font-weight:800;color:var(--dark);letter-spacing:-0.5px;margin-bottom:6px}
+.form-sub{font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.6}
+
+.form-group{margin-bottom:16px}
+.form-label{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:6px;display:block}
+.form-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-family:'Inter',sans-serif;font-size:15px;color:var(--dark);outline:none;transition:border-color .15s;background:var(--white)}
+.form-input:focus{border-color:var(--blue)}
+.form-input.error{border-color:var(--red)}
+.form-input::placeholder{color:var(--muted)}
+.form-hint{font-size:12px;color:var(--muted);margin-top:5px}
+
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:400px){.form-row{grid-template-columns:1fr}}
+
+/* SELECT STYLED */
+.form-select{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-family:'Inter',sans-serif;font-size:15px;color:var(--dark);outline:none;transition:border-color .15s;background:var(--white);cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%235A6A7E'%3E%3Cpath d='M5 8l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:16px}
+.form-select:focus{border-color:var(--blue)}
+
+/* SUBMIT */
+.submit-btn{width:100%;background:var(--blue);color:white;border:none;padding:14px;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px}
+.submit-btn:hover:not(:disabled){background:var(--blue-light)}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed}
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.submit-btn.loading .spinner{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* DIVIDER */
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0}
+.divider-line{flex:1;height:1px;background:var(--border)}
+.divider-text{font-size:12px;color:var(--muted);font-weight:500}
+
+/* GOOGLE BTN */
+.google-btn{width:100%;background:var(--white);color:var(--dark);border:1.5px solid var(--border);padding:12px;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:10px}
+.google-btn:hover{border-color:var(--blue);background:var(--bg)}
+.google-icon{width:18px;height:18px}
+
+/* ERROR / SUCCESS */
+.alert{padding:12px 14px;border-radius:var(--radius);font-size:13px;font-weight:500;margin-bottom:16px;display:none;line-height:1.5}
+.alert.visible{display:block}
+.alert-error{background:rgba(220,38,38,.08);color:var(--red);border:1px solid rgba(220,38,38,.2)}
+.alert-success{background:rgba(13,158,114,.08);color:#065f46;border:1px solid rgba(13,158,114,.2)}
+
+/* FORGOT */
+.forgot-link{font-size:12px;color:var(--blue);text-decoration:none;font-weight:500;float:right;margin-top:-2px}
+.forgot-link:hover{text-decoration:underline}
+
+/* TERMS */
+.terms-text{font-size:12px;color:var(--muted);text-align:center;margin-top:16px;line-height:1.6}
+.terms-text a{color:var(--blue);text-decoration:none}
+
+/* PASSWORD STRENGTH */
+.pw-strength{margin-top:6px;display:none}
+.pw-strength.visible{display:block}
+.pw-bar{height:3px;border-radius:100px;background:var(--border);overflow:hidden;margin-bottom:4px}
+.pw-fill{height:100%;border-radius:100px;transition:all .3s;width:0%}
+.pw-label{font-size:11px;font-weight:600}
+
+/* PLAN SELECTOR */
+.plan-selector{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
+.plan-opt{border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;cursor:pointer;transition:all .15s}
+.plan-opt:hover{border-color:var(--blue)}
+.plan-opt.selected{border-color:var(--blue);background:rgba(27,63,110,.04)}
+.plan-opt input{display:none}
+.plan-opt-name{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:2px}
+.plan-opt-price{font-size:12px;color:var(--muted)}
+.plan-opt.selected .plan-opt-name{color:var(--blue)}
+</style>
+</head>
+<body>
+
+<div class="split">
+  <!-- LEFT -->
+  <div class="left-panel">
+    <div class="lp-logo">IELTS<span>Score</span>Up</div>
+    <div class="lp-content">
+      <h1 class="lp-title">Reach your<br/><span>target band</span><br/>score faster</h1>
+      <p class="lp-sub">AI-powered IELTS training for Academic and General Training. Get instant feedback on every practice session.</p>
+      <div class="lp-features">
+        <div class="lp-feat"><div class="lp-feat-icon">✍️</div>Writing evaluated in under 10 seconds</div>
+        <div class="lp-feat"><div class="lp-feat-icon">🎧</div>Infinite listening exercises with real accents</div>
+        <div class="lp-feat"><div class="lp-feat-icon">📊</div>Progress tracked across every session</div>
+        <div class="lp-feat"><div class="lp-feat-icon">🏆</div>Earn certificates when you hit your target</div>
+        <div class="lp-feat"><div class="lp-feat-icon">⏱️</div>Full mock exams with band score report</div>
+      </div>
+    </div>
+    <div class="lp-bottom">
+      <div class="lp-quote">"I went from 6.0 to 7.5 in Writing in 6 weeks. The AI feedback is incredibly specific." — Maria R.</div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right-panel">
+    <div class="mobile-logo">IELTS<span>Score</span>Up</div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="showTab('signin')">Sign in</button>
+      <button class="auth-tab" onclick="showTab('signup')">Create account</button>
+    </div>
+
+    <!-- ALERTS -->
+    <div class="alert alert-error" id="alertError"></div>
+    <div class="alert alert-success" id="alertSuccess"></div>
+
+    <!-- SIGN IN FORM -->
+    <div id="signinForm">
+      <div class="form-title">Welcome back</div>
+      <div class="form-sub">Sign in to continue your IELTS preparation.</div>
+
+      <div class="form-group">
+        <label class="form-label">Email address</label>
+        <input type="email" class="form-input" id="siEmail" placeholder="you@email.com" autocomplete="email"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">
+          Password
+          <a href="#" class="forgot-link" onclick="showForgot()">Forgot password?</a>
+        </label>
+        <input type="password" class="form-input" id="siPassword" placeholder="Your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')signIn()"/>
+      </div>
+
+      <button class="submit-btn" id="siBtn" onclick="signIn()">
+        <div class="spinner"></div>
+        <span>Sign in →</span>
+      </button>
+
+      <div class="divider"><div class="divider-line"></div><div class="divider-text">or</div><div class="divider-line"></div></div>
+
+      <button class="google-btn" onclick="signInGoogle()">
+        <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
+      </button>
+
+      <div class="terms-text">Don't have an account? <a href="#" onclick="showTab('signup')">Create one free →</a></div>
+    </div>
+
+    <!-- SIGN UP FORM -->
+    <div id="signupForm" style="display:none">
+      <div class="form-title">Create your account</div>
+      <div class="form-sub">Start your free trial. No credit card required.</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First name</label>
+          <input type="text" class="form-input" id="suFirst" placeholder="John" autocomplete="given-name"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last name</label>
+          <input type="text" class="form-input" id="suLast" placeholder="Smith" autocomplete="family-name"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email address</label>
+        <input type="email" class="form-input" id="suEmail" placeholder="you@email.com" autocomplete="email"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-input" id="suPassword" placeholder="Min. 8 characters" oninput="checkPwStrength(this.value)" autocomplete="new-password"/>
+        <div class="pw-strength" id="pwStrength">
+          <div class="pw-bar"><div class="pw-fill" id="pwFill"></div></div>
+          <div class="pw-label" id="pwLabel"></div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Target band score</label>
+          <select class="form-select" id="suTarget">
+            <option value="6.0">Band 6.0</option>
+            <option value="6.5">Band 6.5</option>
+            <option value="7.0" selected>Band 7.0</option>
+            <option value="7.5">Band 7.5</option>
+            <option value="8.0">Band 8.0</option>
+            <option value="8.5">Band 8.5</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Test type</label>
+          <select class="form-select" id="suExamType">
+            <option value="Academic">Academic</option>
+            <option value="General">General Training</option>
+            <option value="Both">Both</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Exam date (optional)</label>
+        <input type="date" class="form-input" id="suExamDate"/>
+        <div class="form-hint">We'll tailor your study plan to your timeline.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Choose your plan</label>
+        <div class="plan-selector">
+          <label class="plan-opt selected" id="planFree" onclick="selectPlan('free',this)">
+            <input type="radio" name="plan" value="free" checked/>
+            <div class="plan-opt-name">Free</div>
+            <div class="plan-opt-price">$0 — try it first</div>
+          </label>
+          <label class="plan-opt" id="planPro" onclick="selectPlan('pro',this)">
+            <input type="radio" name="plan" value="pro"/>
+            <div class="plan-opt-name">Pro</div>
+            <div class="plan-opt-price">$17/mo — full access</div>
+          </label>
+        </div>
+      </div>
+
+      <button class="submit-btn" id="suBtn" onclick="signUp()">
+        <div class="spinner"></div>
+        <span>Create account →</span>
+      </button>
+
+      <div class="terms-text">By creating an account you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</div>
+    </div>
+
+    <!-- FORGOT PASSWORD -->
+    <div id="forgotForm" style="display:none">
+      <div class="form-title">Reset password</div>
+      <div class="form-sub">Enter your email and we'll send you a reset link.</div>
+      <div class="form-group">
+        <label class="form-label">Email address</label>
+        <input type="email" class="form-input" id="fpEmail" placeholder="you@email.com"/>
+      </div>
+      <button class="submit-btn" id="fpBtn" onclick="resetPassword()">
+        <div class="spinner"></div>
+        <span>Send reset link →</span>
+      </button>
+      <div class="terms-text" style="margin-top:16px"><a href="#" onclick="showTab('signin')">← Back to sign in</a></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+var SUPABASE_URL='https://ystwgkfwydyrefbqjcjd.supabase.co';
+var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk';
+var sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+// Check if already logged in
+sb.auth.getSession().then(function(r){
+  if(r.data.session) window.location.href='dashboard.html';
+});
+
+function showTab(tab){
+  document.querySelectorAll('.auth-tab').forEach(function(t,i){t.classList.toggle('active',i===(tab==='signin'?0:1))});
+  document.getElementById('signinForm').style.display=tab==='signin'?'block':'none';
+  document.getElementById('signupForm').style.display=tab==='signup'?'block':'none';
+  document.getElementById('forgotForm').style.display='none';
+  clearAlerts();
+}
+
+function showForgot(){
+  document.getElementById('signinForm').style.display='none';
+  document.getElementById('forgotForm').style.display='block';
+  clearAlerts();
+}
+
+function showAlert(type,msg){
+  clearAlerts();
+  var el=document.getElementById('alert'+type.charAt(0).toUpperCase()+type.slice(1));
+  el.textContent=msg; el.classList.add('visible');
+}
+function clearAlerts(){
+  document.querySelectorAll('.alert').forEach(function(a){a.classList.remove('visible');a.textContent='';});
+}
+
+function setLoading(btnId,loading){
+  var btn=document.getElementById(btnId);
+  btn.classList.toggle('loading',loading);
+  btn.disabled=loading;
+}
+
+function selectPlan(plan,el){
+  document.querySelectorAll('.plan-opt').forEach(function(p){p.classList.remove('selected')});
+  el.classList.add('selected');
+}
+
+function checkPwStrength(pw){
+  var el=document.getElementById('pwStrength');
+  var fill=document.getElementById('pwFill');
+  var label=document.getElementById('pwLabel');
+  if(pw.length===0){el.classList.remove('visible');return;}
+  el.classList.add('visible');
+  var score=0;
+  if(pw.length>=8)score++;
+  if(/[A-Z]/.test(pw))score++;
+  if(/[0-9]/.test(pw))score++;
+  if(/[^A-Za-z0-9]/.test(pw))score++;
+  var configs=[
+    {w:'25%',c:'#DC2626',t:'Weak'},
+    {w:'50%',c:'#D97706',t:'Fair'},
+    {w:'75%',c:'#2558A0',t:'Good'},
+    {w:'100%',c:'#0D9E72',t:'Strong'}
+  ];
+  var cfg=configs[score-1]||configs[0];
+  fill.style.width=cfg.w; fill.style.background=cfg.c;
+  label.textContent=cfg.t; label.style.color=cfg.c;
+}
+
+async function signIn(){
+  var email=document.getElementById('siEmail').value.trim();
+  var password=document.getElementById('siPassword').value;
+  if(!email||!password){showAlert('error','Please enter your email and password.');return;}
+  setLoading('siBtn',true); clearAlerts();
+  var r=await sb.auth.signInWithPassword({email,password});
+  if(r.error){showAlert('error',r.error.message);setLoading('siBtn',false);}
+  else{window.location.href='dashboard.html';}
+}
+
+async function signUp(){
+  var first=document.getElementById('suFirst').value.trim();
+  var last=document.getElementById('suLast').value.trim();
+  var email=document.getElementById('suEmail').value.trim();
+  var password=document.getElementById('suPassword').value;
+  var target=document.getElementById('suTarget').value;
+  var examType=document.getElementById('suExamType').value;
+  var examDate=document.getElementById('suExamDate').value;
+  var plan=document.querySelector('.plan-opt.selected input').value;
+
+  if(!first||!last){showAlert('error','Please enter your first and last name.');return;}
+  if(!email){showAlert('error','Please enter your email address.');return;}
+  if(password.length<8){showAlert('error','Password must be at least 8 characters.');return;}
+
+  setLoading('suBtn',true); clearAlerts();
+
+  var r=await sb.auth.signUp({
+    email,password,
+    options:{data:{full_name:first+' '+last}}
+  });
+
+  if(r.error){showAlert('error',r.error.message);setLoading('suBtn',false);return;}
+
+  if(r.data.user){
+    await sb.from('profiles').update({
+      full_name:first+' '+last,
+      target_band:parseFloat(target),
+      exam_type:examType,
+      exam_date:examDate||null,
+      plan:plan
+    }).eq('id',r.data.user.id);
+  }
+
+  setLoading('suBtn',false);
+  showAlert('success','Account created! Check your email to confirm your account, then sign in.');
+  setTimeout(function(){showTab('signin');},3000);
+}
+
+async function signInGoogle(){
+  await sb.auth.signInWithOAuth({
+    provider:'google',
+    options:{redirectTo:window.location.origin+'/dashboard.html'}
+  });
+}
+
+async function resetPassword(){
+  var email=document.getElementById('fpEmail').value.trim();
+  if(!email){showAlert('error','Please enter your email address.');return;}
+  setLoading('fpBtn',true); clearAlerts();
+  var r=await sb.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+'/auth.html'});
+  setLoading('fpBtn',false);
+  if(r.error){showAlert('error',r.error.message);}
+  else{showAlert('success','Reset link sent! Check your email inbox.');}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Certificates — IELTScoreUp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1B3F6E;--blue-light:#2558A0;--green:#0D9E72;--green-light:#0FBF8A;
+  --bg:#F4F6FA;--white:#FFFFFF;--dark:#0F1C2E;--muted:#5A6A7E;
+  --border:#E2E8F0;--radius:12px;--radius-lg:20px;--gold:#C9A84C;--gold-light:#F0D080;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webkit-font-smoothing:antialiased;min-height:100vh}
+
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.logo{font-size:16px;font-weight:800;color:var(--dark);text-decoration:none}
+.logo span{color:var(--green)}
+.back-link{font-size:13px;color:var(--muted);text-decoration:none;font-weight:500}
+.back-link:hover{color:var(--dark)}
+
+.page{max-width:1000px;margin:0 auto;padding:36px 24px}
+
+/* MODULE SELECTOR */
+.modules-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.mod-btn{padding:8px 16px;border-radius:100px;border:1.5px solid var(--border);background:var(--white);font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px}
+.mod-btn:hover{border-color:var(--blue);color:var(--blue)}
+.mod-btn.active{border-color:var(--blue);background:rgba(27,63,110,.06);color:var(--blue)}
+.mod-btn.earned{border-color:var(--green);background:rgba(13,158,114,.06);color:var(--green)}
+.mod-btn .earned-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0}
+
+/* STATUS CARD */
+.status-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.sc-left{display:flex;align-items:center;gap:14px}
+.sc-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.sc-info{}
+.sc-title{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:3px}
+.sc-sub{font-size:13px;color:var(--muted)}
+.sc-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.req-pill{font-size:12px;font-weight:600;padding:5px 14px;border-radius:100px}
+.req-met{background:rgba(13,158,114,.1);color:#065f46}
+.req-unmet{background:rgba(217,119,6,.1);color:#92400e}
+.download-btn{background:var(--blue);color:white;border:none;padding:10px 20px;border-radius:var(--radius);font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;gap:6px}
+.download-btn:hover{background:var(--blue-light)}
+.download-btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* CERTIFICATE PREVIEW */
+.preview-wrap{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:32px;margin-bottom:24px}
+.preview-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between}
+.preview-scale{font-size:11px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0}
+
+/* THE CERTIFICATE */
+#certificateCanvas{width:100%;max-width:800px;margin:0 auto;display:block}
+
+.cert-outer{width:800px;min-height:560px;background:white;border:3px solid var(--gold);border-radius:8px;padding:40px;position:relative;overflow:hidden;font-family:'Inter',sans-serif}
+.cert-outer::before{content:'';position:absolute;inset:8px;border:1px solid var(--gold-light);border-radius:4px;pointer-events:none}
+.cert-corner{position:absolute;width:60px;height:60px}
+.cert-corner svg{width:60px;height:60px}
+.cc-tl{top:0;left:0}
+.cc-tr{top:0;right:0;transform:scaleX(-1)}
+.cc-bl{bottom:0;left:0;transform:scaleY(-1)}
+.cc-br{bottom:0;right:0;transform:scale(-1)}
+
+.cert-watermark{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0.03}
+.cert-watermark-text{font-size:120px;font-weight:900;color:var(--blue);white-space:nowrap;letter-spacing:-4px;transform:rotate(-30deg)}
+
+.cert-header{text-align:center;margin-bottom:24px;position:relative;z-index:1}
+.cert-logo{font-size:20px;font-weight:900;color:var(--blue);letter-spacing:-0.5px;margin-bottom:4px}
+.cert-logo span{color:var(--green)}
+.cert-logo-sub{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase}
+
+.cert-divider{display:flex;align-items:center;gap:12px;margin:16px 0}
+.cert-divider-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.cert-divider-diamond{width:8px;height:8px;background:var(--gold);transform:rotate(45deg);flex-shrink:0}
+
+.cert-title{font-family:'Playfair Display',Georgia,serif;font-size:13px;font-weight:400;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase;text-align:center;margin-bottom:6px;position:relative;z-index:1}
+.cert-subtitle{font-family:'Playfair Display',Georgia,serif;font-size:32px;font-weight:700;color:var(--blue);text-align:center;letter-spacing:-0.5px;margin-bottom:20px;position:relative;z-index:1}
+
+.cert-presented{font-size:13px;color:var(--muted);text-align:center;margin-bottom:8px;position:relative;z-index:1}
+.cert-name{font-family:'Playfair Display',Georgia,serif;font-size:40px;font-weight:700;color:var(--dark);text-align:center;letter-spacing:-1px;margin-bottom:16px;position:relative;z-index:1;border-bottom:2px solid var(--gold-light);padding-bottom:12px;max-width:500px;margin-left:auto;margin-right:auto}
+
+.cert-body{text-align:center;font-size:14px;color:var(--muted);line-height:1.8;max-width:520px;margin:0 auto 20px;position:relative;z-index:1}
+.cert-body strong{color:var(--dark)}
+
+.cert-band-row{display:flex;align-items:center;justify-content:center;gap:32px;margin:20px 0;position:relative;z-index:1}
+.cert-band-box{text-align:center}
+.cert-band-num{font-family:'Playfair Display',Georgia,serif;font-size:52px;font-weight:700;color:var(--blue);letter-spacing:-2px;line-height:1}
+.cert-band-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:4px}
+.cert-band-sep{width:1px;height:60px;background:var(--gold-light)}
+
+.cert-footer{display:flex;align-items:flex-end;justify-content:space-between;margin-top:24px;padding-top:16px;border-top:1px solid var(--gold-light);position:relative;z-index:1}
+.cert-sig{text-align:center}
+.cert-sig-line{width:140px;height:1px;background:var(--dark);margin:0 auto 6px}
+.cert-sig-name{font-size:12px;font-weight:700;color:var(--dark)}
+.cert-sig-role{font-size:10px;color:var(--muted);margin-top:2px}
+.cert-seal{width:72px;height:72px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;flex-direction:column;border:3px solid var(--gold)}
+.cert-seal-text{font-size:7px;font-weight:800;color:white;letter-spacing:0.1em;text-transform:uppercase;text-align:center;line-height:1.4}
+.cert-seal-band{font-size:16px;font-weight:900;color:var(--gold-light);letter-spacing:-0.5px}
+.cert-date{text-align:right}
+.cert-date-val{font-size:13px;font-weight:600;color:var(--dark)}
+.cert-date-label{font-size:10px;color:var(--muted);margin-top:2px;letter-spacing:0.05em;text-transform:uppercase}
+.cert-id{font-size:9px;color:var(--border);margin-top:8px;letter-spacing:0.1em}
+
+/* NOT EARNED */
+.not-earned{background:var(--bg);border-radius:var(--radius-lg);border:2px dashed var(--border);padding:48px 24px;text-align:center}
+.ne-icon{font-size:40px;margin-bottom:16px}
+.ne-title{font-size:16px;font-weight:700;color:var(--dark);margin-bottom:8px}
+.ne-sub{font-size:14px;color:var(--muted);line-height:1.65;max-width:400px;margin:0 auto 20px}
+.ne-progress{background:var(--white);border-radius:var(--radius);padding:16px 20px;max-width:340px;margin:0 auto}
+.ne-prog-label{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between}
+.ne-prog-bar{height:6px;background:var(--border);border-radius:100px;overflow:hidden}
+.ne-prog-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:100px;transition:width .6s ease}
+.practice-btn{display:inline-flex;align-items:center;gap:6px;background:var(--blue);color:white;border:none;padding:11px 22px;border-radius:var(--radius);font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s;text-decoration:none;margin-top:16px}
+.practice-btn:hover{background:var(--blue-light)}
+
+/* ALL CERTS GRID */
+.certs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+@media(max-width:700px){.certs-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:450px){.certs-grid{grid-template-columns:1fr}}
+.cert-mini{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:18px;text-align:center;cursor:pointer;transition:all .2s}
+.cert-mini:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 6px 20px rgba(27,63,110,.1)}
+.cert-mini.earned-mini{border-color:var(--gold)}
+.cert-mini.earned-mini:hover{border-color:var(--gold)}
+.cm-icon{font-size:28px;margin-bottom:10px}
+.cm-name{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:4px}
+.cm-req{font-size:11px;color:var(--muted);margin-bottom:8px}
+.cm-status{font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;display:inline-block}
+.cm-earned{background:rgba(201,168,76,.15);color:#92700a}
+.cm-locked{background:var(--bg);color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="dashboard.html" class="logo">IELTS<span>Score</span>Up</a>
+  <a href="dashboard.html" class="back-link">← Dashboard</a>
+</div>
+
+<div class="page">
+
+  <div style="margin-bottom:24px">
+    <h1 style="font-size:24px;font-weight:900;color:var(--dark);letter-spacing:-0.5px;margin-bottom:6px">Your certificates</h1>
+    <p style="font-size:14px;color:var(--muted)">Earn a certificate for each module by reaching the minimum band score. Download and share your achievements.</p>
+  </div>
+
+  <!-- OVERVIEW GRID -->
+  <div class="certs-grid" id="certsGrid"></div>
+
+  <!-- MODULE SELECTOR -->
+  <div class="modules-row" id="modulesRow"></div>
+
+  <!-- STATUS CARD -->
+  <div class="status-card" id="statusCard"></div>
+
+  <!-- CERTIFICATE PREVIEW or NOT EARNED -->
+  <div class="preview-wrap">
+    <div class="preview-label">
+      Certificate preview
+      <span class="preview-scale">Scale: full size when downloaded</span>
+    </div>
+    <div id="certPreview"></div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+var SUPABASE_URL='https://ystwgkfwydyrefbqjcjd.supabase.co';
+var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk';
+var sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+var modules=[
+  {id:'writing',name:'Writing',icon:'✍️',minBand:6.0,color:'#1B3F6E',link:'writing.html'},
+  {id:'reading',name:'Reading',icon:'📖',minBand:6.5,color:'#0D9E72',link:'reading.html'},
+  {id:'listening',name:'Listening',icon:'🎧',minBand:6.5,color:'#D97706',link:'listening.html'},
+  {id:'speaking',name:'Speaking',icon:'🎤',minBand:6.0,color:'#DC2626',link:'speaking.html'},
+  {id:'grammar',name:'Grammar',icon:'📝',minBand:null,minPct:70,color:'#7C3AED',link:'grammar.html'},
+  {id:'mock',name:'Mock Exam',icon:'⏱️',minBand:6.0,color:'#1B3F6E',link:'mock-exam.html'}
+];
+
+var currentModule=0;
+var userProfile={full_name:'Student',email:''};
+var userProgress={};
+var earnedCerts={};
+
+async function init(){
+  var s=await sb.auth.getSession();
+  if(s.data.session){
+    var uid=s.data.session.user.id;
+    var pr=await sb.from('profiles').select('*').eq('id',uid).single();
+    if(pr.data) userProfile=pr.data;
+    var certs=await sb.from('certificates').select('*').eq('user_id',uid);
+    if(certs.data) certs.data.forEach(function(c){earnedCerts[c.module]=c;});
+    var sessions=await sb.from('sessions').select('*').eq('user_id',uid);
+    if(sessions.data){
+      sessions.data.forEach(function(s){
+        if(!userProgress[s.module]||s.band>userProgress[s.module]) userProgress[s.module]=s.band;
+      });
+    }
+  } else {
+    // Demo mode
+    userProfile={full_name:'John Smith',email:'john@example.com'};
+    userProgress={writing:7.0,reading:7.5,listening:6.5,speaking:6.5,grammar:80,mock:6.5};
+    earnedCerts={writing:{module:'writing',band:7.0,issued_at:new Date().toISOString()}};
+  }
+  renderOverview();
+  renderModuleSelector();
+  selectModule(0);
+}
+
+function isEarned(mod){
+  return !!earnedCerts[mod.id];
+}
+
+function meetsRequirement(mod){
+  var prog=userProgress[mod.id];
+  if(!prog) return false;
+  if(mod.minPct) return prog>=mod.minPct;
+  return parseFloat(prog)>=mod.minBand;
+}
+
+function progressPct(mod){
+  var prog=userProgress[mod.id]||0;
+  if(mod.minPct) return Math.min(prog/mod.minPct*100,100);
+  var min=4.0,max=mod.minBand;
+  return Math.min((parseFloat(prog)-min)/(max-min)*100,100);
+}
+
+function renderOverview(){
+  var grid=document.getElementById('certsGrid');
+  grid.innerHTML='';
+  modules.forEach(function(m,i){
+    var earned=isEarned(m);
+    var req=mod_req_text(m);
+    var div=document.createElement('div');
+    div.className='cert-mini'+(earned?' earned-mini':'');
+    div.innerHTML='<div class="cm-icon">'+m.icon+'</div>'+
+      '<div class="cm-name">'+m.name+'</div>'+
+      '<div class="cm-req">Min. '+req+'</div>'+
+      '<span class="cm-status '+(earned?'cm-earned':'cm-locked')+'">'+(earned?'🏆 Earned':'🔒 Locked')+'</span>';
+    div.onclick=function(){selectModule(i);document.getElementById('modulesRow').scrollIntoView({behavior:'smooth'});};
+    grid.appendChild(div);
+  });
+}
+
+function mod_req_text(m){return m.minPct?m.minPct+'% correct':'Band '+m.minBand.toFixed(1);}
+
+function renderModuleSelector(){
+  var row=document.getElementById('modulesRow');
+  row.innerHTML='';
+  modules.forEach(function(m,i){
+    var earned=isEarned(m);
+    var btn=document.createElement('button');
+    btn.className='mod-btn'+(earned?' earned':'')+(i===currentModule?' active':'');
+    btn.id='modBtn'+i;
+    btn.innerHTML=(earned?'<span class="earned-dot"></span>':'')+m.icon+' '+m.name;
+    btn.onclick=function(){selectModule(i);};
+    row.appendChild(btn);
+  });
+}
+
+function selectModule(idx){
+  currentModule=idx;
+  document.querySelectorAll('.mod-btn').forEach(function(b,i){
+    b.classList.toggle('active',i===idx);
+  });
+  var m=modules[idx];
+  var earned=isEarned(m);
+  var meets=meetsRequirement(m);
+  var prog=userProgress[m.id]||0;
+  var req=mod_req_text(m);
+
+  // Status card
+  var sc=document.getElementById('statusCard');
+  sc.innerHTML='<div class="sc-left">'+
+    '<div class="sc-icon" style="background:'+m.color+'22">'+m.icon+'</div>'+
+    '<div class="sc-info">'+
+      '<div class="sc-title">'+m.name+' Certificate</div>'+
+      '<div class="sc-sub">Requirement: '+req+' · Your best: '+(prog?prog+(m.minPct?'%':''):'Not attempted yet')+'</div>'+
+    '</div></div>'+
+    '<div class="sc-right">'+
+      '<span class="req-pill '+(meets?'req-met':'req-unmet')+'">'+(meets?'✓ Requirement met':'Requirement not met yet')+'</span>'+
+      (earned?'<button class="download-btn" onclick="downloadCert()">⬇ Download PDF</button>':
+       meets?'<button class="download-btn" onclick="issueCert()">🏆 Claim certificate</button>':
+       '<button class="download-btn" disabled>🔒 Not earned yet</button>')+
+    '</div>';
+
+  // Preview
+  var preview=document.getElementById('certPreview');
+  if(earned||meets){
+    var cert=earnedCerts[m.id];
+    var band=cert?cert.band:prog;
+    var date=cert?new Date(cert.issued_at):new Date();
+    preview.innerHTML=buildCertHTML(m,band,date);
+  } else {
+    var pct=Math.max(0,Math.min(100,progressPct(m)));
+    preview.innerHTML='<div class="not-earned">'+
+      '<div class="ne-icon">🔒</div>'+
+      '<div class="ne-title">Certificate not earned yet</div>'+
+      '<div class="ne-sub">Complete more '+m.name+' practice sessions and reach '+req+' to unlock this certificate.</div>'+
+      '<div class="ne-progress">'+
+        '<div class="ne-prog-label"><span>Your progress</span><span>'+Math.round(pct)+'%</span></div>'+
+        '<div class="ne-prog-bar"><div class="ne-prog-fill" style="width:'+pct+'%"></div></div>'+
+      '</div>'+
+      '<a href="'+m.link+'" class="practice-btn">Practice '+m.name+' →</a>'+
+    '</div>';
+  }
+}
+
+function buildCertHTML(m,band,date){
+  var name=userProfile.full_name||'Student';
+  var dateStr=date.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  var certId='ISU-'+m.id.toUpperCase().slice(0,3)+'-'+Date.now().toString(36).toUpperCase().slice(-6);
+  var achievement=m.minPct?'achieving a score of '+band+'%':'achieving a band score of '+band+'.0';
+  var cornerSVG='<svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 2 L2 20 M2 2 L20 2" stroke="#C9A84C" stroke-width="2" stroke-linecap="round"/><path d="M8 8 L8 18 M8 8 L18 8" stroke="#C9A84C" stroke-width="1" stroke-linecap="round" opacity="0.5"/></svg>';
+
+  return '<div class="cert-outer" id="certEl" style="transform-origin:top left;transform:scale('+Math.min(1,(document.getElementById('certPreview').offsetWidth-40)/800)+')">'+
+    '<div class="cert-corner cc-tl">'+cornerSVG+'</div>'+
+    '<div class="cert-corner cc-tr">'+cornerSVG+'</div>'+
+    '<div class="cert-corner cc-bl">'+cornerSVG+'</div>'+
+    '<div class="cert-corner cc-br">'+cornerSVG+'</div>'+
+    '<div class="cert-watermark"><div class="cert-watermark-text">IELTScoreUp</div></div>'+
+
+    '<div class="cert-header">'+
+      '<div class="cert-logo">IELTS<span>Score</span>Up</div>'+
+      '<div class="cert-logo-sub">AI-Powered IELTS Training Platform</div>'+
+    '</div>'+
+
+    '<div class="cert-divider"><div class="cert-divider-line"></div><div class="cert-divider-diamond"></div><div class="cert-divider-line"></div></div>'+
+
+    '<div class="cert-title">This is to certify that</div>'+
+    '<div class="cert-name">'+name+'</div>'+
+
+    '<div class="cert-body">'+
+      'has successfully demonstrated proficiency in <strong>IELTS '+m.name+'</strong> '+
+      'by '+achievement+' on the IELTScoreUp platform, meeting the required standard for this certification.'+
+    '</div>'+
+
+    '<div class="cert-band-row">'+
+      '<div class="cert-band-box">'+
+        '<div class="cert-band-num" style="color:'+m.color+'">'+band+(m.minPct?'%':'')+'</div>'+
+        '<div class="cert-band-label">'+(m.minPct?'Score achieved':'Band achieved')+'</div>'+
+      '</div>'+
+      '<div class="cert-band-sep"></div>'+
+      '<div class="cert-band-box">'+
+        '<div class="cert-band-num" style="color:var(--gold);font-size:32px">'+m.icon+'</div>'+
+        '<div class="cert-band-label">'+m.name+'</div>'+
+      '</div>'+
+      '<div class="cert-band-sep"></div>'+
+      '<div class="cert-band-box">'+
+        '<div class="cert-band-num" style="font-size:28px;color:var(--muted)">'+dateStr.split(' ')[2]+'</div>'+
+        '<div class="cert-band-label">Year issued</div>'+
+      '</div>'+
+    '</div>'+
+
+    '<div class="cert-footer">'+
+      '<div class="cert-sig">'+
+        '<div class="cert-sig-line"></div>'+
+        '<div class="cert-sig-name">IELTScoreUp AI Examiner</div>'+
+        '<div class="cert-sig-role">Certified Assessment System</div>'+
+      '</div>'+
+      '<div class="cert-seal">'+
+        '<div class="cert-seal-text">IELTS<br/>SCORE<br/>UP</div>'+
+        '<div class="cert-seal-band">'+(m.minPct?band+'%':band)+'</div>'+
+      '</div>'+
+      '<div class="cert-date">'+
+        '<div class="cert-date-val">'+dateStr+'</div>'+
+        '<div class="cert-date-label">Date of issue</div>'+
+        '<div class="cert-id">ID: '+certId+'</div>'+
+      '</div>'+
+    '</div>'+
+  '</div>';
+}
+
+async function issueCert(){
+  var m=modules[currentModule];
+  var prog=userProgress[m.id];
+  var s=await sb.auth.getSession();
+  if(s.data.session){
+    await sb.from('certificates').upsert({
+      user_id:s.data.session.user.id,
+      module:m.id,
+      band:parseFloat(prog)
+    });
+    earnedCerts[m.id]={module:m.id,band:parseFloat(prog),issued_at:new Date().toISOString()};
+  } else {
+    earnedCerts[m.id]={module:m.id,band:parseFloat(prog),issued_at:new Date().toISOString()};
+  }
+  renderOverview();
+  renderModuleSelector();
+  selectModule(currentModule);
+}
+
+function downloadCert(){
+  var m=modules[currentModule];
+  var cert=earnedCerts[m.id];
+  if(!cert) return;
+  var name=userProfile.full_name||'Student';
+  var band=cert.band;
+  var date=new Date(cert.issued_at);
+  var dateStr=date.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+  var certId='ISU-'+m.id.toUpperCase().slice(0,3)+'-'+Date.now().toString(36).toUpperCase().slice(-6);
+
+  var doc=new window.jspdf.jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+  var W=297,H=210;
+
+  // Background
+  doc.setFillColor(255,255,255);
+  doc.rect(0,0,W,H,'F');
+
+  // Gold border
+  doc.setDrawColor(201,168,76);
+  doc.setLineWidth(1.5);
+  doc.rect(8,8,W-16,H-16);
+  doc.setLineWidth(0.4);
+  doc.rect(11,11,W-22,H-22);
+
+  // Header
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(22);
+  doc.setTextColor(27,63,110);
+  doc.text('IELTSScoreUp',W/2,28,{align:'center'});
+  doc.setFontSize(8);
+  doc.setTextColor(90,106,126);
+  doc.setFont('helvetica','normal');
+  doc.text('AI-POWERED IELTS TRAINING PLATFORM',W/2,34,{align:'center'});
+
+  // Divider
+  doc.setDrawColor(201,168,76);
+  doc.setLineWidth(0.5);
+  doc.line(40,38,W-40,38);
+
+  // Certificate of achievement
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(11);
+  doc.setTextColor(90,106,126);
+  doc.text('CERTIFICATE OF ACHIEVEMENT',W/2,48,{align:'center'});
+
+  // This certifies
+  doc.setFontSize(11);
+  doc.setTextColor(90,106,126);
+  doc.text('This is to certify that',W/2,62,{align:'center'});
+
+  // Name
+  doc.setFont('times','bold');
+  doc.setFontSize(34);
+  doc.setTextColor(15,28,46);
+  doc.text(name,W/2,78,{align:'center'});
+
+  // Name underline
+  doc.setDrawColor(240,208,128);
+  doc.setLineWidth(0.8);
+  var nameW=doc.getTextWidth(name);
+  doc.line(W/2-nameW/2,80,W/2+nameW/2,80);
+
+  // Body text
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(11);
+  doc.setTextColor(90,106,126);
+  var achievement=m.minPct?'achieving a score of '+band+'%':'achieving a band score of '+band+'.0';
+  doc.text('has successfully demonstrated proficiency in IELTS '+m.name+' by',W/2,92,{align:'center'});
+  doc.text(achievement+' on the IELTScoreUp platform.',W/2,99,{align:'center'});
+
+  // Band score box
+  doc.setFillColor(27,63,110);
+  doc.roundedRect(W/2-25,108,50,28,3,3,'F');
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(22);
+  doc.setTextColor(255,255,255);
+  doc.text(String(band)+(m.minPct?'%':''),W/2,122,{align:'center'});
+  doc.setFontSize(7);
+  doc.setTextColor(200,200,220);
+  doc.text(m.minPct?'SCORE ACHIEVED':'BAND ACHIEVED',W/2,130,{align:'center'});
+
+  // Footer divider
+  doc.setDrawColor(201,168,76);
+  doc.setLineWidth(0.5);
+  doc.line(40,145,W-40,145);
+
+  // Footer
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(9);
+  doc.setTextColor(90,106,126);
+  doc.text('IELTScoreUp AI Examiner',55,158,{align:'center'});
+  doc.setDrawColor(15,28,46);
+  doc.setLineWidth(0.3);
+  doc.line(20,152,90,152);
+  doc.text('Certified Assessment System',55,163,{align:'center'});
+
+  doc.text(dateStr,W/2,158,{align:'center'});
+  doc.setFontSize(8);
+  doc.text('DATE OF ISSUE',W/2,163,{align:'center'});
+
+  doc.text('ID: '+certId,W-55,158,{align:'center'});
+  doc.setFontSize(8);
+  doc.text('CERTIFICATE ID',W-55,163,{align:'center'});
+
+  doc.save('IELTScoreUp-'+m.name+'-Certificate-'+name.replace(/\s/g,'-')+'.pdf');
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mock Exam — IELTScoreUp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1B3F6E;--blue-light:#2558A0;--green:#0D9E72;--green-light:#0FBF8A;
+  --bg:#F4F6FA;--white:#FFFFFF;--dark:#0F1C2E;--muted:#5A6A7E;
+  --border:#E2E8F0;--radius:12px;--radius-lg:20px;--red:#DC2626;--amber:#D97706;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webkit-font-smoothing:antialiased;min-height:100vh}
+
+/* TOPBAR */
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-size:16px;font-weight:800;color:var(--dark);text-decoration:none}
+.logo span{color:var(--green)}
+.topbar-center{display:flex;align-items:center;gap:16px}
+.exam-label{font-size:13px;font-weight:600;color:var(--muted)}
+.timer-pill{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:100px;padding:6px 16px}
+.timer-icon{font-size:13px}
+.timer-val{font-size:15px;font-weight:800;color:var(--dark);font-variant-numeric:tabular-nums;letter-spacing:-0.3px}
+.timer-val.warning{color:var(--red)}
+.back-link{font-size:13px;color:var(--muted);text-decoration:none;font-weight:500}
+.back-link:hover{color:var(--dark)}
+
+/* SCREENS */
+.screen{display:none}
+.screen.active{display:block}
+.page{max-width:900px;margin:0 auto;padding:40px 24px}
+
+/* ── INTRO SCREEN ── */
+.intro-hero{text-align:center;padding:60px 24px 40px}
+.intro-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(13,158,114,.1);color:var(--green);font-size:13px;font-weight:700;padding:6px 16px;border-radius:100px;margin-bottom:24px}
+.intro-title{font-size:clamp(32px,5vw,52px);font-weight:900;color:var(--dark);letter-spacing:-1.5px;margin-bottom:16px;line-height:1.05}
+.intro-sub{font-size:16px;color:var(--muted);max-width:500px;margin:0 auto 40px;line-height:1.7}
+.test-type-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:640px;margin:0 auto 40px}
+@media(max-width:600px){.test-type-grid{grid-template-columns:1fr}}
+.test-type-card{background:var(--white);border-radius:var(--radius-lg);border:2px solid var(--border);padding:28px 24px;cursor:pointer;transition:all .2s;text-align:left;position:relative;overflow:hidden}
+.test-type-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--blue));opacity:0;transition:opacity .2s}
+.test-type-card:hover{border-color:var(--blue);box-shadow:0 8px 24px rgba(27,63,110,.1)}
+.test-type-card:hover::after{opacity:1}
+.test-type-card.selected{border-color:var(--blue);background:rgba(27,63,110,.03)}
+.test-type-card.selected::after{opacity:1}
+.ttc-icon{font-size:28px;margin-bottom:12px}
+.ttc-name{font-size:18px;font-weight:800;color:var(--dark);margin-bottom:6px;letter-spacing:-0.3px}
+.ttc-desc{font-size:13px;color:var(--muted);line-height:1.6}
+.ttc-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.ttc-tag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px;background:var(--bg);color:var(--muted)}
+
+.sections-overview{max-width:640px;margin:0 auto 32px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:600px){.sections-overview{grid-template-columns:repeat(2,1fr)}}
+.so-card{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);padding:14px;text-align:center}
+.so-icon{font-size:18px;margin-bottom:6px}
+.so-name{font-size:12px;font-weight:700;color:var(--dark);margin-bottom:2px}
+.so-time{font-size:11px;color:var(--muted)}
+
+.api-box{max-width:480px;margin:0 auto 32px;background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px 24px}
+.api-box-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
+.api-box input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-family:'Inter',sans-serif;font-size:14px;color:var(--dark);outline:none;transition:border-color .15s;background:var(--bg)}
+.api-box input:focus{border-color:var(--blue);background:var(--white)}
+.api-box-note{font-size:11px;color:var(--muted);margin-top:6px}
+.api-box-note a{color:var(--blue);text-decoration:none}
+
+.start-btn{background:var(--blue);color:white;border:none;padding:16px 48px;border-radius:var(--radius);font-size:16px;font-weight:800;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;letter-spacing:-0.2px;display:block;margin:0 auto}
+.start-btn:hover:not(:disabled){background:var(--blue-light);transform:translateY(-1px)}
+.start-btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* ── SECTION TRANSITION ── */
+.transition-screen{text-align:center;padding:80px 24px}
+.tr-badge{display:inline-block;background:rgba(27,63,110,.08);color:var(--blue);font-size:12px;font-weight:700;padding:4px 14px;border-radius:100px;margin-bottom:20px;letter-spacing:0.05em}
+.tr-title{font-size:36px;font-weight:900;color:var(--dark);letter-spacing:-1px;margin-bottom:10px}
+.tr-sub{font-size:16px;color:var(--muted);margin-bottom:40px;line-height:1.7;max-width:480px;margin-left:auto;margin-right:auto}
+.tr-btn{background:var(--green);color:white;border:none;padding:14px 36px;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.tr-btn:hover{background:var(--green-light)}
+
+/* ── EXAM SECTIONS ── */
+.section-header{background:var(--blue);border-radius:var(--radius-lg);padding:22px 28px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.sh-left{}
+.sh-eyebrow{font-size:11px;font-weight:700;color:rgba(255,255,255,.55);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px}
+.sh-title{font-size:20px;font-weight:800;color:white;letter-spacing:-0.3px}
+.sh-desc{font-size:13px;color:rgba(255,255,255,.6);margin-top:4px}
+.sh-right{text-align:right}
+.sh-timer{font-size:28px;font-weight:900;color:white;letter-spacing:-1px;font-variant-numeric:tabular-nums}
+.sh-timer.warning{color:#FCA5A5}
+.sh-timer-label{font-size:11px;color:rgba(255,255,255,.5)}
+
+/* LISTENING PLAYER */
+.audio-player{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px;margin-bottom:16px}
+.player-row{display:flex;align-items:center;gap:12px}
+.play-btn{width:42px;height:42px;border-radius:50%;background:var(--blue);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s}
+.play-btn:hover{background:var(--blue-light)}
+.play-btn svg{width:16px;height:16px;fill:white;margin-left:2px}
+.prog-wrap{flex:1}
+.prog-bar{height:5px;background:var(--border);border-radius:100px;overflow:hidden;cursor:pointer}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:100px;width:0%;transition:width .15s}
+.prog-times{display:flex;justify-content:space-between;margin-top:4px}
+.prog-time{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.player-note{font-size:12px;color:var(--muted);margin-top:10px;font-style:italic}
+
+/* PASSAGE */
+.passage-box{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:22px 26px;margin-bottom:16px;max-height:380px;overflow-y:auto}
+.passage-title{font-size:18px;font-weight:800;color:var(--dark);margin-bottom:14px;letter-spacing:-0.3px}
+.passage-text{font-size:15px;color:var(--dark);line-height:1.85}
+.passage-text p{margin-bottom:12px}
+.para-lbl{font-weight:700;color:var(--blue);margin-right:6px}
+
+/* QUESTIONS */
+.questions-box{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:22px 26px;margin-bottom:16px}
+.qb-title{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.q-list{display:flex;flex-direction:column;gap:18px}
+.q-item{display:flex;flex-direction:column;gap:8px}
+.q-num{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase}
+.q-text{font-size:14px;font-weight:500;color:var(--dark);line-height:1.6}
+.q-options{display:flex;flex-direction:column;gap:6px}
+.q-opt{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);cursor:pointer;transition:all .15s;font-size:13px;color:var(--dark)}
+.q-opt:hover{border-color:var(--blue);background:rgba(27,63,110,.03)}
+.q-opt.sel{border-color:var(--blue);background:rgba(27,63,110,.06);color:var(--blue)}
+.q-opt input{accent-color:var(--blue);width:13px;height:13px;flex-shrink:0}
+.q-fill{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Inter',sans-serif;font-size:14px;color:var(--dark);outline:none;transition:border-color .15s}
+.q-fill:focus{border-color:var(--blue)}
+.tfng-row{display:flex;gap:6px}
+.tfng-btn{flex:1;padding:8px 4px;border-radius:8px;border:1.5px solid var(--border);font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;text-align:center;transition:all .15s;background:var(--white);font-family:'Inter',sans-serif}
+.tfng-btn:hover{border-color:var(--blue);color:var(--blue)}
+.tfng-btn.sel{border-color:var(--blue);background:rgba(27,63,110,.06);color:var(--blue)}
+
+/* WRITING AREA */
+.writing-prompt{background:var(--bg);border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;border-left:3px solid var(--blue)}
+.wp-label{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px}
+.wp-text{font-size:14px;color:var(--dark);line-height:1.7}
+.writing-area{width:100%;min-height:240px;border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;font-family:'Inter',sans-serif;font-size:15px;color:var(--dark);line-height:1.8;resize:vertical;outline:none;transition:border-color .15s;background:var(--white)}
+.writing-area:focus{border-color:var(--blue)}
+.writing-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.wc-info{font-size:13px;color:var(--muted)}
+.wc-num{font-weight:700;color:var(--dark)}
+.wc-ok{color:var(--green)}
+
+/* SPEAKING AREA */
+.speaking-cue{background:var(--bg);border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;border:2px dashed var(--border)}
+.sc-label{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
+.sc-topic{font-size:16px;font-weight:800;color:var(--dark);margin-bottom:10px}
+.sc-bullets{list-style:none;display:flex;flex-direction:column;gap:6px}
+.sc-bullets li{font-size:14px;color:var(--dark);display:flex;align-items:flex-start;gap:8px}
+.sc-bullets li::before{content:'•';color:var(--blue);font-weight:700;flex-shrink:0}
+
+/* NEXT SECTION BUTTON */
+.next-section-btn{width:100%;background:var(--blue);color:white;border:none;padding:14px;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;margin-top:4px}
+.next-section-btn:hover:not(:disabled){background:var(--blue-light)}
+.next-section-btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* ── REPORT SCREEN ── */
+.report-page{max-width:860px;margin:0 auto;padding:40px 24px}
+.report-hero{background:var(--blue);border-radius:var(--radius-lg);padding:36px;text-align:center;margin-bottom:24px}
+.rh-eyebrow{font-size:12px;font-weight:700;color:rgba(255,255,255,.55);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px}
+.rh-band{font-size:80px;font-weight:900;color:white;letter-spacing:-4px;line-height:1}
+.rh-label{font-size:16px;color:rgba(255,255,255,.65);margin-top:8px}
+.rh-type{display:inline-block;background:rgba(255,255,255,.12);color:white;font-size:12px;font-weight:700;padding:4px 14px;border-radius:100px;margin-top:12px}
+
+.band-breakdown{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+@media(max-width:600px){.band-breakdown{grid-template-columns:repeat(2,1fr)}}
+.bb-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:18px;text-align:center}
+.bb-skill{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
+.bb-score{font-size:36px;font-weight:900;color:var(--blue);letter-spacing:-1.5px;line-height:1}
+.bb-bar{height:5px;background:var(--border);border-radius:100px;margin-top:10px;overflow:hidden}
+.bb-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:100px;transition:width 1s cubic-bezier(.16,1,.3,1)}
+
+.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+@media(max-width:600px){.report-grid{grid-template-columns:1fr}}
+.rg-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px}
+.rg-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px}
+.rg-content{font-size:14px;color:var(--dark);line-height:1.75}
+
+.report-full{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:24px;margin-bottom:24px}
+.rf-section{border-top:1px solid var(--border);padding-top:16px;margin-top:16px}
+.rf-section:first-child{border-top:none;padding-top:0;margin-top:0}
+.rf-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
+.rf-content{font-size:14px;color:var(--dark);line-height:1.8}
+
+.redo-btn{width:100%;background:var(--green);color:white;border:none;padding:15px;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.redo-btn:hover{background:var(--green-light)}
+
+.loading-overlay{position:fixed;inset:0;background:rgba(15,28,46,.85);display:none;align-items:center;justify-content:center;flex-direction:column;gap:20px;z-index:200}
+.loading-overlay.active{display:flex}
+.loading-dots{display:flex;gap:8px}
+.loading-dots span{width:10px;height:10px;background:white;border-radius:50%;animation:bounce 1.2s infinite}
+.loading-dots span:nth-child(2){animation-delay:.2s}
+.loading-dots span:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+.loading-text{color:rgba(255,255,255,.8);font-size:16px;font-weight:500}
+.loading-sub{color:rgba(255,255,255,.45);font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html" class="logo">IELTS<span>Score</span>Up</a>
+  <div class="topbar-center">
+    <span class="exam-label" id="topExamLabel">Mock Exam</span>
+    <div class="timer-pill" id="topTimerPill" style="display:none">
+      <span class="timer-icon">⏱</span>
+      <span class="timer-val" id="topTimer">00:00</span>
+    </div>
+  </div>
+  <a href="index.html" class="back-link">← Exit</a>
+</div>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-dots"><span></span><span></span><span></span></div>
+  <div class="loading-text">Generating your full band report...</div>
+  <div class="loading-sub">Analysing all four skills. This takes about 20 seconds.</div>
+</div>
+
+<!-- SCREEN 0: INTRO -->
+<div class="screen active" id="screen-intro">
+  <div class="intro-hero">
+    <div class="intro-badge">🎓 Full IELTS Mock Exam</div>
+    <h1 class="intro-title">Test yourself under<br/>real exam conditions</h1>
+    <p class="intro-sub">Complete all four sections in order. Your responses will be evaluated by AI to give you a predicted band score.</p>
+
+    <div class="test-type-grid">
+      <div class="test-type-card selected" id="ttc-academic" onclick="selectType('Academic',this)">
+        <div class="ttc-icon">🎓</div>
+        <div class="ttc-name">Academic</div>
+        <div class="ttc-desc">For university admission and professional registration. More complex texts and tasks.</div>
+        <div class="ttc-tags"><span class="ttc-tag">Undergraduate</span><span class="ttc-tag">Postgraduate</span><span class="ttc-tag">Professional</span></div>
+      </div>
+      <div class="test-type-card" id="ttc-general" onclick="selectType('General',this)">
+        <div class="ttc-icon">🌍</div>
+        <div class="ttc-name">General Training</div>
+        <div class="ttc-desc">For migration and work experience. Focus on practical, everyday English tasks.</div>
+        <div class="ttc-tags"><span class="ttc-tag">Migration</span><span class="ttc-tag">Work visa</span><span class="ttc-tag">Secondary school</span></div>
+      </div>
+    </div>
+
+    <div class="sections-overview">
+      <div class="so-card"><div class="so-icon">🎧</div><div class="so-name">Listening</div><div class="so-time">30 min</div></div>
+      <div class="so-card"><div class="so-icon">📖</div><div class="so-name">Reading</div><div class="so-time">60 min</div></div>
+      <div class="so-card"><div class="so-icon">✍️</div><div class="so-name">Writing</div><div class="so-time">60 min</div></div>
+      <div class="so-card"><div class="so-icon">🎤</div><div class="so-name">Speaking</div><div class="so-time">15 min</div></div>
+    </div>
+
+    <div class="api-box">
+      <div class="api-box-label">Anthropic API Key</div>
+      <input type="password" id="apiKeyIntro" placeholder="sk-ant-..." oninput="checkStart()"/>
+      <div class="api-box-note">Required for AI scoring. Never stored. <a href="https://console.anthropic.com" target="_blank">Get yours free →</a></div>
+    </div>
+
+    <button class="start-btn" id="startBtn" onclick="startExam()" disabled>Begin mock exam →</button>
+  </div>
+</div>
+
+<!-- SCREEN 1: LISTENING -->
+<div class="screen" id="screen-listening">
+  <div class="page">
+    <div class="section-header">
+      <div class="sh-left">
+        <div class="sh-eyebrow">Section 1 of 4</div>
+        <div class="sh-title">Listening</div>
+        <div class="sh-desc">Listen and answer all 10 questions.</div>
+      </div>
+      <div class="sh-right">
+        <div class="sh-timer" id="listeningTimer">30:00</div>
+        <div class="sh-timer-label">remaining</div>
+      </div>
+    </div>
+
+    <div class="audio-player">
+      <div class="player-row">
+        <button class="play-btn" id="mockPlayBtn" onclick="toggleMockAudio()">
+          <svg id="mockPlayIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <svg id="mockPauseIcon" viewBox="0 0 24 24" style="display:none;fill:white"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+        <div class="prog-wrap">
+          <div class="prog-bar"><div class="prog-fill" id="mockProgFill"></div></div>
+          <div class="prog-times"><span class="prog-time" id="mockCurTime">0:00</span><span class="prog-time" id="mockDurTime">—</span></div>
+        </div>
+      </div>
+      <div class="player-note">Play the audio first, then answer the questions below. You may play it once.</div>
+    </div>
+
+    <div class="questions-box">
+      <div class="qb-title">Questions 1–10 — Answer based on what you hear.</div>
+      <div class="q-list" id="listeningQList"></div>
+    </div>
+
+    <button class="next-section-btn" id="listeningNextBtn" onclick="goToTransition('reading')" disabled>Save & continue to Reading →</button>
+  </div>
+</div>
+
+<!-- SCREEN 2: READING -->
+<div class="screen" id="screen-reading">
+  <div class="page">
+    <div class="section-header">
+      <div class="sh-left">
+        <div class="sh-eyebrow">Section 2 of 4</div>
+        <div class="sh-title">Reading</div>
+        <div class="sh-desc" id="readingDesc">Read the passage and answer all questions.</div>
+      </div>
+      <div class="sh-right">
+        <div class="sh-timer" id="readingTimer">60:00</div>
+        <div class="sh-timer-label">remaining</div>
+      </div>
+    </div>
+    <div class="passage-box">
+      <div class="passage-title" id="readingTitle"></div>
+      <div class="passage-text" id="readingPassage"></div>
+    </div>
+    <div class="questions-box">
+      <div class="qb-title">Questions 1–8 — Answer based on the passage above.</div>
+      <div class="q-list" id="readingQList"></div>
+    </div>
+    <button class="next-section-btn" id="readingNextBtn" onclick="goToTransition('writing')" disabled>Save & continue to Writing →</button>
+  </div>
+</div>
+
+<!-- SCREEN 3: WRITING -->
+<div class="screen" id="screen-writing">
+  <div class="page">
+    <div class="section-header">
+      <div class="sh-left">
+        <div class="sh-eyebrow">Section 3 of 4</div>
+        <div class="sh-title">Writing</div>
+        <div class="sh-desc">Complete both tasks. Task 1 first, then Task 2.</div>
+      </div>
+      <div class="sh-right">
+        <div class="sh-timer" id="writingTimer">60:00</div>
+        <div class="sh-timer-label">remaining</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:16px">
+      <div class="writing-prompt">
+        <div class="wp-label" id="t1Label">Task 1</div>
+        <div class="wp-text" id="t1Prompt"></div>
+      </div>
+      <div style="background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px">
+        <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px;display:flex;justify-content:space-between">
+          <span>Task 1 response</span><span>Min 150 words</span>
+        </div>
+        <textarea class="writing-area" id="task1Text" placeholder="Write your Task 1 response here..." oninput="updateWC('task1Text','wc1')"></textarea>
+        <div class="writing-footer"><span class="wc-info">Words: <span class="wc-num" id="wc1">0</span></span></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="writing-prompt">
+        <div class="wp-label" id="t2Label">Task 2</div>
+        <div class="wp-text" id="t2Prompt"></div>
+      </div>
+      <div style="background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px">
+        <div style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px;display:flex;justify-content:space-between">
+          <span>Task 2 response</span><span>Min 250 words</span>
+        </div>
+        <textarea class="writing-area" id="task2Text" placeholder="Write your Task 2 response here..." oninput="updateWC('task2Text','wc2')"></textarea>
+        <div class="writing-footer"><span class="wc-info">Words: <span class="wc-num" id="wc2">0</span></span></div>
+      </div>
+    </div>
+
+    <button class="next-section-btn" id="writingNextBtn" onclick="goToTransition('speaking')" disabled style="margin-top:16px">Save & continue to Speaking →</button>
+  </div>
+</div>
+
+<!-- SCREEN 4: SPEAKING -->
+<div class="screen" id="screen-speaking">
+  <div class="page">
+    <div class="section-header">
+      <div class="sh-left">
+        <div class="sh-eyebrow">Section 4 of 4</div>
+        <div class="sh-title">Speaking</div>
+        <div class="sh-desc">Answer all three parts. Write your spoken responses.</div>
+      </div>
+      <div class="sh-right">
+        <div class="sh-timer" id="speakingTimer">15:00</div>
+        <div class="sh-timer-label">remaining</div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:22px">
+        <div style="font-size:11px;font-weight:700;color:var(--blue);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Part 1 — Introduction (4–5 minutes)</div>
+        <div class="q-text" id="sp1Q" style="margin-bottom:12px;font-size:15px;font-weight:600;color:var(--dark)"></div>
+        <textarea class="writing-area" id="sp1Text" placeholder="Write your spoken response to Part 1..." oninput="checkSpeakingReady()" style="min-height:100px"></textarea>
+      </div>
+      <div style="background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:22px">
+        <div style="font-size:11px;font-weight:700;color:var(--blue);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px">Part 2 — Long turn (3–4 minutes)</div>
+        <div class="speaking-cue">
+          <div class="sc-label">Talk about this topic for 1–2 minutes</div>
+          <div class="sc-topic" id="sp2Topic"></div>
+          <ul class="sc-bullets" id="sp2Bullets"></ul>
+        </div>
+        <textarea class="writing-area" id="sp2Text" placeholder="Write your 2-minute long turn response..." oninput="checkSpeakingReady()" style="min-height:140px"></textarea>
+      </div>
+      <div style="background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:22px">
+        <div style="font-size:11px;font-weight:700;color:var(--blue);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px">Part 3 — Discussion (4–5 minutes)</div>
+        <div class="q-text" id="sp3Q" style="margin-bottom:12px;font-size:15px;font-weight:600;color:var(--dark)"></div>
+        <textarea class="writing-area" id="sp3Text" placeholder="Write your discussion response to Part 3..." oninput="checkSpeakingReady()" style="min-height:120px"></textarea>
+      </div>
+    </div>
+
+    <button class="next-section-btn" id="speakingNextBtn" onclick="finishExam()" disabled style="margin-top:16px;background:var(--green)">Submit exam & get band report →</button>
+  </div>
+</div>
+
+<!-- SCREEN 5: TRANSITION -->
+<div class="screen" id="screen-transition">
+  <div class="page">
+    <div class="transition-screen">
+      <div class="tr-badge" id="trBadge">Section complete</div>
+      <div class="tr-title" id="trTitle">Listening complete</div>
+      <div class="tr-sub" id="trSub">Well done. Take a short break before the next section.</div>
+      <button class="tr-btn" id="trBtn" onclick="proceedToNext()">Start next section →</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 6: REPORT -->
+<div class="screen" id="screen-report">
+  <div class="report-page">
+    <div class="report-hero">
+      <div class="rh-eyebrow">Mock Exam Complete</div>
+      <div class="rh-band" id="rhBand">—</div>
+      <div class="rh-label" id="rhLabel">Predicted overall band</div>
+      <div class="rh-type" id="rhType">Academic</div>
+    </div>
+
+    <div class="band-breakdown">
+      <div class="bb-card"><div class="bb-skill">Listening</div><div class="bb-score" id="bbL">—</div><div class="bb-bar"><div class="bb-fill" id="bbLBar" style="width:0%"></div></div></div>
+      <div class="bb-card"><div class="bb-skill">Reading</div><div class="bb-score" id="bbR">—</div><div class="bb-bar"><div class="bb-fill" id="bbRBar" style="width:0%"></div></div></div>
+      <div class="bb-card"><div class="bb-skill">Writing</div><div class="bb-score" id="bbW">—</div><div class="bb-bar"><div class="bb-fill" id="bbWBar" style="width:0%"></div></div></div>
+      <div class="bb-card"><div class="bb-skill">Speaking</div><div class="bb-score" id="bbS">—</div><div class="bb-bar"><div class="bb-fill" id="bbSBar" style="width:0%"></div></div></div>
+    </div>
+
+    <div class="report-grid">
+      <div class="rg-card">
+        <div class="rg-label">Strongest skill</div>
+        <div class="rg-content" id="rgStrong">—</div>
+      </div>
+      <div class="rg-card">
+        <div class="rg-label">Priority to improve</div>
+        <div class="rg-content" id="rgWeak">—</div>
+      </div>
+    </div>
+
+    <div class="report-full">
+      <div class="rf-section">
+        <div class="rf-label">Writing feedback</div>
+        <div class="rf-content" id="rfWriting">—</div>
+      </div>
+      <div class="rf-section">
+        <div class="rf-label">Speaking feedback</div>
+        <div class="rf-content" id="rfSpeaking">—</div>
+      </div>
+      <div class="rf-section">
+        <div class="rf-label">Reading & Listening</div>
+        <div class="rf-content" id="rfRL">—</div>
+      </div>
+      <div class="rf-section">
+        <div class="rf-label">30-day study plan</div>
+        <div class="rf-content" id="rfPlan">—</div>
+      </div>
+      <div class="rf-section">
+        <div class="rf-label">Are you ready for the real exam?</div>
+        <div class="rf-content" id="rfReady">—</div>
+      </div>
+    </div>
+
+    <button class="redo-btn" onclick="resetExam()">Take another mock exam →</button>
+  </div>
+</div>
+
+<script>
+var examType='Academic', currentTimer=null, nextSection=null, mockAudioPlaying=false, mockUtterance=null, mockAudioProgress=0, mockAudioDuration=0, mockProgressInterval=null;
+
+var examData={
+  Academic:{
+    listening:{
+      transcript:`Agent: Good morning, City University Admissions, how can I help?
+Student: Hi, I'm calling about the postgraduate application process. My name is Sarah Chen.
+Agent: Of course, Sarah. Which programme are you applying for?
+Student: The MSc in Environmental Science. I completed my undergraduate degree last year with a first-class result.
+Agent: Excellent. The deadline for September entry is the fifteenth of March. You'll need to submit your personal statement, two academic references, and your degree transcripts.
+Student: Do I need to take an English language test?
+Agent: Yes, we require an IELTS score of at least seven point zero overall, with no band below six point five.
+Student: And the tuition fees?
+Agent: For international students, the fee is eighteen thousand five hundred pounds per year. We do offer a merit scholarship worth five thousand pounds for applicants with distinction.
+Student: How long does the admissions process take?
+Agent: Once we receive your complete application, you can expect a decision within four to six weeks. You can track your application status through the online portal.
+Student: Could I come to an open day?
+Agent: Our next open day is the twenty-second of February, starting at ten in the morning. Registration is required on our website.`,
+      questions:[
+        {type:'fill',text:"The student's name is Sarah _____.",answer:'Chen'},
+        {type:'fill',text:'The application deadline for September entry is the fifteenth of _____ .',answer:'March'},
+        {type:'mcq',text:'What IELTS overall score is required?',options:['6.0','6.5','7.0','7.5'],answer:'C'},
+        {type:'fill',text:'The international tuition fee is £_____ per year.',answer:'18,500'},
+        {type:'mcq',text:'How long does the admissions process take?',options:['2–3 weeks','4–6 weeks','6–8 weeks','8–10 weeks'],answer:'B'},
+        {type:'fill',text:'The merit scholarship is worth £_____ .',answer:'5,000'},
+        {type:'mcq',text:'When is the next open day?',options:['15th February','20th February','22nd February','28th February'],answer:'C'},
+        {type:'fill',text:"Applicants can track their application through the online _____.",answer:'portal'},
+        {type:'mcq',text:'What does the student need to submit with her application?',options:['Only a personal statement','Personal statement and one reference','Personal statement, two references and transcripts','Only transcripts'],answer:'C'},
+        {type:'fill',text:"The student completed her degree with a _____ result.",answer:'first-class'}
+      ]
+    },
+    reading:{
+      title:'The Psychology of Decision Making',
+      passage:`<p><span class="para-lbl">A</span>Every day, humans make thousands of decisions, ranging from the trivial — what to eat for breakfast — to the life-changing — whether to accept a job offer in another country. For decades, economists assumed that people made decisions rationally, carefully weighing costs and benefits to maximise their personal utility. This model, known as rational choice theory, dominated economic and social science thinking for much of the twentieth century.</p>
+<p><span class="para-lbl">B</span>However, research by psychologists Daniel Kahneman and Amos Tversky in the 1970s and 1980s fundamentally challenged this view. Their work revealed that human decision-making is riddled with systematic biases and cognitive shortcuts, known as heuristics, that often lead people away from what would objectively be their best choice. Kahneman later described two systems of thinking: System 1, which is fast, intuitive, and emotional, and System 2, which is slow, deliberate, and logical. Most everyday decisions, he argued, are dominated by System 1.</p>
+<p><span class="para-lbl">C</span>One of the most well-documented biases is loss aversion — the tendency for people to feel the pain of losing something more acutely than the pleasure of gaining something of equivalent value. In experiments, people typically demand twice as much to give up an object they own than they would be willing to pay to acquire it. This asymmetry has significant implications for economics, marketing, and public policy.</p>
+<p><span class="para-lbl">D</span>Another important concept is the anchoring effect. When people are asked to estimate an unknown quantity, their answer is heavily influenced by an initial piece of information — the "anchor" — even when that information is clearly irrelevant. In one famous study, participants were asked to spin a wheel that stopped at either 10 or 65, and then estimate the percentage of African countries in the United Nations. Those who saw a higher number gave significantly higher estimates, demonstrating how arbitrary information can distort our judgement.</p>
+<p><span class="para-lbl">E</span>These insights have given rise to the field of behavioural economics, which applies psychological findings to economic models. Governments around the world have used this knowledge to design so-called "nudges" — small changes to the environment that steer people towards better choices without restricting their freedom. Enrolling employees in pension plans by default, for example, dramatically increases participation rates compared to opt-in systems.</p>`,
+      questions:[
+        {type:'tfng',text:'Rational choice theory assumed people always make logical decisions.',answer:'TRUE'},
+        {type:'tfng',text:'Kahneman and Tversky conducted their research in the 1990s.',answer:'FALSE'},
+        {type:'mcq',text:'According to the passage, what is System 1 thinking?',options:['Slow and deliberate','Fast and intuitive','Logical and rational','Careful and analytical'],answer:'B'},
+        {type:'tfng',text:'Loss aversion means people feel gains and losses equally.',answer:'FALSE'},
+        {type:'fill',text:'In experiments, people demand _____ times as much to give up an object as they would pay to acquire it.',answer:'twice'},
+        {type:'mcq',text:'What does the anchoring effect demonstrate?',options:['That people ignore irrelevant information','That first impressions are always accurate','That arbitrary information can distort judgement','That numbers always influence decisions positively'],answer:'C'},
+        {type:'tfng',text:'Behavioural economics applies psychological findings to economic models.',answer:'TRUE'},
+        {type:'fill',text:'Changes to the environment that steer people towards better choices are called "_____".',answer:'nudges'}
+      ]
+    },
+    writing:{
+      t1:{label:'Task 1 — Academic',prompt:'The graph below shows the percentage of the population aged 65 and over in three countries between 1940 and 2040.\n\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nWrite at least 150 words.'},
+      t2:{label:'Task 2',prompt:'Some people think that the best way to reduce crime is to give longer prison sentences. Others, however, believe that there are better alternative ways of reducing crime.\n\nDiscuss both these views and give your own opinion.\n\nWrite at least 250 words.'}
+    },
+    speaking:{
+      p1:'Tell me about your hometown. What do you like most about where you grew up, and has it changed much over the years?',
+      p2:{topic:'Describe a book or film that had a significant impact on you.',bullets:['What it was about','When you first read or watched it','Why it had such an impact on you','How it influenced your thinking or behaviour']},
+      p3:'In what ways do you think books and films shape people\'s attitudes and values in society? Do you think their influence is mostly positive or negative?'
+    }
+  },
+  General:{
+    listening:{
+      transcript:`Manager: Good morning Sarah, please come in and sit down.
+Sarah: Thank you, Mr. Peterson.
+Manager: So, as I mentioned in the email, we're restructuring the customer service department. We need to move your team from the second floor to the fourth floor by the end of next month.
+Sarah: I see. Will we have the same amount of space?
+Manager: Actually, the new office is slightly larger — about forty square metres more. You'll have a proper meeting room and a small kitchen area.
+Sarah: That sounds positive. What about the car parking?
+Manager: The fourth floor team currently uses spaces in the North car park. We'll arrange twelve spaces for your team. Anyone who doesn't have a permit will need to apply through HR.
+Sarah: And the move itself — will we get any help?
+Manager: Yes, the facilities team will handle all the heavy lifting and IT will disconnect and reconnect all the equipment. We just need each person to pack their personal items in the boxes we'll provide.
+Sarah: When exactly does the move happen?
+Manager: The scheduled date is the third of April, a Saturday, so there'll be no disruption to work.
+Sarah: That's very considerate. Should I communicate this to my team?
+Manager: Please do. I'd like everyone to be informed by this Friday at the latest.`,
+      questions:[
+        {type:'fill',text:"The office is moving from the second floor to the _____ floor.",answer:'fourth'},
+        {type:'fill',text:'The new office is _____ square metres larger.',answer:'forty'},
+        {type:'mcq',text:'What will the new office have that the current one does not?',options:['More desks','A meeting room and kitchen','A gym','A rooftop terrace'],answer:'B'},
+        {type:'fill',text:"The team will have _____ parking spaces in the North car park.",answer:'twelve'},
+        {type:'mcq',text:'Who will handle the disconnection of IT equipment?',options:['Sarah\'s team','The facilities team','The IT department','An external company'],answer:'C'},
+        {type:'fill',text:'The move is scheduled for the third of _____ .',answer:'April'},
+        {type:'mcq',text:'On what day will the move take place?',options:['Friday','Saturday','Sunday','Monday'],answer:'B'},
+        {type:'fill',text:'Sarah must inform her team by _____ at the latest.',answer:'Friday'},
+        {type:'mcq',text:'What must each employee do themselves?',options:['Move their own desks','Pack their personal items','Disconnect their computers','Book a parking space'],answer:'B'},
+        {type:'fill',text:'Anyone without a parking permit needs to apply through _____.',answer:'HR'}
+      ]
+    },
+    reading:{
+      title:'Working from Home: Policy and Practice',
+      passage:`<p><span class="para-lbl">A</span>In the wake of widespread disruption to conventional working arrangements, remote work has transitioned from an occasional privilege to a mainstream expectation for millions of employees globally. Organisations that once resisted flexible working on productivity grounds have been forced to reconsider their positions as evidence mounts that, for many roles, location is increasingly irrelevant to output.</p>
+<p><span class="para-lbl">B</span>Research conducted by Stanford University found that remote workers were thirteen per cent more productive than their office-based counterparts, due largely to a quieter working environment and fewer interruptions. However, the same study noted that home workers were also less likely to be promoted, suggesting that physical visibility within an organisation still carries significant career advantages.</p>
+<p><span class="para-lbl">C</span>The question of work-life balance is more nuanced than it first appears. While the elimination of commuting saves both time and money, surveys consistently show that remote workers struggle to disconnect from work, often logging more hours than contracted. A survey by the Trades Union Congress found that employees working from home put in an average of six additional hours per week without additional pay.</p>
+<p><span class="para-lbl">D</span>Employers face their own set of challenges. Managing performance remotely requires a fundamental shift in management style, from supervising activity to measuring outcomes. This transition demands greater trust on the part of managers and more autonomy for employees. Organisations that fail to make this cultural shift often find that remote working arrangements become a source of frustration for both parties.</p>
+<p><span class="para-lbl">E</span>Many companies have settled on hybrid models as a compromise, requiring employees to be present in the office for a specified number of days per week while permitting remote work for the remainder. While this approach attempts to balance the benefits of both settings, critics argue that it may simply combine the disadvantages of each — the distraction of the office with the isolation of home — without fully delivering the advantages of either.</p>`,
+      questions:[
+        {type:'tfng',text:'The Stanford study found remote workers were less productive than office workers.',answer:'FALSE'},
+        {type:'tfng',text:'Remote workers are more likely to receive promotions.',answer:'FALSE'},
+        {type:'mcq',text:'According to paragraph C, what is one downside of working from home?',options:['Higher commuting costs','Difficulty disconnecting from work','Fewer working hours','Less access to technology'],answer:'B'},
+        {type:'fill',text:'TUC research found remote workers put in an average of _____ extra hours per week.',answer:'six'},
+        {type:'tfng',text:'Managing remote workers requires measuring outcomes rather than supervising activity.',answer:'TRUE'},
+        {type:'mcq',text:'What is a hybrid working model?',options:['Fully remote working','Fully office-based working','A mix of office and remote working','Flexible hours but office-based'],answer:'C'},
+        {type:'tfng',text:'All critics agree that hybrid working is the ideal solution.',answer:'FALSE'},
+        {type:'fill',text:'Remote work has moved from an occasional _____ to a mainstream expectation.',answer:'privilege'}
+      ]
+    },
+    writing:{
+      t1:{label:'Task 1 — General Training',prompt:'You have recently moved to a new city for work. Write a letter to a friend back home.\n\nIn your letter:\n• describe your new home and neighbourhood\n• explain what your new job is like\n• invite your friend to come and visit you\n\nWrite at least 150 words. You do NOT need to write any addresses.'},
+      t2:{label:'Task 2',prompt:'Some people believe that it is important to teach children about money management from an early age. Others feel that financial education is better left until adulthood.\n\nDiscuss both views and give your own opinion.\n\nWrite at least 250 words.'}
+    },
+    speaking:{
+      p1:'Let\'s talk about your daily routine. What does a typical weekday look like for you, and is there anything you would like to change about it?',
+      p2:{topic:'Describe a time when you helped someone.',bullets:['Who you helped and what the situation was','What you did to help them','How the person reacted','How you felt about helping them']},
+      p3:'In what ways do you think communities benefit when people help each other? Do you feel that people today are less willing to help strangers than in the past?'
+    }
+  }
+};
+
+function selectType(type, el){
+  examType=type;
+  document.querySelectorAll('.test-type-card').forEach(function(c){c.classList.remove('selected')});
+  el.classList.add('selected');
+}
+
+function checkStart(){
+  var key=document.getElementById('apiKeyIntro').value.trim();
+  document.getElementById('startBtn').disabled=!key.startsWith('sk-ant-');
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});
+  document.getElementById('screen-'+id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function startExam(){
+  var data=examData[examType];
+  renderListeningQuestions(data.listening.questions);
+  renderReadingSection(data);
+  renderWritingSection(data);
+  renderSpeakingSection(data);
+  showScreen('listening');
+  document.getElementById('topTimerPill').style.display='flex';
+  document.getElementById('topExamLabel').textContent=examType+' Mock Exam';
+  startSectionTimer('listeningTimer',30*60,function(){goToTransition('reading');});
+}
+
+function renderListeningQuestions(questions){
+  var data=examData[examType];
+  var text=data.listening.transcript;
+  var utt=new SpeechSynthesisUtterance(text);
+  utt.rate=0.9; utt.pitch=1; utt.volume=1;
+  var voices=window.speechSynthesis.getVoices();
+  var v=voices.find(function(v){return v.lang==='en-GB'})||voices.find(function(v){return v.lang.startsWith('en')});
+  if(v) utt.voice=v;
+  mockAudioDuration=text.split(' ').length*0.55;
+  document.getElementById('mockDurTime').textContent=formatTime(Math.round(mockAudioDuration));
+  window._mockUtt=utt; window._mockAudioDuration=mockAudioDuration;
+  utt.onend=function(){stopMockAudio(true)};
+
+  var list=document.getElementById('listeningQList');
+  list.innerHTML='';
+  questions.forEach(function(q,i){renderMockQ(q,i,list,'L');});
+  document.getElementById('listeningNextBtn').disabled=false;
+}
+
+var mockIsPlaying=false, mockStartTime=0, mockElapsed=0;
+function toggleMockAudio(){
+  if(mockIsPlaying){stopMockAudio(false);}
+  else {
+    if(window.speechSynthesis.speaking) window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(window._mockUtt);
+    mockIsPlaying=true;
+    mockStartTime=Date.now()-mockElapsed*1000;
+    document.getElementById('mockPlayIcon').style.display='none';
+    document.getElementById('mockPauseIcon').style.display='block';
+    clearInterval(mockProgressInterval);
+    mockProgressInterval=setInterval(function(){
+      mockElapsed=(Date.now()-mockStartTime)/1000;
+      var pct=Math.min(mockElapsed/window._mockAudioDuration*100,100);
+      document.getElementById('mockProgFill').style.width=pct+'%';
+      document.getElementById('mockCurTime').textContent=formatTime(Math.round(mockElapsed));
+      if(mockElapsed>=window._mockAudioDuration){clearInterval(mockProgressInterval);stopMockAudio(true);}
+    },200);
+  }
+}
+function stopMockAudio(finished){
+  window.speechSynthesis.cancel(); clearInterval(mockProgressInterval);
+  mockIsPlaying=false;
+  document.getElementById('mockPlayIcon').style.display='block';
+  document.getElementById('mockPauseIcon').style.display='none';
+  if(finished){document.getElementById('mockProgFill').style.width='100%';}
+}
+function formatTime(s){var m=Math.floor(s/60);return m+':'+(s%60<10?'0':'')+s%60;}
+
+function renderReadingSection(data){
+  document.getElementById('readingTitle').textContent=data.reading.title;
+  document.getElementById('readingPassage').innerHTML=data.reading.passage;
+  var list=document.getElementById('readingQList'); list.innerHTML='';
+  data.reading.questions.forEach(function(q,i){renderMockQ(q,i,list,'R');});
+  document.getElementById('readingNextBtn').disabled=false;
+}
+
+function renderWritingSection(data){
+  document.getElementById('t1Label').textContent=data.writing.t1.label;
+  document.getElementById('t1Prompt').textContent=data.writing.t1.prompt;
+  document.getElementById('t2Label').textContent=data.writing.t2.label;
+  document.getElementById('t2Prompt').textContent=data.writing.t2.prompt;
+}
+
+function renderSpeakingSection(data){
+  document.getElementById('sp1Q').textContent=data.speaking.p1;
+  document.getElementById('sp2Topic').textContent=data.speaking.p2.topic;
+  var blist=document.getElementById('sp2Bullets'); blist.innerHTML='';
+  data.speaking.p2.bullets.forEach(function(b){var li=document.createElement('li');li.textContent=b;blist.appendChild(li);});
+  document.getElementById('sp3Q').textContent=data.speaking.p3;
+}
+
+function renderMockQ(q,i,container,prefix){
+  var div=document.createElement('div'); div.className='q-item';
+  var num=document.createElement('div'); num.className='q-num'; num.textContent='Question '+(i+1);
+  var txt=document.createElement('div'); txt.className='q-text'; txt.textContent=q.text;
+  div.appendChild(num); div.appendChild(txt);
+  if(q.type==='mcq'){
+    var opts=document.createElement('div'); opts.className='q-options';
+    q.options.forEach(function(opt,j){
+      var d=document.createElement('div'); d.className='q-opt'; d.id=prefix+'opt_'+i+'_'+j;
+      var inp=document.createElement('input'); inp.type='radio'; inp.name=prefix+'q'+i; inp.value=String.fromCharCode(65+j);
+      inp.onchange=function(){
+        document.querySelectorAll('[id^="'+prefix+'opt_'+i+'_"]').forEach(function(x){x.classList.remove('sel')});
+        d.classList.add('sel');
+      };
+      d.appendChild(inp); d.appendChild(document.createTextNode(String.fromCharCode(65+j)+'. '+opt));
+      opts.appendChild(d);
+    });
+    div.appendChild(opts);
+  } else if(q.type==='tfng'){
+    var row=document.createElement('div'); row.className='tfng-row';
+    ['TRUE','FALSE','NOT GIVEN'].forEach(function(val){
+      var btn=document.createElement('button'); btn.className='tfng-btn'; btn.textContent=val; btn.dataset.q=prefix+i; btn.dataset.val=val;
+      btn.onclick=function(){
+        document.querySelectorAll('[data-q="'+prefix+i+'"]').forEach(function(x){x.classList.remove('sel')});
+        btn.classList.add('sel');
+      };
+      row.appendChild(btn);
+    });
+    div.appendChild(row);
+  } else {
+    var inp=document.createElement('input'); inp.type='text'; inp.className='q-fill'; inp.id=prefix+'fill_'+i; inp.placeholder='Type your answer...';
+    div.appendChild(inp);
+  }
+  container.appendChild(div);
+}
+
+var sectionTimers={};
+function startSectionTimer(elId, seconds, onEnd){
+  if(sectionTimers[elId]) clearInterval(sectionTimers[elId]);
+  var left=seconds;
+  function update(){
+    var m=Math.floor(left/60),s=left%60;
+    var txt=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    var el=document.getElementById(elId);
+    if(el){el.textContent=txt;el.className='sh-timer'+(left<=120?' warning':'');}
+    document.getElementById('topTimer').textContent=txt;
+    document.getElementById('topTimer').className='timer-val'+(left<=120?' warning':'');
+  }
+  update();
+  sectionTimers[elId]=setInterval(function(){left--;update();if(left<=0){clearInterval(sectionTimers[elId]);if(onEnd)onEnd();}},1000);
+}
+
+function clearAllTimers(){Object.values(sectionTimers).forEach(clearInterval);}
+
+var pendingNext=null;
+function goToTransition(next){
+  clearAllTimers(); pendingNext=next;
+  var names={reading:'Reading',writing:'Writing',speaking:'Speaking'};
+  var times={reading:'60 minutes',writing:'60 minutes',speaking:'15 minutes'};
+  document.getElementById('trBadge').textContent='Section complete';
+  document.getElementById('trTitle').textContent='Ready for '+names[next];
+  document.getElementById('trSub').textContent='You are about to start the '+names[next]+' section. You will have '+times[next]+'. Good luck!';
+  showScreen('transition');
+}
+
+function proceedToNext(){
+  var sec=pendingNext;
+  showScreen(sec);
+  if(sec==='reading') startSectionTimer('readingTimer',60*60,function(){goToTransition('writing');});
+  else if(sec==='writing'){startSectionTimer('writingTimer',60*60,function(){goToTransition('speaking');});checkWritingReady();}
+  else if(sec==='speaking'){startSectionTimer('speakingTimer',15*60,function(){finishExam();});checkSpeakingReady();}
+}
+
+function updateWC(textId,wcId){
+  var el=document.getElementById(textId);
+  var wc=el.value.trim()===''?0:el.value.trim().split(/\s+/).length;
+  document.getElementById(wcId).textContent=wc;
+  checkWritingReady();
+}
+
+function checkWritingReady(){
+  var t1=document.getElementById('task1Text');
+  var t2=document.getElementById('task2Text');
+  var w1=t1?t1.value.trim().split(/\s+/).filter(Boolean).length:0;
+  var w2=t2?t2.value.trim().split(/\s+/).filter(Boolean).length:0;
+  var btn=document.getElementById('writingNextBtn');
+  if(btn) btn.disabled=!(w1>=150&&w2>=250);
+}
+
+function checkSpeakingReady(){
+  var s1=document.getElementById('sp1Text');
+  var s2=document.getElementById('sp2Text');
+  var s3=document.getElementById('sp3Text');
+  var ok=s1&&s1.value.trim().length>20&&s2&&s2.value.trim().length>50&&s3&&s3.value.trim().length>20;
+  var btn=document.getElementById('speakingNextBtn');
+  if(btn) btn.disabled=!ok;
+}
+
+function collectAnswers(){
+  var data=examData[examType];
+  var lAnswers=data.listening.questions.map(function(q,i){
+    if(q.type==='mcq'){var el=document.querySelector('input[name="Lq'+i+'"]:checked');return el?el.value:'';}
+    if(q.type==='tfng'){var el=document.querySelector('[data-q="L'+i+'"].sel');return el?el.dataset.val:'';}
+    var el=document.getElementById('Lfill_'+i);return el?el.value.trim():'';
+  });
+  var rAnswers=data.reading.questions.map(function(q,i){
+    if(q.type==='mcq'){var el=document.querySelector('input[name="Rq'+i+'"]:checked');return el?el.value:'';}
+    if(q.type==='tfng'){var el=document.querySelector('[data-q="R'+i+'"].sel');return el?el.dataset.val:'';}
+    var el=document.getElementById('Rfill_'+i);return el?el.value.trim():'';
+  });
+  var lScore=lAnswers.filter(function(a,i){
+    var q=data.listening.questions[i];
+    return q.type==='fill'?a.toLowerCase()===q.answer.toLowerCase():a===q.answer;
+  }).length;
+  var rScore=rAnswers.filter(function(a,i){
+    var q=data.reading.questions[i];
+    return q.type==='fill'?a.toLowerCase()===q.answer.toLowerCase():a===q.answer;
+  }).length;
+  return {
+    lScore:lScore,lTotal:data.listening.questions.length,
+    rScore:rScore,rTotal:data.reading.questions.length,
+    task1:document.getElementById('task1Text').value.trim(),
+    task2:document.getElementById('task2Text').value.trim(),
+    t1Prompt:data.writing.t1.prompt, t2Prompt:data.writing.t2.prompt,
+    sp1:document.getElementById('sp1Text').value.trim(),
+    sp2:document.getElementById('sp2Text').value.trim(),
+    sp3:document.getElementById('sp3Text').value.trim(),
+    sp1Q:data.speaking.p1, sp2Topic:data.speaking.p2.topic, sp3Q:data.speaking.p3
+  };
+}
+
+function scoreToBand(correct,total){
+  var pct=correct/total;
+  if(pct>=0.97)return 9.0;if(pct>=0.93)return 8.5;if(pct>=0.87)return 8.0;
+  if(pct>=0.80)return 7.5;if(pct>=0.72)return 7.0;if(pct>=0.64)return 6.5;
+  if(pct>=0.55)return 6.0;if(pct>=0.46)return 5.5;if(pct>=0.38)return 5.0;
+  if(pct>=0.30)return 4.5;return 4.0;
+}
+
+async function finishExam(){
+  clearAllTimers();
+  document.getElementById('loadingOverlay').classList.add('active');
+  var a=collectAnswers();
+  var key=document.getElementById('apiKeyIntro').value.trim();
+  var lBand=scoreToBand(a.lScore,a.lTotal);
+  var rBand=scoreToBand(a.rScore,a.rTotal);
+
+  try{
+    var res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6', max_tokens:1400,
+        system:`You are a senior IELTS examiner. Evaluate Writing and Speaking responses from a mock ${examType} IELTS exam and return ONLY JSON — no markdown:
+{
+  "writing_band": "6.5",
+  "speaking_band": "7.0",
+  "overall_band": "7.0",
+  "strongest_skill": "One sentence naming the best skill and why.",
+  "priority_skill": "One sentence naming the weakest skill and why.",
+  "writing_feedback": "3 sentences of specific feedback on both tasks.",
+  "speaking_feedback": "3 sentences covering fluency, vocabulary, grammar across all 3 parts.",
+  "rl_feedback": "2 sentences on reading and listening performance based on the scores.",
+  "study_plan": "4 specific actions for the next 30 days, one per skill.",
+  "exam_ready": "Honest 2-sentence assessment of whether they are ready for the real exam."
+}
+Band scores must be: 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0. Be honest and specific.`,
+        messages:[{role:'user',content:`Exam type: ${examType}
+Listening: ${a.lScore}/${a.lTotal} correct (Band: ${lBand})
+Reading: ${a.rScore}/${a.rTotal} correct (Band: ${rBand})
+
+Writing Task 1 prompt: ${a.t1Prompt}
+Writing Task 1 response: ${a.task1}
+
+Writing Task 2 prompt: ${a.t2Prompt}
+Writing Task 2 response: ${a.task2}
+
+Speaking Part 1 question: ${a.sp1Q}
+Speaking Part 1 response: ${a.sp1}
+
+Speaking Part 2 topic: ${a.sp2Topic}
+Speaking Part 2 response: ${a.sp2}
+
+Speaking Part 3 question: ${a.sp3Q}
+Speaking Part 3 response: ${a.sp3}`}]
+      })
+    });
+    var d=await res.json();
+    var r=JSON.parse(d.content[0].text.trim().replace(/```json|```/g,'').trim());
+    var wBand=parseFloat(r.writing_band), sBand=parseFloat(r.speaking_band);
+    var overall=r.overall_band;
+
+    document.getElementById('rhBand').textContent=overall;
+    document.getElementById('rhLabel').textContent='Predicted overall band score';
+    document.getElementById('rhType').textContent=examType+' Training';
+    document.getElementById('bbL').textContent=lBand;
+    document.getElementById('bbR').textContent=rBand;
+    document.getElementById('bbW').textContent=wBand;
+    document.getElementById('bbS').textContent=sBand;
+
+    setTimeout(function(){
+      document.getElementById('bbLBar').style.width=((lBand-1)/8*100)+'%';
+      document.getElementById('bbRBar').style.width=((rBand-1)/8*100)+'%';
+      document.getElementById('bbWBar').style.width=((wBand-1)/8*100)+'%';
+      document.getElementById('bbSBar').style.width=((sBand-1)/8*100)+'%';
+    },300);
+
+    document.getElementById('rgStrong').textContent=r.strongest_skill;
+    document.getElementById('rgWeak').textContent=r.priority_skill;
+    document.getElementById('rfWriting').textContent=r.writing_feedback;
+    document.getElementById('rfSpeaking').textContent=r.speaking_feedback;
+    document.getElementById('rfRL').textContent=r.rl_feedback;
+    document.getElementById('rfPlan').textContent=r.study_plan;
+    document.getElementById('rfReady').textContent=r.exam_ready;
+
+    document.getElementById('loadingOverlay').classList.remove('active');
+    showScreen('report');
+  }catch(e){
+    document.getElementById('loadingOverlay').classList.remove('active');
+    alert('Error generating report: '+e.message);
+  }
+}
+
+function resetExam(){showScreen('intro');document.getElementById('topTimerPill').style.display='none';}
+
+window.speechSynthesis.onvoiceschanged=function(){};
+</script>
+</body>
+</html>

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Speaking Practice — IELTScoreUp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1B3F6E;--blue-light:#2558A0;--green:#0D9E72;--green-light:#0FBF8A;
+  --bg:#F4F6FA;--white:#FFFFFF;--dark:#0F1C2E;--muted:#5A6A7E;
+  --border:#E2E8F0;--radius:12px;--radius-lg:20px;--red:#DC2626;--amber:#D97706;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webkit-font-smoothing:antialiased;min-height:100vh}
+.topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.logo{font-size:16px;font-weight:800;color:var(--dark);text-decoration:none}
+.logo span{color:var(--green)}
+.back-link{font-size:13px;color:var(--muted);text-decoration:none;font-weight:500}
+.back-link:hover{color:var(--dark)}
+
+.page{max-width:860px;margin:0 auto;padding:32px 24px}
+
+/* PART TABS */
+.part-tabs{display:flex;gap:8px;margin-bottom:28px}
+.part-tab{flex:1;padding:12px 8px;border-radius:var(--radius);border:1.5px solid var(--border);background:var(--white);font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;text-align:center;transition:all .15s;font-family:'Inter',sans-serif;line-height:1.4}
+.part-tab .tab-sub{font-size:11px;font-weight:500;margin-top:2px;opacity:.7}
+.part-tab.active{border-color:var(--blue);background:rgba(27,63,110,.06);color:var(--blue)}
+.part-tab.done{border-color:var(--green);background:rgba(13,158,114,.06);color:var(--green)}
+
+/* PART HEADER */
+.part-header{background:var(--blue);border-radius:var(--radius-lg);padding:28px 32px;margin-bottom:20px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.part-header-left{}
+.part-eyebrow{font-size:11px;font-weight:700;color:rgba(255,255,255,.55);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px}
+.part-title{font-size:22px;font-weight:900;color:white;letter-spacing:-0.5px;margin-bottom:6px}
+.part-desc{font-size:14px;color:rgba(255,255,255,.65);line-height:1.6;max-width:480px}
+.timer-pill{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:100px;padding:8px 18px;text-align:center;flex-shrink:0}
+.timer-num{font-size:26px;font-weight:900;color:white;letter-spacing:-1px;font-variant-numeric:tabular-nums;line-height:1}
+.timer-label{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
+.timer-num.warning{color:#FCA5A5}
+
+/* TOPIC NAV */
+.topic-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.topic-nav-btn{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
+.topic-nav-btn:hover{border-color:var(--blue);color:var(--blue)}
+.topic-counter{font-size:13px;color:var(--muted);font-weight:500}
+
+/* QUESTION CARD */
+.question-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:24px;margin-bottom:16px}
+.q-label{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px}
+.q-main{font-size:18px;font-weight:700;color:var(--dark);line-height:1.5;letter-spacing:-0.2px;margin-bottom:8px}
+.q-sub{font-size:14px;color:var(--muted);line-height:1.6}
+
+/* CUE CARD (Part 2) */
+.cue-card{background:var(--bg);border-radius:var(--radius);padding:20px;border:2px dashed var(--border);margin-bottom:16px}
+.cue-card-title{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:12px}
+.cue-card-topic{font-size:16px;font-weight:800;color:var(--blue);margin-bottom:14px;letter-spacing:-0.3px}
+.cue-bullets{list-style:none;display:flex;flex-direction:column;gap:8px}
+.cue-bullets li{display:flex;align-items:flex-start;gap:8px;font-size:14px;color:var(--dark)}
+.cue-bullets li::before{content:'•';color:var(--blue);font-weight:700;flex-shrink:0;margin-top:1px}
+.cue-note{font-size:13px;color:var(--muted);margin-top:14px;font-style:italic}
+
+/* PREP TIMER (Part 2) */
+.prep-bar{background:var(--bg);border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:16px;border:1px solid var(--border)}
+.prep-icon{font-size:18px}
+.prep-text{font-size:13px;color:var(--dark);font-weight:500;flex:1}
+.prep-timer{font-size:18px;font-weight:800;color:var(--blue);font-variant-numeric:tabular-nums}
+.prep-timer.done{color:var(--green)}
+.prep-btn{background:var(--blue);color:white;border:none;padding:7px 16px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s}
+.prep-btn:hover{background:var(--blue-light)}
+
+/* PART 3 FOLLOW-UPS */
+.followup-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.followup-item{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);padding:14px 16px;cursor:pointer;transition:all .15s}
+.followup-item:hover{border-color:var(--blue);background:rgba(27,63,110,.02)}
+.followup-item.active{border-color:var(--blue);background:rgba(27,63,110,.04)}
+.followup-num{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:4px}
+.followup-q{font-size:14px;font-weight:600;color:var(--dark);line-height:1.5}
+
+/* RESPONSE AREA */
+.response-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:24px;margin-bottom:16px}
+.response-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.response-hint{font-size:11px;color:var(--muted);font-weight:400;font-style:italic}
+.response-textarea{width:100%;min-height:140px;border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;font-family:'Inter',sans-serif;font-size:15px;color:var(--dark);line-height:1.8;resize:vertical;outline:none;transition:border-color .15s}
+.response-textarea:focus{border-color:var(--blue)}
+.response-textarea::placeholder{color:var(--muted);font-size:14px}
+.response-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.wc-text{font-size:13px;color:var(--muted)}
+.wc-num{font-weight:700;color:var(--dark)}
+
+/* BOTTOM BAR */
+.bottom-bar{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:16px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.api-wrap{flex:1;min-width:200px}
+.api-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:9px 13px;font-family:'Inter',sans-serif;font-size:13px;color:var(--dark);outline:none;transition:border-color .15s;background:var(--bg)}
+.api-input:focus{border-color:var(--blue);background:var(--white)}
+.api-note{font-size:11px;color:var(--muted);margin-top:4px}
+.api-note a{color:var(--blue);text-decoration:none}
+.eval-btn{background:var(--blue);color:white;border:none;padding:12px 24px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.eval-btn:hover:not(:disabled){background:var(--blue-light)}
+.eval-btn:disabled{opacity:.45;cursor:not-allowed}
+.spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.eval-btn.loading .spinner{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* FEEDBACK */
+.feedback-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;display:none}
+.feedback-card.visible{display:block}
+.fb-band-bar{background:var(--blue);padding:22px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.fb-overall{display:flex;align-items:baseline;gap:8px}
+.fb-score{font-size:52px;font-weight:900;color:white;letter-spacing:-2px;line-height:1}
+.fb-score-label{font-size:14px;color:rgba(255,255,255,.6)}
+.fb-criteria{display:flex;gap:20px;flex-wrap:wrap}
+.fb-criterion{text-align:center}
+.fb-c-score{font-size:22px;font-weight:800;color:white;letter-spacing:-0.5px}
+.fb-c-label{font-size:10px;color:rgba(255,255,255,.5);font-weight:600;letter-spacing:0.05em;text-transform:uppercase;margin-top:2px;max-width:80px;line-height:1.3}
+.fb-body{padding:22px 24px;display:flex;flex-direction:column;gap:18px}
+.fb-section{border-top:1px solid var(--border);padding-top:16px}
+.fb-section:first-child{border-top:none;padding-top:0}
+.fb-sec-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
+.fb-sec-content{font-size:14px;color:var(--dark);line-height:1.75}
+.fb-example{background:var(--bg);border-radius:var(--radius);padding:14px;font-size:14px;color:var(--dark);line-height:1.75;border-left:3px solid var(--green)}
+.fb-vocab{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.vocab-chip{background:rgba(27,63,110,.08);color:var(--blue);font-size:12px;font-weight:600;padding:4px 12px;border-radius:100px}
+
+.next-part-btn{width:100%;background:var(--green);color:white;border:none;padding:14px;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;margin-top:16px;display:none}
+.next-part-btn.visible{display:block}
+.next-part-btn:hover{background:var(--green-light)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a href="index.html" class="logo">IELTS<span>Score</span>Up</a>
+  <a href="index.html" class="back-link">← Dashboard</a>
+</div>
+
+<div class="page">
+
+  <div class="part-tabs">
+    <button class="part-tab active" onclick="goPart(0,this)" id="ptab0">Part 1<div class="tab-sub">Introduction</div></button>
+    <button class="part-tab" onclick="goPart(1,this)" id="ptab1">Part 2<div class="tab-sub">Long turn</div></button>
+    <button class="part-tab" onclick="goPart(2,this)" id="ptab2">Part 3<div class="tab-sub">Discussion</div></button>
+  </div>
+
+  <div class="part-header">
+    <div class="part-header-left">
+      <div class="part-eyebrow" id="partEyebrow">Part 1</div>
+      <div class="part-title" id="partTitle">Introduction & Interview</div>
+      <div class="part-desc" id="partDesc">Answer questions about yourself and familiar topics. Speak naturally as if talking to an examiner.</div>
+    </div>
+    <div class="timer-pill">
+      <div class="timer-num" id="partTimer">04:00</div>
+      <div class="timer-label">remaining</div>
+    </div>
+  </div>
+
+  <div id="partContent"></div>
+
+  <div class="bottom-bar">
+    <div class="api-wrap">
+      <input type="password" class="api-input" id="apiKey" placeholder="sk-ant-..."/>
+      <div class="api-note">Never stored. <a href="https://console.anthropic.com" target="_blank">Get key →</a></div>
+    </div>
+    <button class="eval-btn" id="evalBtn" onclick="evaluateResponse()" disabled>
+      <div class="spinner"></div>
+      <span class="btn-text">Get AI feedback →</span>
+    </button>
+  </div>
+
+  <div class="feedback-card" id="feedbackCard">
+    <div class="fb-band-bar">
+      <div class="fb-overall">
+        <div class="fb-score" id="fbScore">—</div>
+        <div class="fb-score-label">Band score</div>
+      </div>
+      <div class="fb-criteria">
+        <div class="fb-criterion"><div class="fb-c-score" id="fbFC">—</div><div class="fb-c-label">Fluency & Coherence</div></div>
+        <div class="fb-criterion"><div class="fb-c-score" id="fbLP">—</div><div class="fb-c-label">Lexical Precision</div></div>
+        <div class="fb-criterion"><div class="fb-c-score" id="fbGR">—</div><div class="fb-c-label">Grammatical Range</div></div>
+        <div class="fb-criterion"><div class="fb-c-score" id="fbP">—</div><div class="fb-c-label">Pronunciation</div></div>
+      </div>
+    </div>
+    <div class="fb-body">
+      <div class="fb-section">
+        <div class="fb-sec-label">What you did well</div>
+        <div class="fb-sec-content" id="fbStrengths">—</div>
+      </div>
+      <div class="fb-section">
+        <div class="fb-sec-label">What to improve</div>
+        <div class="fb-sec-content" id="fbImprovements">—</div>
+      </div>
+      <div class="fb-section">
+        <div class="fb-sec-label">Improved example response</div>
+        <div class="fb-example" id="fbExample">—</div>
+      </div>
+      <div class="fb-section">
+        <div class="fb-sec-label">Vocabulary to use next time</div>
+        <div class="fb-vocab" id="fbVocab"></div>
+      </div>
+      <div class="fb-section">
+        <div class="fb-sec-label">Next steps</div>
+        <div class="fb-sec-content" id="fbNext">—</div>
+      </div>
+    </div>
+    <button class="next-part-btn" id="nextPartBtn" onclick="goNextPart()">Continue to next part →</button>
+  </div>
+
+</div>
+
+<script>
+var currentPart=0, topicIdx=0, followupIdx=0, timerInterval=null;
+
+var partMeta=[
+  {eyebrow:'Part 1',title:'Introduction & Interview',desc:'Answer questions about yourself and familiar topics. Speak naturally as if talking to an examiner.',time:240,placeholder:'Write your spoken response here. Aim for 2–3 sentences per question. Be natural and personal.'},
+  {eyebrow:'Part 2',title:'Individual Long Turn',desc:'You have 1 minute to prepare, then speak for 1–2 minutes on the topic given.',time:120,placeholder:'Write what you would say in your 2-minute long turn. Aim for at least 150 words covering all the bullet points.'},
+  {eyebrow:'Part 3',title:'Two-Way Discussion',desc:'Discuss abstract questions related to the Part 2 topic. Give developed, reasoned answers.',time:300,placeholder:'Write your response to the selected question. Aim for 3–5 sentences with reasons and examples.'}
+];
+
+var topics={
+  part1:[
+    {label:'Topic: Hometown & Living',question:'Let\'s talk about where you live. Can you describe your hometown or the area where you live now?',sub:'Talk about what it\'s like, what you like or dislike about it, and how long you\'ve lived there.'},
+    {label:'Topic: Work & Study',question:'Do you work or are you a student at the moment?',sub:'Tell me about what you do and what you enjoy or find challenging about it.'},
+    {label:'Topic: Free Time & Hobbies',question:'What do you enjoy doing in your free time?',sub:'Describe your hobbies or interests and explain why you enjoy them.'}
+  ],
+  part2:[
+    {
+      topic:'Describe a skill you would like to learn.',
+      bullets:['What the skill is','Why you want to learn it','How you would go about learning it','How this skill would benefit you'],
+      note:'You will have 1 minute to prepare. Then speak for 1 to 2 minutes.'
+    },
+    {
+      topic:'Describe a memorable journey or trip you have taken.',
+      bullets:['Where you went','Who you went with','What you did there','Why this journey was memorable'],
+      note:'You will have 1 minute to prepare. Then speak for 1 to 2 minutes.'
+    },
+    {
+      topic:'Describe a person who has had a significant influence on your life.',
+      bullets:['Who this person is','How you know them','What they have done that influenced you','Why their influence has been important'],
+      note:'You will have 1 minute to prepare. Then speak for 1 to 2 minutes.'
+    }
+  ],
+  part3:[
+    {
+      intro:'Let\'s discuss some broader questions about learning and skills.',
+      questions:[
+        'Why do you think it\'s important for people to keep learning new skills throughout their lives?',
+        'How has technology changed the way people learn new skills compared to the past?',
+        'Do you think schools do enough to teach students practical life skills? Why or why not?',
+        'Some people say natural talent is more important than hard work when learning a skill. Do you agree?'
+      ]
+    },
+    {
+      intro:'Now let\'s talk about travel and its effects on society.',
+      questions:[
+        'How has international travel changed the way people understand other cultures?',
+        'Do you think tourism always has a positive effect on local communities? Why or why not?',
+        'How might travel change in the future due to environmental concerns?',
+        'Some people prefer to travel alone rather than in groups. What are the advantages and disadvantages of each?'
+      ]
+    },
+    {
+      intro:'Let\'s discuss the role of influential people in society.',
+      questions:[
+        'What qualities do you think make a person truly influential in society?',
+        'Do you think social media has changed the kind of people who become influential? In what way?',
+        'Should schools teach students about influential historical figures? Why or why not?',
+        'Some people believe parents are the most important influence in a child\'s life. Do you agree?'
+      ]
+    }
+  ]
+};
+
+var prepTimerInterval=null, prepTimeLeft=60;
+
+function goPart(idx, el){
+  currentPart=idx; topicIdx=0; followupIdx=0;
+  document.querySelectorAll('.part-tab').forEach(function(t){t.classList.remove('active')});
+  el.classList.add('active');
+  clearInterval(timerInterval);
+  renderPart();
+  resetFeedback();
+}
+
+function goNextPart(){
+  if(currentPart<2){
+    var nextIdx=currentPart+1;
+    goPart(nextIdx, document.getElementById('ptab'+nextIdx));
+    document.getElementById('ptab'+currentPart).classList.add('done');
+  }
+}
+
+function renderPart(){
+  var m=partMeta[currentPart];
+  document.getElementById('partEyebrow').textContent=m.eyebrow;
+  document.getElementById('partTitle').textContent=m.title;
+  document.getElementById('partDesc').textContent=m.desc;
+  startPartTimer(m.time);
+  var c=document.getElementById('partContent');
+  c.innerHTML='';
+
+  if(currentPart===0){
+    var t=topics.part1[topicIdx%topics.part1.length];
+    var topicNav=makeTopicNav(topics.part1.length,'part1');
+    var qCard=makeQuestionCard('Examiner Question',t.question,t.sub);
+    var resp=makeResponseCard(m.placeholder);
+    c.appendChild(topicNav); c.appendChild(qCard); c.appendChild(resp);
+  } else if(currentPart===1){
+    var t=topics.part2[topicIdx%topics.part2.length];
+    var topicNav=makeTopicNav(topics.part2.length,'part2');
+    var cue=document.createElement('div'); cue.className='cue-card';
+    cue.innerHTML='<div class="cue-card-title">Talk about the following topic:</div><div class="cue-card-topic">'+t.topic+'</div><ul class="cue-bullets">'+t.bullets.map(function(b){return'<li>'+b+'</li>'}).join('')+'</ul><div class="cue-note">'+t.note+'</div>';
+    var prep=makePrepBar();
+    var resp=makeResponseCard(m.placeholder);
+    c.appendChild(topicNav); c.appendChild(cue); c.appendChild(prep); c.appendChild(resp);
+    startPrepTimer();
+  } else {
+    var t=topics.part3[topicIdx%topics.part3.length];
+    var topicNav=makeTopicNav(topics.part3.length,'part3');
+    var intro=document.createElement('div');
+    intro.style.cssText='font-size:14px;color:var(--muted);margin-bottom:14px;font-style:italic';
+    intro.textContent=t.intro;
+    var flist=document.createElement('div'); flist.className='followup-list';
+    t.questions.forEach(function(q,i){
+      var item=document.createElement('div');
+      item.className='followup-item'+(i===0?' active':'');
+      item.id='fitem'+i;
+      item.innerHTML='<div class="followup-num">Question '+(i+1)+'</div><div class="followup-q">'+q+'</div>';
+      item.onclick=function(){
+        document.querySelectorAll('.followup-item').forEach(function(x){x.classList.remove('active')});
+        item.classList.add('active'); followupIdx=i;
+        updateResponsePlaceholder();
+        resetFeedback();
+      };
+      flist.appendChild(item);
+    });
+    var resp=makeResponseCard(m.placeholder);
+    c.appendChild(topicNav); c.appendChild(intro); c.appendChild(flist); c.appendChild(resp);
+  }
+  checkEvalReady();
+}
+
+function makeTopicNav(total, part){
+  var div=document.createElement('div'); div.className='topic-nav';
+  var prev=document.createElement('button'); prev.className='topic-nav-btn'; prev.textContent='← Prev topic';
+  prev.onclick=function(){topicIdx=(topicIdx-1+total)%total; clearInterval(prepTimerInterval); renderPart(); resetFeedback();};
+  var ctr=document.createElement('span'); ctr.className='topic-counter';
+  ctr.textContent='Topic '+(topicIdx%total+1)+' of '+total;
+  var next=document.createElement('button'); next.className='topic-nav-btn'; next.textContent='Next topic →';
+  next.onclick=function(){topicIdx=(topicIdx+1)%total; clearInterval(prepTimerInterval); renderPart(); resetFeedback();};
+  div.appendChild(prev); div.appendChild(ctr); div.appendChild(next);
+  return div;
+}
+
+function makeQuestionCard(label, question, sub){
+  var div=document.createElement('div'); div.className='question-card';
+  div.innerHTML='<div class="q-label">'+label+'</div><div class="q-main">'+question+'</div>'+(sub?'<div class="q-sub">'+sub+'</div>':'');
+  return div;
+}
+
+function makePrepBar(){
+  var div=document.createElement('div'); div.className='prep-bar'; div.id='prepBar';
+  div.innerHTML='<span class="prep-icon">📝</span><span class="prep-text">Preparation time</span><span class="prep-timer" id="prepTimerNum">1:00</span><button class="prep-btn" onclick="skipPrep()">Start speaking</button>';
+  return div;
+}
+
+function makeResponseCard(placeholder){
+  var div=document.createElement('div'); div.className='response-card';
+  div.innerHTML='<div class="response-label">Your spoken response <span class="response-hint">Write as you would speak</span></div><textarea class="response-textarea" id="responseText" placeholder="'+placeholder+'" oninput="onResponseInput()"></textarea><div class="response-footer"><span class="wc-text">Words: <span class="wc-num" id="wcNum">0</span></span></div>';
+  return div;
+}
+
+function updateResponsePlaceholder(){
+  var el=document.getElementById('responseText');
+  if(el) el.placeholder=partMeta[currentPart].placeholder;
+}
+
+function onResponseInput(){
+  var el=document.getElementById('responseText');
+  if(!el) return;
+  var wc=el.value.trim()===''?0:el.value.trim().split(/\s+/).length;
+  var wn=document.getElementById('wcNum');
+  if(wn) wn.textContent=wc;
+  checkEvalReady();
+}
+
+function checkEvalReady(){
+  var key=document.getElementById('apiKey').value.trim();
+  var el=document.getElementById('responseText');
+  var wc=el&&el.value.trim()!==''?el.value.trim().split(/\s+/).length:0;
+  var minW=currentPart===1?120:40;
+  document.getElementById('evalBtn').disabled=!(key.startsWith('sk-ant-')&&wc>=minW);
+}
+
+document.getElementById('apiKey').addEventListener('input', checkEvalReady);
+
+function startPrepTimer(){
+  clearInterval(prepTimerInterval); prepTimeLeft=60;
+  prepTimerInterval=setInterval(function(){
+    prepTimeLeft--;
+    var el=document.getElementById('prepTimerNum');
+    if(el){
+      var m=Math.floor(prepTimeLeft/60),s=prepTimeLeft%60;
+      el.textContent=m+':'+(s<10?'0':'')+s;
+      if(prepTimeLeft<=0){clearInterval(prepTimerInterval);el.textContent='0:00';el.className='prep-timer done';}
+    } else {clearInterval(prepTimerInterval);}
+  },1000);
+}
+
+function skipPrep(){
+  clearInterval(prepTimerInterval);
+  var el=document.getElementById('prepTimerNum');
+  if(el){el.textContent='0:00';el.className='prep-timer done';}
+}
+
+function startPartTimer(seconds){
+  clearInterval(timerInterval);
+  var left=seconds;
+  function update(){
+    var m=Math.floor(left/60),s=left%60;
+    var el=document.getElementById('partTimer');
+    el.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    el.className='timer-num'+(left<=30?' warning':'');
+  }
+  update();
+  timerInterval=setInterval(function(){left--;update();if(left<=0)clearInterval(timerInterval);},1000);
+}
+
+function resetFeedback(){
+  document.getElementById('feedbackCard').classList.remove('visible');
+  document.getElementById('nextPartBtn').classList.remove('visible');
+  var el=document.getElementById('responseText');
+  if(el){el.value='';var wn=document.getElementById('wcNum');if(wn)wn.textContent='0';}
+  checkEvalReady();
+}
+
+function getCurrentQuestion(){
+  if(currentPart===0){var t=topics.part1[topicIdx%topics.part1.length];return t.question+' '+t.sub;}
+  if(currentPart===1){var t=topics.part2[topicIdx%topics.part2.length];return'Describe: '+t.topic+'. Cover: '+t.bullets.join(', ')+'.';}
+  var t=topics.part3[topicIdx%topics.part3.length];return t.questions[followupIdx%t.questions.length];
+}
+
+async function evaluateResponse(){
+  var key=document.getElementById('apiKey').value.trim();
+  var response=document.getElementById('responseText').value.trim();
+  var question=getCurrentQuestion();
+  var partLabel=partMeta[currentPart].eyebrow;
+  var btn=document.getElementById('evalBtn');
+  btn.classList.add('loading'); btn.disabled=true;
+  btn.querySelector('.btn-text').textContent='Evaluating...';
+
+  var system=`You are an expert IELTS Speaking examiner. Evaluate the student's written spoken response for IELTS ${partLabel} and return ONLY a JSON object — no markdown, no extra text.
+
+Return exactly:
+{
+  "overall": "6.5",
+  "fluency_coherence": "6.5",
+  "lexical_precision": "7.0",
+  "grammatical_range": "6.0",
+  "pronunciation_note": "6.5",
+  "strengths": "2-3 sentences on what they did well.",
+  "improvements": "2-3 sentences with specific issues found in their response.",
+  "example": "Write a stronger version of part of their response, showing better vocabulary and grammar.",
+  "vocabulary": ["word or phrase 1", "word or phrase 2", "word or phrase 3", "word or phrase 4"],
+  "next_steps": "2 actionable things to practise before the exam."
+}
+
+Band scores must be one of: 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0
+Be honest and specific. Reference the actual content of their response.`;
+
+  try{
+    var res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6', max_tokens:1000,
+        system:system,
+        messages:[{role:'user',content:'IELTS Speaking '+partLabel+'\n\nQuestion: '+question+'\n\nStudent response:\n'+response}]
+      })
+    });
+    var data=await res.json();
+    var raw=data.content[0].text.trim().replace(/```json|```/g,'').trim();
+    var r=JSON.parse(raw);
+
+    document.getElementById('fbScore').textContent=r.overall;
+    document.getElementById('fbFC').textContent=r.fluency_coherence;
+    document.getElementById('fbLP').textContent=r.lexical_precision;
+    document.getElementById('fbGR').textContent=r.grammatical_range;
+    document.getElementById('fbP').textContent=r.pronunciation_note;
+    document.getElementById('fbStrengths').textContent=r.strengths;
+    document.getElementById('fbImprovements').textContent=r.improvements;
+    document.getElementById('fbExample').textContent=r.example;
+    document.getElementById('fbNext').textContent=r.next_steps;
+    var vocab=document.getElementById('fbVocab');
+    vocab.innerHTML='';
+    (r.vocabulary||[]).forEach(function(w){
+      var chip=document.createElement('span');chip.className='vocab-chip';chip.textContent=w;vocab.appendChild(chip);
+    });
+
+    document.getElementById('feedbackCard').classList.add('visible');
+    document.getElementById('feedbackCard').scrollIntoView({behavior:'smooth',block:'start'});
+    if(currentPart<2) document.getElementById('nextPartBtn').classList.add('visible');
+    document.getElementById('ptab'+currentPart).classList.add('done');
+  }catch(e){
+    alert('Error: '+e.message);
+  }finally{
+    btn.classList.remove('loading');
+    btn.querySelector('.btn-text').textContent='Get AI feedback →';
+    checkEvalReady();
+  }
+}
+
+renderPart();
+</script>
+</body>
+</html>
