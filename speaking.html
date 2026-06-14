@@ -130,22 +130,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 </style>
 </head>
 <body>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-(function(){
-  var sb=supabase.createClient('https://ystwgkfwydyrefbqjcjd.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk');
-  sb.auth.getSession().then(function(r){
-    if(!r.data.session){window.location.href='/auth.html';}
-    else{
-      var name=r.data.session.user.user_metadata?.full_name||r.data.session.user.email.split('@')[0];
-      var el=document.getElementById('topUserName');
-      if(el)el.textContent=name;
-    }
-  });
-})();
-</script>
-
-
 <script>
 (function(){
   var sb=supabase.createClient('https://ystwgkfwydyrefbqjcjd.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk');
@@ -394,9 +380,7 @@ function makePrepBar(){
 
 function makeResponseCard(placeholder){
   var div=document.createElement('div'); div.className='response-card';
-  div.innerHTML='<div class="response-label">Your spoken response <span class="response-hint">Write or use the microphone</span>
-  <button id="micBtn" onclick="toggleMic()" title="Record your voice" style="background:none;border:1.5px solid #E2E8F0;border-radius:8px;padding:5px 10px;cursor:pointer;font-size:16px;transition:all .15s;flex-shrink:0" onmouseover="this.style.borderColor='#1B3F6E'" onmouseout="this.style.borderColor='#E2E8F0'">🎤</button>
-</div><textarea class="response-textarea" id="responseText" placeholder="'+placeholder+'" oninput="onResponseInput()"></textarea><div class="response-footer"><span class="wc-text">Words: <span class="wc-num" id="wcNum">0</span></span></div>';
+  div.innerHTML='<div class="response-label" style="display:flex;align-items:center;justify-content:space-between"><span>Your spoken response <span class="response-hint">Write or record your voice</span></span><button id="micBtn" onclick="toggleMic()" title="Record your voice" style="background:none;border:1.5px solid #E2E8F0;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:16px;transition:all .15s;display:flex;align-items:center;gap:6px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#5A6A7E">🎤 <span id="micLabel">Record</span></button></div><textarea class="response-textarea" id="responseText" placeholder="'+placeholder+'" oninput="onResponseInput()"></textarea><div class="response-footer"><span class="wc-text">Words: <span class="wc-num" id="wcNum">0</span></span></div>';
   return div;
 }
 
@@ -536,89 +520,74 @@ Be honest and specific. Reference the actual content of their response.`;
 renderPart();
 
 // ── MICROPHONE ────────────────────────────────────────────────
-var mediaRecorder=null, audioChunks=[], isRecording=false;
+var _mediaRecorder=null,_audioChunks=[],_isRecording=false;
 
 async function toggleMic(){
-  var btn=document.getElementById('micBtn');
-  if(isRecording){
-    stopRecording();
+  if(_isRecording){
+    _stopRec();
   } else {
-    await startRecording();
+    await _startRec();
   }
 }
 
-async function startRecording(){
+async function _startRec(){
   try{
-    var stream=await navigator.mediaDevices.getUserMedia({audio:true});
-    audioChunks=[];
-    mediaRecorder=new MediaRecorder(stream);
-    mediaRecorder.ondataavailable=function(e){if(e.data.size>0)audioChunks.push(e.data);};
-    mediaRecorder.onstop=async function(){
-      var blob=new Blob(audioChunks,{type:'audio/webm'});
-      await transcribeAudio(blob);
+    var stream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});
+    _audioChunks=[];
+    _mediaRecorder=new MediaRecorder(stream);
+    _mediaRecorder.ondataavailable=function(e){if(e.data.size>0)_audioChunks.push(e.data);};
+    _mediaRecorder.onstop=async function(){
       stream.getTracks().forEach(function(t){t.stop();});
+      var blob=new Blob(_audioChunks,{type:'audio/webm'});
+      await _transcribe(blob);
     };
-    mediaRecorder.start();
-    isRecording=true;
+    _mediaRecorder.start();
+    _isRecording=true;
     var btn=document.getElementById('micBtn');
-    if(btn){btn.textContent='⏹';btn.style.background='rgba(220,38,38,.1)';btn.style.borderColor='#DC2626';}
+    var lbl=document.getElementById('micLabel');
+    if(btn){btn.style.background='rgba(220,38,38,.1)';btn.style.borderColor='#DC2626';btn.style.color='#DC2626';}
+    if(lbl) lbl.textContent='Stop';
   }catch(e){
-    alert('Microphone access denied. Please allow microphone access in your browser settings.');
+    alert('Could not access microphone. Please allow microphone access in your browser settings and make sure you are using HTTPS.');
   }
 }
 
-function stopRecording(){
-  if(mediaRecorder&&mediaRecorder.state!=='inactive'){
-    mediaRecorder.stop();
-  }
-  isRecording=false;
+function _stopRec(){
+  if(_mediaRecorder&&_mediaRecorder.state!=='inactive') _mediaRecorder.stop();
+  _isRecording=false;
   var btn=document.getElementById('micBtn');
-  if(btn){btn.textContent='⏳';btn.style.background='rgba(217,119,6,.1)';btn.style.borderColor='#D97706';}
+  var lbl=document.getElementById('micLabel');
+  if(btn){btn.style.background='rgba(217,119,6,.1)';btn.style.borderColor='#D97706';btn.style.color='#D97706';}
+  if(lbl) lbl.textContent='Processing...';
 }
 
-async function transcribeAudio(blob){
+async function _transcribe(blob){
   var btn=document.getElementById('micBtn');
+  var lbl=document.getElementById('micLabel');
   try{
-    // Convert to base64 and send to backend for Whisper transcription
-    var reader=new FileReader();
-    reader.onloadend=async function(){
-      try{
-        var sb2=supabase.createClient('https://ystwgkfwydyrefbqjcjd.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk');
-        var sd=await sb2.auth.getSession();
-        var token=sd.data?.session?.access_token||'';
-        
-        var formData=new FormData();
-        formData.append('audio',blob,'recording.webm');
-        
-        var res=await fetch('https://ieltscore-up-api-production.up.railway.app/api/speaking/transcribe',{
-          method:'POST',
-          headers:{'Authorization':'Bearer '+token},
-          body:formData
-        });
-        
-        if(res.ok){
-          var data=await res.json();
-          var textarea=document.getElementById('responseText');
-          if(textarea&&data.text){
-            textarea.value=(textarea.value?textarea.value+' ':'')+data.text;
-            onResponseInput();
-          }
-        } else {
-          // Fallback: just show placeholder
-          var textarea=document.getElementById('responseText');
-          if(textarea) textarea.placeholder='Transcription failed. Please type your response.';
-        }
-      }catch(e){console.log('Transcription error:',e);}
-      finally{
-        if(btn){btn.textContent='🎤';btn.style.background='none';btn.style.borderColor='#E2E8F0';}
+    var sb2=supabase.createClient('https://ystwgkfwydyrefbqjcjd.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk');
+    var sd=await sb2.auth.getSession();
+    var token=sd.data?.session?.access_token||'';
+    var form=new FormData();
+    form.append('audio',blob,'recording.webm');
+    var res=await fetch('https://ieltscore-up-api-production.up.railway.app/api/speaking/transcribe',{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+token},
+      body:form
+    });
+    if(res.ok){
+      var data=await res.json();
+      var ta=document.getElementById('responseText');
+      if(ta&&data.text){
+        ta.value=(ta.value?ta.value.trimEnd()+' ':'')+data.text;
+        onResponseInput();
       }
-    };
-    reader.readAsArrayBuffer(blob);
-  }catch(e){
-    if(btn){btn.textContent='🎤';btn.style.background='none';btn.style.borderColor='#E2E8F0';}
+    }
+  }catch(e){console.log('Transcription error:',e);}
+  finally{
+    if(btn){btn.style.background='none';btn.style.borderColor='#E2E8F0';btn.style.color='#5A6A7E';}
+    if(lbl) lbl.textContent='Record';
   }
 }
 
 </script>
-</body>
-</html>
