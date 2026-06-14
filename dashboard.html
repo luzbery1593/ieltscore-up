@@ -5,681 +5,321 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Dashboard — IELTScoreUp</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --blue:#1B3F6E;--blue-light:#2558A0;--green:#0D9E72;--green-light:#0FBF8A;
-  --bg:#F4F6FA;--white:#FFFFFF;--dark:#0F1C2E;--muted:#5A6A7E;
-  --border:#E2E8F0;--radius:12px;--radius-lg:20px;--red:#DC2626;--amber:#D97706;
-}
+:root{--blue:#1B3F6E;--blue-light:#2558A0;--green:#0D9E72;--green-light:#0FBF8A;--bg:#F4F6FA;--white:#FFFFFF;--dark:#0F1C2E;--muted:#5A6A7E;--border:#E2E8F0;--radius:12px;--radius-lg:20px;--red:#DC2626;--amber:#D97706;}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webkit-font-smoothing:antialiased;min-height:100vh}
 
 /* SIDEBAR */
-.sidebar{position:fixed;top:0;left:0;bottom:0;width:240px;background:var(--blue);display:flex;flex-direction:column;z-index:50;transition:transform .25s}
-@media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}}
-.sidebar-logo{padding:24px 20px 20px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:240px;background:var(--blue);display:flex;flex-direction:column;z-index:50}
+@media(max-width:768px){.sidebar{transform:translateX(-100%);transition:transform .25s}.sidebar.open{transform:translateX(0)}}
+.sb-logo{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,.1)}
 .sb-logo-text{font-size:17px;font-weight:900;color:white;letter-spacing:-0.3px}
 .sb-logo-text span{color:var(--green-light)}
-.sidebar-nav{flex:1;padding:16px 12px;display:flex;flex-direction:column;gap:4px;overflow-y:auto}
-.nav-section-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.35);letter-spacing:0.1em;text-transform:uppercase;padding:12px 8px 6px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius);color:rgba(255,255,255,.65);font-size:14px;font-weight:500;text-decoration:none;transition:all .15s;cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif;width:100%;text-align:left}
-.nav-item:hover{background:rgba(255,255,255,.08);color:white}
-.nav-item.active{background:rgba(255,255,255,.12);color:white;font-weight:600}
-.nav-item .nav-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
-.nav-item .nav-badge{margin-left:auto;font-size:10px;font-weight:700;background:var(--green);color:white;padding:2px 7px;border-radius:100px}
-.sidebar-footer{padding:16px 12px;border-top:1px solid rgba(255,255,255,.1)}
-.sb-user{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius)}
-.sb-avatar{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:white;flex-shrink:0}
-.sb-user-info{}
-.sb-user-name{font-size:13px;font-weight:600;color:white}
-.sb-user-plan{font-size:11px;color:rgba(255,255,255,.45)}
+.sb-nav{flex:1;padding:14px 12px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
+.sb-section{font-size:10px;font-weight:700;color:rgba(255,255,255,.35);letter-spacing:0.1em;text-transform:uppercase;padding:10px 8px 4px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:rgba(255,255,255,.65);font-size:14px;font-weight:500;text-decoration:none;transition:all .15s;cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif;width:100%;text-align:left}
+.sb-item:hover{background:rgba(255,255,255,.08);color:white}
+.sb-item.active{background:rgba(255,255,255,.12);color:white;font-weight:600}
+.sb-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.sb-badge{margin-left:auto;font-size:10px;font-weight:700;background:var(--green);color:white;padding:2px 7px;border-radius:100px}
+.sb-footer{padding:14px 12px;border-top:1px solid rgba(255,255,255,.1)}
+.sb-user{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px}
+.sb-avatar{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:white;flex-shrink:0}
+.sb-info{}
+.sb-name{font-size:13px;font-weight:600;color:white}
+.sb-plan{font-size:11px;color:rgba(255,255,255,.45)}
 
 /* MAIN */
-.main{margin-left:240px;min-height:100vh;padding-top:0}
+.main{margin-left:240px;min-height:100vh}
 @media(max-width:768px){.main{margin-left:0}}
 
 /* TOPBAR */
 .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40}
-.menu-btn{display:none;background:none;border:none;cursor:pointer;font-size:20px;color:var(--dark);padding:4px}
+.menu-btn{display:none;background:none;border:none;cursor:pointer;font-size:20px;color:var(--dark)}
 @media(max-width:768px){.menu-btn{display:block}}
-.topbar-left{display:flex;align-items:center;gap:12px}
 .page-title{font-size:16px;font-weight:700;color:var(--dark)}
-.topbar-right{display:flex;align-items:center;gap:12px}
 
-
-/* PAGE CONTENT */
+/* PAGE */
 .page{padding:28px}
 @media(max-width:600px){.page{padding:16px}}
 
-/* WELCOME BANNER */
-.welcome-banner{background:var(--blue);border-radius:var(--radius-lg);padding:28px 32px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;position:relative;overflow:hidden}
-.welcome-banner::before{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;background:rgba(255,255,255,.04);border-radius:50%}
-.wb-left{}
-.wb-greeting{font-size:13px;font-weight:600;color:rgba(255,255,255,.55);margin-bottom:6px}
-.wb-title{font-size:22px;font-weight:900;color:white;letter-spacing:-0.5px;margin-bottom:8px}
-.wb-sub{font-size:14px;color:rgba(255,255,255,.6);line-height:1.6;max-width:420px}
-.wb-right{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0}
-.wb-band{font-size:56px;font-weight:900;color:white;letter-spacing:-3px;line-height:1}
-.wb-band-label{font-size:12px;color:rgba(255,255,255,.5);font-weight:600}
-.wb-band-sub{font-size:11px;color:rgba(255,255,255,.35)}
+/* WELCOME */
+.welcome{background:var(--blue);border-radius:var(--radius-lg);padding:28px 32px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;position:relative;overflow:hidden}
+.welcome::before{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;background:rgba(255,255,255,.04);border-radius:50%;pointer-events:none}
+.welcome-greeting{font-size:13px;font-weight:600;color:rgba(255,255,255,.55);margin-bottom:6px}
+.welcome-title{font-size:22px;font-weight:900;color:white;letter-spacing:-0.5px;margin-bottom:8px}
+.welcome-sub{font-size:14px;color:rgba(255,255,255,.6);line-height:1.6;max-width:420px}
+.welcome-sub strong{color:white}
+.welcome-band{font-size:56px;font-weight:900;color:white;letter-spacing:-3px;line-height:1;text-align:center}
+.welcome-band-label{font-size:12px;color:rgba(255,255,255,.5);font-weight:600;text-align:center}
 
-/* STATS ROW */
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
-@media(max-width:700px){.stats-row{grid-template-columns:repeat(2,1fr)}}
-.stat-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:18px 20px}
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+@media(max-width:700px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:18px 20px}
 .stat-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
 .stat-val{font-size:28px;font-weight:900;color:var(--dark);letter-spacing:-1px;line-height:1}
 .stat-sub{font-size:12px;color:var(--muted);margin-top:4px}
-.stat-trend{font-size:12px;font-weight:600;margin-top:6px}
-.trend-up{color:var(--green)}
-.trend-down{color:var(--red)}
 
-/* MODULES GRID */
+/* MODULES */
 .section-title{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:14px}
-.modules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
-@media(max-width:900px){.modules-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:500px){.modules-grid{grid-template-columns:1fr}}
+.modules{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
+@media(max-width:900px){.modules{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.modules{grid-template-columns:1fr}}
+.mod{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px;text-decoration:none;display:block;transition:all .2s;position:relative;overflow:hidden}
+.mod::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--blue));opacity:0;transition:opacity .2s}
+.mod:hover{box-shadow:0 6px 24px rgba(27,63,110,.1);transform:translateY(-2px)}
+.mod:hover::after{opacity:1}
+.mod-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.mod-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ic-blue{background:rgba(27,63,110,.1)}
+.ic-green{background:rgba(13,158,114,.1)}
+.ic-amber{background:rgba(217,119,6,.1)}
+.ic-red{background:rgba(220,38,38,.1)}
+.ic-purple{background:rgba(124,58,237,.1)}
+.mod-band{font-size:18px;font-weight:900;color:var(--blue);letter-spacing:-0.5px}
+.mod-band-none{font-size:12px;font-weight:600;color:var(--muted)}
+.mod-name{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:4px}
+.mod-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:12px}
+.mod-bar{height:4px;background:var(--border);border-radius:100px;overflow:hidden}
+.mod-bar-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:100px;transition:width .6s}
+.mod-footer{display:flex;justify-content:space-between;margin-top:6px}
+.mod-sessions{font-size:11px;color:var(--muted)}
+.mod-cta{font-size:11px;font-weight:600;color:var(--blue)}
 
-.module-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px;cursor:pointer;transition:all .2s;text-decoration:none;display:block;position:relative;overflow:hidden}
-.module-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;opacity:0;transition:opacity .2s}
-.module-card:hover{box-shadow:0 6px 24px rgba(27,63,110,.1);transform:translateY(-2px)}
-.module-card:hover::after{opacity:1}
-.mc-writing::after{background:linear-gradient(90deg,#1B3F6E,#0D9E72)}
-.mc-reading::after{background:linear-gradient(90deg,#0D9E72,#2558A0)}
-.mc-listening::after{background:linear-gradient(90deg,#D97706,#1B3F6E)}
-.mc-speaking::after{background:linear-gradient(90deg,#DC2626,#D97706)}
-.mc-grammar::after{background:linear-gradient(90deg,#7C3AED,#1B3F6E)}
-.mc-mock::after{background:linear-gradient(90deg,#0D9E72,#1B3F6E)}
+/* MOCK BANNER */
+.mock-banner{background:linear-gradient(135deg,var(--dark),var(--blue));border-radius:var(--radius-lg);padding:24px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.mock-banner-title{font-size:18px;font-weight:800;color:white;margin-bottom:6px;letter-spacing:-0.3px}
+.mock-banner-sub{font-size:13px;color:rgba(255,255,255,.6);line-height:1.6}
+.mock-btn{background:var(--green);color:white;border:none;padding:12px 24px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;text-decoration:none;white-space:nowrap;flex-shrink:0}
+.mock-btn:hover{background:var(--green-light)}
 
-.mc-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
-.mc-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.icon-blue{background:rgba(27,63,110,.1)}
-.icon-green{background:rgba(13,158,114,.1)}
-.icon-amber{background:rgba(217,119,6,.1)}
-.icon-red{background:rgba(220,38,38,.1)}
-.icon-purple{background:rgba(124,58,237,.1)}
-.mc-band{font-size:18px;font-weight:900;color:var(--blue);letter-spacing:-0.5px}
-.mc-band-none{font-size:12px;font-weight:600;color:var(--muted)}
-.mc-name{font-size:15px;font-weight:700;color:var(--dark);margin-bottom:4px;letter-spacing:-0.2px}
-.mc-desc{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:12px}
-.mc-progress-bar{height:4px;background:var(--border);border-radius:100px;overflow:hidden}
-.mc-progress-fill{height:100%;border-radius:100px;transition:width .6s cubic-bezier(.16,1,.3,1)}
-.fill-blue{background:linear-gradient(90deg,var(--green),var(--blue))}
-.mc-progress-label{display:flex;justify-content:space-between;margin-top:5px}
-.mc-prog-text{font-size:11px;color:var(--muted)}
-.mc-sessions{font-size:11px;font-weight:600;color:var(--muted)}
-
-/* ACTIVITY + TIPS */
+/* TWO COL */
 .two-col{display:grid;grid-template-columns:1fr 360px;gap:16px;margin-bottom:24px}
 @media(max-width:900px){.two-col{grid-template-columns:1fr}}
+.card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px}
 
-.activity-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px}
-.activity-list{display:flex;flex-direction:column;gap:0}
-.activity-item{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--border)}
+/* ACTIVITY */
+.activity-item{display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid var(--border)}
 .activity-item:last-child{border-bottom:none}
 .activity-dot{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .activity-info{flex:1}
 .activity-title{font-size:13px;font-weight:600;color:var(--dark);margin-bottom:2px}
 .activity-sub{font-size:12px;color:var(--muted)}
-.activity-score{font-size:15px;font-weight:800;color:var(--blue);white-space:nowrap}
-.activity-empty{text-align:center;padding:32px 16px;color:var(--muted);font-size:14px}
+.activity-score{font-size:15px;font-weight:800;color:var(--blue)}
+.empty-activity{text-align:center;padding:32px 16px;color:var(--muted);font-size:14px}
 
-.tips-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px}
+/* TIPS */
 .tip-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
 .tip-item:last-child{border-bottom:none}
 .tip-num{width:24px;height:24px;border-radius:6px;background:rgba(27,63,110,.08);color:var(--blue);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
 .tip-text{font-size:13px;color:var(--dark);line-height:1.6}
 .tip-text strong{color:var(--blue)}
 
-/* MOCK EXAM BANNER */
-.mock-banner{background:linear-gradient(135deg,var(--dark) 0%,var(--blue) 100%);border-radius:var(--radius-lg);padding:24px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px}
-.mb-left{}
-.mb-title{font-size:18px;font-weight:800;color:white;margin-bottom:6px;letter-spacing:-0.3px}
-.mb-sub{font-size:13px;color:rgba(255,255,255,.6);line-height:1.6}
-.mb-btn{background:var(--green);color:white;border:none;padding:12px 24px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;text-decoration:none;white-space:nowrap;flex-shrink:0}
-.mb-btn:hover{background:var(--green-light)}
-
-/* BAND CHART */
-.band-chart-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:20px;margin-bottom:24px}
-.band-chart{display:flex;align-items:flex-end;gap:8px;height:100px;margin-top:16px;padding-bottom:8px;border-bottom:1px solid var(--border)}
-.bc-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
-.bc-bar{width:100%;border-radius:4px 4px 0 0;transition:height .6s cubic-bezier(.16,1,.3,1);min-height:4px;background:linear-gradient(180deg,var(--blue),var(--green))}
-.bc-label{font-size:10px;color:var(--muted);font-weight:600;text-align:center}
-.bc-val{font-size:12px;font-weight:700;color:var(--blue)}
-.band-chart-labels{display:flex;justify-content:space-between;margin-top:6px}
-.bcl{font-size:10px;color:var(--muted);flex:1;text-align:center}
-
-/* MOBILE OVERLAY */
+/* OVERLAY */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:49}
 .overlay.active{display:block}
-
-/* PLAN BADGE */
-.plan-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(13,158,114,.1);color:var(--green);font-size:12px;font-weight:700;padding:4px 12px;border-radius:100px}
-.upgrade-btn{background:var(--blue);color:white;border:none;padding:8px 16px;border-radius:var(--radius);font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s;text-decoration:none}
-.upgrade-btn:hover{background:var(--blue-light)}
 </style>
 </head>
 <body>
 
-<!-- MOBILE OVERLAY -->
 <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 
-<!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
-  <div class="sidebar-logo">
+  <div class="sb-logo">
     <div class="sb-logo-text">IELTS<span>Score</span>Up</div>
   </div>
-  <nav class="sidebar-nav">
-    <div class="nav-section-label">Main</div>
-    <a class="nav-item active" href="dashboard.html">
-      <span class="nav-icon">🏠</span> Dashboard
-    </a>
-
-    <div class="nav-section-label">Practice</div>
-    <a class="nav-item" href="writing.html">
-      <span class="nav-icon">✍️</span> Writing
-    </a>
-    <a class="nav-item" href="reading.html">
-      <span class="nav-icon">📖</span> Reading
-    </a>
-    <a class="nav-item" href="listening.html">
-      <span class="nav-icon">🎧</span> Listening
-    </a>
-    <a class="nav-item" href="speaking.html">
-      <span class="nav-icon">🎤</span> Speaking
-    </a>
-    <a class="nav-item" href="grammar.html">
-      <span class="nav-icon">📝</span> Grammar
-    </a>
-
-    <div class="nav-section-label">Exam</div>
-    <a class="nav-item" href="mock-exam.html">
-      <span class="nav-icon">⏱️</span> Mock Exam
-      <span class="nav-badge">NEW</span>
-    </a>
-
-    <div class="nav-section-label">Account</div>
-    <a class="nav-item" href="/profile.html">
-      <span class="nav-icon">📊</span> My Progress
-    </a>
-    <a class="nav-item" href="/profile.html">
-      <span class="nav-icon">⚙️</span> Settings
-    </a>
+  <nav class="sb-nav">
+    <div class="sb-section">Main</div>
+    <a class="sb-item active" href="/dashboard.html"><span class="sb-icon">🏠</span>Dashboard</a>
+    <div class="sb-section">Practice</div>
+    <a class="sb-item" href="/writing.html"><span class="sb-icon">✍️</span>Writing</a>
+    <a class="sb-item" href="/reading.html"><span class="sb-icon">📖</span>Reading</a>
+    <a class="sb-item" href="/listening.html"><span class="sb-icon">🎧</span>Listening</a>
+    <a class="sb-item" href="/speaking.html"><span class="sb-icon">🎤</span>Speaking</a>
+    <a class="sb-item" href="/grammar.html"><span class="sb-icon">📝</span>Grammar</a>
+    <div class="sb-section">Exam</div>
+    <a class="sb-item" href="/mock-exam.html"><span class="sb-icon">⏱️</span>Mock Exam<span class="sb-badge">NEW</span></a>
+    <div class="sb-section">Account</div>
+    <a class="sb-item" href="/profile.html"><span class="sb-icon">📊</span>My Progress</a>
+    <a class="sb-item" href="/profile.html"><span class="sb-icon">⚙️</span>Settings</a>
+    <a class="sb-item" href="/certificates.html"><span class="sb-icon">🏆</span>Certificates</a>
+    <button class="sb-item" onclick="doSignOut()" style="color:rgba(255,255,255,.5);margin-top:4px"><span class="sb-icon">↩</span>Sign out</button>
   </nav>
-  <div class="sidebar-footer">
+  <div class="sb-footer">
     <div class="sb-user">
       <div class="sb-avatar" id="sbAvatar">?</div>
-      <div class="sb-user-info">
-        <div class="sb-user-name" id="sbUserName">Loading...</div>
-        <div class="sb-user-plan" id="sbUserPlan">Free Plan</div>
+      <div class="sb-info">
+        <div class="sb-name" id="sbName">Loading...</div>
+        <div class="sb-plan" id="sbPlan">Free Plan</div>
       </div>
-        <button onclick="doSignOut()" class="nav-item" style="color:rgba(255,255,255,.5);width:100%;margin-top:8px;text-align:left">
-      <span class="nav-icon">↩</span> Sign out
-    </button>
+    </div>
   </div>
 </div>
 
-<!-- MAIN -->
 <div class="main">
   <div class="topbar">
-    <div class="topbar-left">
+    <div style="display:flex;align-items:center;gap:12px">
       <button class="menu-btn" onclick="toggleSidebar()">☰</button>
       <span class="page-title">Dashboard</span>
-    </div>
-    <div class="topbar-right">
-      </div>
     </div>
   </div>
 
   <div class="page">
 
-    <!-- WELCOME -->
-    <div class="welcome-banner">
-      <div class="wb-left">
-        <div class="wb-greeting" id="greeting">Good morning 👋</div>
-        <div class="wb-title">Ready to raise your band score?</div>
-        <div class="wb-sub">You've completed <strong id="totalSessions" style="color:white">0</strong> practice sessions. Keep going — consistency is the key to IELTS success.</div>
+    <div class="welcome">
+      <div>
+        <div class="welcome-greeting" id="greeting">Good morning 👋</div>
+        <div class="welcome-title">Ready to raise your band score?</div>
+        <div class="welcome-sub">You've completed <strong id="totalSessions">0</strong> practice sessions. Keep going — consistency is the key to IELTS success.</div>
       </div>
-      <div class="wb-right">
-        <div class="wb-band" id="currentBand">—</div>
-        <div class="wb-band-label">Current estimate</div>
-        <div class="wb-band-sub">Based on your practice</div>
-      </div>
-    </div>
-
-    <!-- STATS -->
-    <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-label">Sessions done</div>
-        <div class="stat-val" id="statSessions">0</div>
-        <div class="stat-sub">Total practice sessions</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Best skill</div>
-        <div class="stat-val" id="statBest" style="font-size:18px;padding-top:4px">—</div>
-        <div class="stat-sub" id="statBestSub">No data yet</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Needs work</div>
-        <div class="stat-val" id="statWeak" style="font-size:18px;padding-top:4px">—</div>
-        <div class="stat-sub" id="statWeakSub">No data yet</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Mock exams</div>
-        <div class="stat-val" id="statMocks">0</div>
-        <div class="stat-sub">Completed</div>
+      <div>
+        <div class="welcome-band" id="currentBand">—</div>
+        <div class="welcome-band-label">Current estimate</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.35);text-align:center">Based on your practice</div>
       </div>
     </div>
 
-    <!-- MODULES -->
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Sessions done</div><div class="stat-val" id="statSessions">0</div><div class="stat-sub">Total practice sessions</div></div>
+      <div class="stat"><div class="stat-label">Best skill</div><div class="stat-val" id="statBest" style="font-size:18px;padding-top:4px">—</div><div class="stat-sub" id="statBestSub">No data yet</div></div>
+      <div class="stat"><div class="stat-label">Needs work</div><div class="stat-val" id="statWeak" style="font-size:18px;padding-top:4px">—</div><div class="stat-sub" id="statWeakSub">No data yet</div></div>
+      <div class="stat"><div class="stat-label">Mock exams</div><div class="stat-val" id="statMocks">0</div><div class="stat-sub">Completed</div></div>
+    </div>
+
     <div class="section-title">Practice modules</div>
-    <div class="modules-grid">
-      <a href="writing.html" class="module-card mc-writing">
-        <div class="mc-header">
-          <div class="mc-icon icon-blue">✍️</div>
-          <div>
-            <div class="mc-band" id="writingBand">—</div>
-            <div class="mc-band-none" id="writingBandLabel">Not started</div>
-          </div>
-        </div>
-        <div class="mc-name">Writing</div>
-        <div class="mc-desc">Task 1 & Task 2 · Academic & General</div>
-        <div class="mc-progress-bar"><div class="mc-progress-fill fill-blue" id="writingBar" style="width:0%"></div></div>
-        <div class="mc-progress-label">
-          <span class="mc-prog-text" id="writingProg">0 sessions</span>
-          <span class="mc-sessions">→ Practice now</span>
-        </div>
-      </a>
-
-      <a href="reading.html" class="module-card mc-reading">
-        <div class="mc-header">
-          <div class="mc-icon icon-green">📖</div>
-          <div>
-            <div class="mc-band" id="readingBand">—</div>
-            <div class="mc-band-none" id="readingBandLabel">Not started</div>
-          </div>
-        </div>
-        <div class="mc-name">Reading</div>
-        <div class="mc-desc">Passages · T/F/NG · Multiple choice</div>
-        <div class="mc-progress-bar"><div class="mc-progress-fill fill-blue" id="readingBar" style="width:0%"></div></div>
-        <div class="mc-progress-label">
-          <span class="mc-prog-text" id="readingProg">0 sessions</span>
-          <span class="mc-sessions">→ Practice now</span>
-        </div>
-      </a>
-
-      <a href="listening.html" class="module-card mc-listening">
-        <div class="mc-header">
-          <div class="mc-icon icon-amber">🎧</div>
-          <div>
-            <div class="mc-band" id="listeningBand">—</div>
-            <div class="mc-band-none" id="listeningBandLabel">Not started</div>
-          </div>
-        </div>
-        <div class="mc-name">Listening</div>
-        <div class="mc-desc">4 sections · Audio + questions</div>
-        <div class="mc-progress-bar"><div class="mc-progress-fill fill-blue" id="listeningBar" style="width:0%"></div></div>
-        <div class="mc-progress-label">
-          <span class="mc-prog-text" id="listeningProg">0 sessions</span>
-          <span class="mc-sessions">→ Practice now</span>
-        </div>
-      </a>
-
-      <a href="speaking.html" class="module-card mc-speaking">
-        <div class="mc-header">
-          <div class="mc-icon icon-red">🎤</div>
-          <div>
-            <div class="mc-band" id="speakingBand">—</div>
-            <div class="mc-band-none" id="speakingBandLabel">Not started</div>
-          </div>
-        </div>
-        <div class="mc-name">Speaking</div>
-        <div class="mc-desc">Parts 1, 2 & 3 · AI feedback</div>
-        <div class="mc-progress-bar"><div class="mc-progress-fill fill-blue" id="speakingBar" style="width:0%"></div></div>
-        <div class="mc-progress-label">
-          <span class="mc-prog-text" id="speakingProg">0 sessions</span>
-          <span class="mc-sessions">→ Practice now</span>
-        </div>
-      </a>
-
-      <a href="grammar.html" class="module-card mc-grammar">
-        <div class="mc-header">
-          <div class="mc-icon icon-purple">📝</div>
-          <div>
-            <div class="mc-band" id="grammarBand">—</div>
-            <div class="mc-band-none" id="grammarBandLabel">Not started</div>
-          </div>
-        </div>
-        <div class="mc-name">Grammar</div>
-        <div class="mc-desc">B1 · B2 · C1 · 5 topics per level</div>
-        <div class="mc-progress-bar"><div class="mc-progress-fill fill-blue" id="grammarBar" style="width:0%"></div></div>
-        <div class="mc-progress-label">
-          <span class="mc-prog-text" id="grammarProg">0 sessions</span>
-          <span class="mc-sessions">→ Practice now</span>
-        </div>
-      </a>
-
-      <a href="mock-exam.html" class="module-card mc-mock">
-        <div class="mc-header">
-          <div class="mc-icon icon-blue">⏱️</div>
-          <div>
-            <div class="mc-band" id="mockBand">—</div>
-            <div class="mc-band-none" id="mockBandLabel">Not attempted</div>
-          </div>
-        </div>
-        <div class="mc-name">Mock Exam</div>
-        <div class="mc-desc">Full exam · Academic & General</div>
-        <div class="mc-progress-bar"><div class="mc-progress-fill fill-blue" id="mockBar" style="width:0%"></div></div>
-        <div class="mc-progress-label">
-          <span class="mc-prog-text" id="mockProg">0 completed</span>
-          <span class="mc-sessions">→ Start exam</span>
-        </div>
-      </a>
+    <div class="modules">
+      <a href="/writing.html" class="mod"><div class="mod-header"><div class="mod-icon ic-blue">✍️</div><div><div class="mod-band" id="wBand">—</div><div class="mod-band-none" id="wLabel">Not started</div></div></div><div class="mod-name">Writing</div><div class="mod-desc">Task 1 & Task 2 · Academic & General</div><div class="mod-bar"><div class="mod-bar-fill" id="wBar" style="width:0%"></div></div><div class="mod-footer"><span class="mod-sessions" id="wSess">0 sessions</span><span class="mod-cta">→ Practice now</span></div></a>
+      <a href="/reading.html" class="mod"><div class="mod-header"><div class="mod-icon ic-green">📖</div><div><div class="mod-band" id="rBand">—</div><div class="mod-band-none" id="rLabel">Not started</div></div></div><div class="mod-name">Reading</div><div class="mod-desc">Passages · T/F/NG · Multiple choice</div><div class="mod-bar"><div class="mod-bar-fill" id="rBar" style="width:0%"></div></div><div class="mod-footer"><span class="mod-sessions" id="rSess">0 sessions</span><span class="mod-cta">→ Practice now</span></div></a>
+      <a href="/listening.html" class="mod"><div class="mod-header"><div class="mod-icon ic-amber">🎧</div><div><div class="mod-band" id="lBand">—</div><div class="mod-band-none" id="lLabel">Not started</div></div></div><div class="mod-name">Listening</div><div class="mod-desc">4 sections · Audio + questions</div><div class="mod-bar"><div class="mod-bar-fill" id="lBar" style="width:0%"></div></div><div class="mod-footer"><span class="mod-sessions" id="lSess">0 sessions</span><span class="mod-cta">→ Practice now</span></div></a>
+      <a href="/speaking.html" class="mod"><div class="mod-header"><div class="mod-icon ic-red">🎤</div><div><div class="mod-band" id="spBand">—</div><div class="mod-band-none" id="spLabel">Not started</div></div></div><div class="mod-name">Speaking</div><div class="mod-desc">Parts 1, 2 & 3 · AI feedback</div><div class="mod-bar"><div class="mod-bar-fill" id="spBar" style="width:0%"></div></div><div class="mod-footer"><span class="mod-sessions" id="spSess">0 sessions</span><span class="mod-cta">→ Practice now</span></div></a>
+      <a href="/grammar.html" class="mod"><div class="mod-header"><div class="mod-icon ic-purple">📝</div><div><div class="mod-band" id="gBand">—</div><div class="mod-band-none" id="gLabel">Not started</div></div></div><div class="mod-name">Grammar</div><div class="mod-desc">B1 · B2 · C1 · 5 topics per level</div><div class="mod-bar"><div class="mod-bar-fill" id="gBar" style="width:0%"></div></div><div class="mod-footer"><span class="mod-sessions" id="gSess">0 sessions</span><span class="mod-cta">→ Practice now</span></div></a>
+      <a href="/mock-exam.html" class="mod"><div class="mod-header"><div class="mod-icon ic-blue">⏱️</div><div><div class="mod-band" id="mBand">—</div><div class="mod-band-none" id="mLabel">Not attempted</div></div></div><div class="mod-name">Mock Exam</div><div class="mod-desc">Full exam · Academic & General</div><div class="mod-bar"><div class="mod-bar-fill" id="mBar" style="width:0%"></div></div><div class="mod-footer"><span class="mod-sessions" id="mSess">0 completed</span><span class="mod-cta">→ Start exam</span></div></a>
     </div>
 
-    <!-- MOCK BANNER -->
     <div class="mock-banner">
-      <div class="mb-left">
-        <div class="mb-title">Ready to test yourself?</div>
-        <div class="mb-sub">Take a full mock exam under real conditions. Get a predicted band score for all four skills.</div>
+      <div>
+        <div class="mock-banner-title">Ready to test yourself?</div>
+        <div class="mock-banner-sub">Take a full mock exam under real conditions. Get a predicted band score for all four skills.</div>
       </div>
-      <a href="mock-exam.html" class="mb-btn">Start mock exam →</a>
+      <a href="/mock-exam.html" class="mock-btn">Start mock exam →</a>
     </div>
 
-    <!-- ACTIVITY + TIPS -->
     <div class="two-col">
-      <div class="activity-card">
+      <div class="card">
         <div class="section-title">Recent activity</div>
-        <div class="activity-list" id="activityList">
-          <div class="activity-empty">No sessions yet. Start practising to see your history here.</div>
-        </div>
+        <div id="activityList"><div class="empty-activity">No sessions yet. Start practising to see your history here.</div></div>
       </div>
-
-      <div class="tips-card">
+      <div class="card">
         <div class="section-title">Today's study tips</div>
-        <div class="activity-list">
-          <div class="tip-item">
-            <div class="tip-num">1</div>
-            <div class="tip-text"><strong>Writing:</strong> Always spend 5 minutes planning before you write. Structure = higher band.</div>
-          </div>
-          <div class="tip-item">
-            <div class="tip-num">2</div>
-            <div class="tip-text"><strong>Reading:</strong> Skim the passage first, then read questions. Never read word by word.</div>
-          </div>
-          <div class="tip-item">
-            <div class="tip-num">3</div>
-            <div class="tip-text"><strong>Listening:</strong> Read the questions before the audio starts. Predict the type of answer.</div>
-          </div>
-          <div class="tip-item">
-            <div class="tip-num">4</div>
-            <div class="tip-text"><strong>Speaking:</strong> Extend every answer with a reason and an example. Never give one-word answers.</div>
-          </div>
-          <div class="tip-item">
-            <div class="tip-num">5</div>
-            <div class="tip-text"><strong>Grammar:</strong> Learn 3 new linking words per week. Use them in Writing and Speaking.</div>
-          </div>
-        </div>
+        <div class="tip-item"><div class="tip-num">1</div><div class="tip-text"><strong>Writing:</strong> Always spend 5 minutes planning before you write. Structure = higher band.</div></div>
+        <div class="tip-item"><div class="tip-num">2</div><div class="tip-text"><strong>Reading:</strong> Skim the passage first, then read questions. Never read word by word.</div></div>
+        <div class="tip-item"><div class="tip-num">3</div><div class="tip-text"><strong>Listening:</strong> Read the questions before the audio starts. Predict the type of answer.</div></div>
+        <div class="tip-item"><div class="tip-num">4</div><div class="tip-text"><strong>Speaking:</strong> Extend every answer with a reason and an example. Never give one-word answers.</div></div>
+        <div class="tip-item"><div class="tip-num">5</div><div class="tip-text"><strong>Grammar:</strong> Learn 3 new linking words per week. Use them in Writing and Speaking.</div></div>
       </div>
-    </div>
-
-    <!-- BAND PROGRESS CHART -->
-    <div class="band-chart-card">
-      <div class="section-title">Band score by skill</div>
-      <div class="band-chart" id="bandChart">
-        <div class="bc-bar-wrap"><div class="bc-val" id="bcW">—</div><div class="bc-bar" id="bcWBar" style="height:4px;opacity:.3"></div><div class="bc-label">Writing</div></div>
-        <div class="bc-bar-wrap"><div class="bc-val" id="bcR">—</div><div class="bc-bar" id="bcRBar" style="height:4px;opacity:.3"></div><div class="bc-label">Reading</div></div>
-        <div class="bc-bar-wrap"><div class="bc-val" id="bcL">—</div><div class="bc-bar" id="bcLBar" style="height:4px;opacity:.3"></div><div class="bc-label">Listening</div></div>
-        <div class="bc-bar-wrap"><div class="bc-val" id="bcS">—</div><div class="bc-bar" id="bcSBar" style="height:4px;opacity:.3"></div><div class="bc-label">Speaking</div></div>
-        <div class="bc-bar-wrap"><div class="bc-val" id="bcG">—</div><div class="bc-bar" id="bcGBar" style="height:4px;opacity:.3"></div><div class="bc-label">Grammar</div></div>
-      </div>
-      <div style="text-align:center;margin-top:16px;font-size:13px;color:var(--muted)">Complete practice sessions to see your band scores appear here.</div>
     </div>
 
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// GREETING
-var h=new Date().getHours();
-var g=h<12?'Good morning 👋':h<17?'Good afternoon 👋':'Good evening 👋';
-document.getElementById('greeting').textContent=g;
+var SB_URL='https://ystwgkfwydyrefbqjcjd.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk';
+var sb=supabase.createClient(SB_URL,SB_KEY);
 
-// SIDEBAR MOBILE
-function toggleSidebar(){
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('overlay').classList.toggle('active');
-}
-function closeSidebar(){
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('overlay').classList.remove('active');
-}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('overlay').classList.toggle('active');}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('overlay').classList.remove('active');}
 
+function doSignOut(){sb.auth.signOut().then(function(){window.location.href='/index.html';});}
 
+function bandToPct(b){if(!b||b==='—')return 0;return((parseFloat(b)-1)/8*100).toFixed(1);}
 
-// PROGRESS DATA (stored in localStorage)
-function getProgress(){ return {}; }
-
-function bandToHeight(b){
-  if(!b||b==='—') return 4;
-  return Math.max(4,((parseFloat(b)-1)/8)*88);
-}
-function bandToPct(b){
-  if(!b||b==='—') return 0;
-  return ((parseFloat(b)-1)/8)*100;
+function renderModule(prefix,data){
+  var band=data?data.band:null;
+  var sess=data?data.sessions:0;
+  var bandEl=document.getElementById(prefix+'Band');
+  var labelEl=document.getElementById(prefix+'Label');
+  var barEl=document.getElementById(prefix+'Bar');
+  var sessEl=document.getElementById(prefix+'Sess');
+  if(band){bandEl.textContent=band;labelEl.textContent='Band score';barEl.style.width=bandToPct(band)+'%';}
+  if(sessEl) sessEl.textContent=sess+' session'+(sess!==1?'s':'');
 }
 
-function renderDashboard(p){
-  p = p || {};
-  
+async function init(){
+  var {data:sessionData}=await sb.auth.getSession();
+  if(!sessionData.session){window.location.href='/auth.html';return;}
+  var user=sessionData.session.user;
+  var name=user.user_metadata?.full_name||user.email.split('@')[0];
+  var initial=name.charAt(0).toUpperCase();
+
+  document.getElementById('sbAvatar').textContent=initial;
+  document.getElementById('sbName').textContent=name;
+  var h=new Date().getHours();
+  document.getElementById('greeting').textContent=(h<12?'Good morning':h<17?'Good afternoon':'Good evening')+' 👋';
+
   try{
-    if(typeof getSupabase === 'function'){
-      var sb2=getSupabase();
-      var userRes=await sb2.auth.getUser();
-      var uid=userRes?.data?.user?.id;
-      if(uid){
-        var {data:sessions}=await sb2.from('sessions').select('*').eq('user_id',uid).order('created_at',{ascending:false});
-        if(sessions&&sessions.length>0){
-          sessions.forEach(function(s){
-            if(!p[s.module]) p[s.module]={sessions:0,band:null};
-            p[s.module].sessions++;
-            if(s.band&&(!p[s.module].band||parseFloat(s.band)>parseFloat(p[s.module].band))) p[s.module].band=s.band;
-          });
-          p.activity=sessions.slice(0,6).map(function(s){
-            return{module:s.module,band:s.band,type:s.subtype,date:new Date(s.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})};
-          });
-        }
+    var {data:profile}=await sb.from('profiles').select('*').eq('id',user.id).single();
+    if(profile){
+      if(profile.full_name){document.getElementById('sbName').textContent=profile.full_name;}
+      document.getElementById('sbPlan').textContent=profile.plan==='pro'?'⚡ Pro Plan':profile.plan==='intensive'?'🚀 Intensive':'🆓 Free Plan';
+    }
+  }catch(e){}
+
+  try{
+    var {data:sessions}=await sb.from('sessions').select('*').eq('user_id',user.id).order('created_at',{ascending:false});
+    if(sessions&&sessions.length>0){
+      var p={};
+      sessions.forEach(function(s){
+        if(!p[s.module])p[s.module]={sessions:0,band:null};
+        p[s.module].sessions++;
+        if(s.band&&(!p[s.module].band||parseFloat(s.band)>parseFloat(p[s.module].band)))p[s.module].band=s.band;
+      });
+
+      document.getElementById('totalSessions').textContent=sessions.length;
+      document.getElementById('statSessions').textContent=sessions.length;
+      document.getElementById('statMocks').textContent=(p.mock&&p.mock.sessions)||0;
+
+      var bands=Object.entries(p).filter(function(e){return e[1].band;}).map(function(e){return{skill:e[0],band:parseFloat(e[1].band)};});
+      if(bands.length>0){
+        var best=bands.reduce(function(a,b){return a.band>b.band?a:b;});
+        var weak=bands.reduce(function(a,b){return a.band<b.band?a:b;});
+        document.getElementById('statBest').textContent=best.skill.charAt(0).toUpperCase()+best.skill.slice(1);
+        document.getElementById('statBestSub').textContent='Band '+best.band;
+        document.getElementById('statWeak').textContent=weak.skill.charAt(0).toUpperCase()+weak.skill.slice(1);
+        document.getElementById('statWeakSub').textContent='Band '+weak.band+' — focus here';
+        var allBands=bands.map(function(b){return b.band;});
+        var overall=(allBands.reduce(function(a,b){return a+b;},0)/allBands.length).toFixed(1);
+        document.getElementById('currentBand').textContent=overall;
       }
-    }
-  }catch(e){console.log('Dashboard data error:',e);}
-  var skills=['writing','reading','listening','speaking','grammar'];
-  var bands=[];
-  var totalSessions=0;
-  var bestSkill=null, bestBand=0, weakSkill=null, weakBand=10;
 
-  skills.forEach(function(s){
-    var data=p[s]||{sessions:0,band:null};
-    var sessions=data.sessions||0;
-    var band=data.band||null;
-    totalSessions+=sessions;
+      renderModule('w',p.writing);
+      renderModule('r',p.reading);
+      renderModule('l',p.listening);
+      renderModule('sp',p.speaking);
+      renderModule('g',p.grammar);
+      renderModule('m',p.mock);
 
-    var bandEl=document.getElementById(s+'Band');
-    var labelEl=document.getElementById(s+'BandLabel');
-    var barEl=document.getElementById(s+'Bar');
-    var progEl=document.getElementById(s+'Prog');
-
-    if(band){
-      bandEl.textContent=band;
-      labelEl.textContent='Band score';
-      barEl.style.width=bandToPct(band)+'%';
-      bands.push(parseFloat(band));
-      if(parseFloat(band)>bestBand){bestBand=parseFloat(band);bestSkill=s;}
-      if(parseFloat(band)<weakBand){weakBand=parseFloat(band);weakSkill=s;}
-    } else {
-      bandEl.textContent='—';
-      labelEl.textContent='Not started';
-      barEl.style.width='0%';
-    }
-    progEl.textContent=sessions+' session'+(sessions!==1?'s':'');
-
-    // Chart bars
-    var cbId={'writing':'bcW','reading':'bcR','listening':'bcL','speaking':'bcS','grammar':'bcG'}[s];
-    var cbBarId={'writing':'bcWBar','reading':'bcRBar','listening':'bcLBar','speaking':'bcSBar','grammar':'bcGBar'}[s];
-    if(cbId){
-      document.getElementById(cbId).textContent=band||'—';
-      document.getElementById(cbBarId).style.height=bandToHeight(band)+'px';
-      document.getElementById(cbBarId).style.opacity=band?'1':'0.2';
-    }
-  });
-
-  document.getElementById('totalSessions').textContent=totalSessions;
-  document.getElementById('statSessions').textContent=totalSessions;
-  document.getElementById('statMocks').textContent=(p.mock&&p.mock.sessions)||0;
-
-  if(bestSkill){
-    document.getElementById('statBest').textContent=bestSkill.charAt(0).toUpperCase()+bestSkill.slice(1);
-    document.getElementById('statBestSub').textContent='Band '+bestBand;
-  }
-  if(weakSkill){
-    document.getElementById('statWeak').textContent=weakSkill.charAt(0).toUpperCase()+weakSkill.slice(1);
-    document.getElementById('statWeakSub').textContent='Band '+weakBand+' — focus here';
-  }
-
-  if(bands.length>0){
-    var overall=(bands.reduce(function(a,b){return a+b},0)/bands.length).toFixed(1);
-    document.getElementById('currentBand').textContent=overall;
-  }
-
-  // Mock
-  var mockData=p.mock||{sessions:0,band:null};
-  document.getElementById('mockBand').textContent=mockData.band||'—';
-  document.getElementById('mockBandLabel').textContent=mockData.band?'Last score':'Not attempted';
-  document.getElementById('mockBar').style.width=bandToPct(mockData.band)+'%';
-  document.getElementById('mockProg').textContent=(mockData.sessions||0)+' completed';
-
-  // Activity
-  var activity=p.activity||[];
-  var list=document.getElementById('activityList');
-  if(activity.length===0){
-    list.innerHTML='<div class="activity-empty">No sessions yet. Start practising to see your history here.</div>';
-  } else {
-    list.innerHTML='';
-    activity.slice(-6).reverse().forEach(function(a){
       var icons={writing:'✍️',reading:'📖',listening:'🎧',speaking:'🎤',grammar:'📝',mock:'⏱️'};
       var colors={writing:'rgba(27,63,110,.1)',reading:'rgba(13,158,114,.1)',listening:'rgba(217,119,6,.1)',speaking:'rgba(220,38,38,.1)',grammar:'rgba(124,58,237,.1)',mock:'rgba(27,63,110,.1)'};
-      var div=document.createElement('div'); div.className='activity-item';
-      div.innerHTML='<div class="activity-dot" style="background:'+colors[a.module]+'">'+icons[a.module]+'</div>'+
-        '<div class="activity-info"><div class="activity-title">'+a.module.charAt(0).toUpperCase()+a.module.slice(1)+(a.type?' — '+a.type:'')+'</div>'+
-        '<div class="activity-sub">'+a.date+'</div></div>'+
-        (a.band?'<div class="activity-score">'+a.band+'</div>':'');
-      list.appendChild(div);
-    });
-  }
-}
-
-// SAVE PROGRESS (called from other modules via postMessage or direct localStorage)
-// Other modules can call: saveModuleProgress('writing', {band:'7.0', type:'Task 2 Academic'})
-window.saveModuleProgress=function(module, data){
-  var p=getProgress();
-  if(!p[module]) p[module]={sessions:0,band:null};
-  p[module].sessions=(p[module].sessions||0)+1;
-  if(data.band) p[module].band=data.band;
-  if(!p.activity) p.activity=[];
-  p.activity.push({
-    module:module,
-    band:data.band||null,
-    type:data.type||null,
-    date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})
-  });
-  if(p.activity.length>20) p.activity=p.activity.slice(-20);
-  localStorage.setItem('ielts_progress',JSON.stringify(p));
-  renderDashboard();
-};
-
-
-
-
-
-
-// ── AUTH + USER LOADING ───────────────────────────────────────
-var _SB_URL = 'https://ystwgkfwydyrefbqjcjd.supabase.co';
-var _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk';
-
-function doSignOut(){
-  var sb = supabase.createClient(_SB_URL, _SB_KEY);
-  sb.auth.signOut().then(function(){ window.location.href = '/index.html'; });
-}
-
-async function loadUserAndData(){
-  var sb = supabase.createClient(_SB_URL, _SB_KEY);
-  
-  // Check session
-  var { data: sessionData } = await sb.auth.getSession();
-  if (!sessionData.session) {
-    window.location.href = '/auth.html';
-    return;
-  }
-  
-  var user = sessionData.session.user;
-  var name = user.user_metadata?.full_name || user.email.split('@')[0];
-  var initial = name.charAt(0).toUpperCase();
-  
-  // Update sidebar
-  var avatarEl = document.getElementById('sbAvatar');
-  var nameEl = document.getElementById('sbUserName');
-  var planEl = document.getElementById('sbUserPlan');
-  var greetEl = document.getElementById('greeting');
-  var totalEl = document.getElementById('totalSessions');
-  
-  if (avatarEl) avatarEl.textContent = initial;
-  if (nameEl) nameEl.textContent = name;
-  
-  var h = new Date().getHours();
-  if (greetEl) greetEl.textContent = (h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening') + ' 👋';
-
-  // Load profile
-  try {
-    var { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
-    if (profile) {
-      if (nameEl && profile.full_name) nameEl.textContent = profile.full_name;
-      if (planEl) planEl.textContent = profile.plan === 'pro' ? '⚡ Pro Plan' : profile.plan === 'intensive' ? '🚀 Intensive' : '🆓 Free Plan';
-    }
-  } catch(e) { console.log('Profile error:', e); }
-
-  // Load sessions
-  try {
-    var { data: sessions } = await sb.from('sessions').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
-    if (sessions) {
-      var p = {};
-      sessions.forEach(function(s){
-        if (!p[s.module]) p[s.module] = { sessions: 0, band: null };
-        p[s.module].sessions++;
-        if (s.band && (!p[s.module].band || parseFloat(s.band) > parseFloat(p[s.module].band))) {
-          p[s.module].band = s.band;
-        }
+      var list=document.getElementById('activityList');
+      list.innerHTML='';
+      sessions.slice(0,6).forEach(function(s){
+        var div=document.createElement('div');div.className='activity-item';
+        div.innerHTML='<div class="activity-dot" style="background:'+colors[s.module]+'">'+icons[s.module]+'</div>'+
+          '<div class="activity-info"><div class="activity-title">'+s.module.charAt(0).toUpperCase()+s.module.slice(1)+(s.subtype?' — '+s.subtype:'')+'</div>'+
+          '<div class="activity-sub">'+new Date(s.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})+'</div></div>'+
+          (s.band?'<div class="activity-score">'+s.band+'</div>':'');
+        list.appendChild(div);
       });
-      p.activity = sessions.slice(0, 6).map(function(s){
-        return {
-          module: s.module, band: s.band, type: s.subtype,
-          date: new Date(s.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' })
-        };
-      });
-      if (totalEl) totalEl.textContent = sessions.length;
-      renderDashboard(p);
-    } else {
-      renderDashboard({});
     }
-  } catch(e) {
-    console.log('Sessions error:', e);
-    renderDashboard({});
-  }
+  }catch(e){console.log('Sessions error:',e);}
 }
 
-loadUserAndData();
-
+init();
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
 </body>
 </html>

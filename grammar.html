@@ -133,22 +133,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 </head>
 <body>
 
-<div class="topbar">
-  <a href="index.html" class="logo">IELTS<span>Score</span>Up</a>
-  <a href="index.html" class="back-link">← Dashboard</a>
-</div>
 
-<div class="page">
-
-  <div class="selectors">
-    <div class="selector-card">
-      <div class="selector-label">Level</div>
-      <div class="pills" id="levelPills">
-        <button class="pill active" onclick="setLevel('B1',this)">B1 — Intermediate</button>
-        <button class="pill" onclick="setLevel('B2',this)">B2 — Upper-Int</button>
-        <button class="pill" onclick="setLevel('C1',this)">C1 — Advanced</button>
-      </div>
-    </div>
     <div class="selector-card">
       <div class="selector-label">Grammar topic</div>
       <div class="pills" id="topicPills"></div>
@@ -476,8 +461,7 @@ function checkAnswer(i, userAns, correctAns, card, preChecked){
 
   updateProgress();
   if(answeredCount===totalQ){
-    var key=document.getElementById('apiKey').value.trim();
-    document.getElementById('submitBtn').disabled=!key.startsWith('sk-ant-');
+        document.getElementById('submitBtn').disabled=!key.startsWith('sk-ant-');
   }
 }
 
@@ -500,8 +484,7 @@ document.getElementById('apiKey').addEventListener('input',function(){
 });
 
 async function getAIReport(){
-  var key=document.getElementById('apiKey').value.trim();
-  var data=grammarData[currentLevel];
+    var data=grammarData[currentLevel];
   var set=data.sets[currentTopic]||data.sets[0];
   var topic=data.topics[currentTopic];
   var btn=document.getElementById('submitBtn');

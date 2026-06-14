@@ -28,14 +28,14 @@
 
     // If inside platform and not logged in — redirect to auth
     if (isInsidePlatform && !user) {
-      window.location.href = 'auth.html';
+      window.location.href = '/auth.html';
       return;
     }
 
     if (needsNavbar && user) {
       buildPlatformNav(user, sb);
     } else if (isInsidePlatform && !needsNavbar && !user) {
-      window.location.href = 'auth.html';
+      window.location.href = '/auth.html';
       return;
     } else {
       buildLandingNav(user);
@@ -86,7 +86,7 @@
         </div>
       </div>
       <div class="isu-mob" id="isuMob">
-        <a href="dashboard.html">Dashboard</a>
+        <a href="/dashboard.html">Dashboard</a>
         <a href="/writing.html">Writing</a>
         <a href="/reading.html">Reading</a>
         <a href="/listening.html">Listening</a>
@@ -138,6 +138,6 @@
     var sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     await sb.auth.signOut();
     localStorage.clear();
-    window.location.href = 'index.html';
+    window.location.href = '/index.html';
   };
 })();

@@ -135,39 +135,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 </head>
 <body>
 
-<div class="topbar">
-  <a href="dashboard.html" class="logo">IELTS<span>Score</span>Up</a>
-  <a href="dashboard.html" class="back-link">← Dashboard</a>
-</div>
 
-<div class="page">
-
-  <div style="margin-bottom:24px">
-    <h1 style="font-size:24px;font-weight:900;color:var(--dark);letter-spacing:-0.5px;margin-bottom:6px">Your certificates</h1>
-    <p style="font-size:14px;color:var(--muted)">Earn a certificate for each module by reaching the minimum band score. Download and share your achievements.</p>
-  </div>
-
-  <!-- OVERVIEW GRID -->
-  <div class="certs-grid" id="certsGrid"></div>
-
-  <!-- MODULE SELECTOR -->
-  <div class="modules-row" id="modulesRow"></div>
-
-  <!-- STATUS CARD -->
-  <div class="status-card" id="statusCard"></div>
-
-  <!-- CERTIFICATE PREVIEW or NOT EARNED -->
-  <div class="preview-wrap">
-    <div class="preview-label">
-      Certificate preview
-      <span class="preview-scale">Scale: full size when downloaded</span>
-    </div>
-    <div id="certPreview"></div>
-  </div>
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 var SUPABASE_URL='https://ystwgkfwydyrefbqjcjd.supabase.co';
@@ -505,6 +477,7 @@ function downloadCert(){
 
 init();
 </script>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script src="navbar.js"></script>

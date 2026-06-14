@@ -73,13 +73,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 <link rel="stylesheet" href="navbar.css"/>
 </head>
 <body>
-<div class="topbar">
-  <a href="dashboard.html" class="logo">IELTS<span>Score</span>Up</a>
-  <div style="display:flex;align-items:center;gap:12px">
-    <span style="font-size:13px;color:var(--muted)">Words: <strong id="topWc">0</strong></span>
-    <a href="dashboard.html" class="back-link">← Dashboard</a>
-  </div>
-</div>
+
 <div class="layout">
   <div>
     <div class="panel">
@@ -148,6 +142,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
     </div>
   </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script>
@@ -211,6 +206,7 @@ async function evaluate(){
 }
 init();
 </script>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script src="navbar.js"></script>

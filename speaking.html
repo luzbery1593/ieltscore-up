@@ -132,25 +132,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 </head>
 <body>
 
-<div class="topbar">
-  <a href="index.html" class="logo">IELTS<span>Score</span>Up</a>
-  <a href="index.html" class="back-link">← Dashboard</a>
-</div>
 
-<div class="page">
-
-  <div class="part-tabs">
-    <button class="part-tab active" onclick="goPart(0,this)" id="ptab0">Part 1<div class="tab-sub">Introduction</div></button>
-    <button class="part-tab" onclick="goPart(1,this)" id="ptab1">Part 2<div class="tab-sub">Long turn</div></button>
-    <button class="part-tab" onclick="goPart(2,this)" id="ptab2">Part 3<div class="tab-sub">Discussion</div></button>
-  </div>
-
-  <div class="part-header">
-    <div class="part-header-left">
-      <div class="part-eyebrow" id="partEyebrow">Part 1</div>
-      <div class="part-title" id="partTitle">Introduction & Interview</div>
-      <div class="part-desc" id="partDesc">Answer questions about yourself and familiar topics. Speak naturally as if talking to an examiner.</div>
-    </div>
     <div class="timer-pill">
       <div class="timer-num" id="partTimer">04:00</div>
       <div class="timer-label">remaining</div>
@@ -385,8 +367,7 @@ function onResponseInput(){
 }
 
 function checkEvalReady(){
-  var key=document.getElementById('apiKey').value.trim();
-  var el=document.getElementById('responseText');
+    var el=document.getElementById('responseText');
   var wc=el&&el.value.trim()!==''?el.value.trim().split(/\s+/).length:0;
   var minW=currentPart===1?120:40;
   document.getElementById('evalBtn').disabled=!(key.startsWith('sk-ant-')&&wc>=minW);
@@ -441,8 +422,7 @@ function getCurrentQuestion(){
 }
 
 async function evaluateResponse(){
-  var key=document.getElementById('apiKey').value.trim();
-  var response=document.getElementById('responseText').value.trim();
+    var response=document.getElementById('responseText').value.trim();
   var question=getCurrentQuestion();
   var partLabel=partMeta[currentPart].eyebrow;
   var btn=document.getElementById('evalBtn');
