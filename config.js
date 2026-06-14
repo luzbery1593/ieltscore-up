@@ -1,46 +1,14 @@
 // IELTScoreUp — API Configuration
-// This file connects the frontend to the Railway backend
-
 const CONFIG = {
   API_URL: 'https://ieltscore-up-api-production.up.railway.app',
   SUPABASE_URL: 'https://ystwgkfwydyrefbqjcjd.supabase.co',
   SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk'
 };
 
-// ── API CLIENT ────────────────────────────────────────────────
-// All calls go through the Railway backend — API keys never exposed
-
-async function apiCall(endpoint, body = {}, token = null) {
-  const headers = { 'Content-Type': 'application/json' };
-  if (token) headers['Authorization'] = `Bearer ${token}`;
-
-  const res = await fetch(CONFIG.API_URL + endpoint, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify(body)
-  });
-
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error || 'API error');
-  }
-  return res.json();
-}
-
-async function apiGet(endpoint, token = null) {
-  const headers = {};
-  if (token) headers['Authorization'] = `Bearer ${token}`;
-  const res = await fetch(CONFIG.API_URL + endpoint, { headers });
-  if (!res.ok) { const err = await res.json(); throw new Error(err.error || 'API error'); }
-  return res.json();
-}
-
-// ── SUPABASE CLIENT ───────────────────────────────────────────
 function getSupabase() {
   return supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_KEY);
 }
 
-// ── AUTH HELPERS ──────────────────────────────────────────────
 async function getToken() {
   const sb = getSupabase();
   const { data } = await sb.auth.getSession();
@@ -49,7 +17,7 @@ async function getToken() {
 
 async function requireLogin() {
   const token = await getToken();
-  if (!token) { window.location.href = 'auth.html'; return null; }
+  if (!token) { window.location.href = '/auth.html'; return null; }
   return token;
 }
 
@@ -59,38 +27,28 @@ async function getCurrentUser() {
   return data?.session?.user || null;
 }
 
-// ── PROGRESS HELPERS ──────────────────────────────────────────
-async function saveSession(module, data) {
-  const token = await getToken();
-  if (!token) return;
-  // Sessions are saved server-side via each API endpoint
-  // This function is kept for local UI updates
-  console.log('Session saved:', module, data);
+async function apiCall(endpoint, body = {}, token = null) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  const res = await fetch(CONFIG.API_URL + endpoint, {
+    method: 'POST', headers, body: JSON.stringify(body)
+  });
+  if (!res.ok) { const err = await res.json(); throw new Error(err.error || 'API error'); }
+  return res.json();
 }
 
-// ── AUDIO PLAYER ──────────────────────────────────────────────
-// Fetches real TTS audio from backend and plays it
 async function playTTS(text, voice = 'british_female', onProgress) {
   const token = await getToken();
   if (!token) throw new Error('Not logged in');
-
   const res = await fetch(CONFIG.API_URL + '/api/tts', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
     body: JSON.stringify({ text, voice })
   });
-
   if (!res.ok) throw new Error('Audio generation failed');
-
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
   const audio = new Audio(url);
-
-  audio.ontimeupdate = () => {
-    if (onProgress && audio.duration) {
-      onProgress(audio.currentTime, audio.duration);
-    }
-  };
-
+  audio.ontimeupdate = () => { if (onProgress && audio.duration) onProgress(audio.currentTime, audio.duration); };
   return audio;
 }
