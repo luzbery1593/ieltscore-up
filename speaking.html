@@ -92,7 +92,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 
 /* BOTTOM BAR */
 .bottom-bar{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:16px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-.api-wrap{flex:1;min-width:200px}
 .api-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:9px 13px;font-family:'Inter',sans-serif;font-size:13px;color:var(--dark);outline:none;transition:border-color .15s;background:var(--bg)}
 .api-input:focus{border-color:var(--blue);background:var(--white)}
 .api-note{font-size:11px;color:var(--muted);margin-top:4px}
@@ -174,8 +173,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
   <div id="partContent"></div>
 
   <div class="bottom-bar">
-    
-    </div>
     <button class="eval-btn" id="evalBtn" onclick="evaluateResponse()" disabled>
       <div class="spinner"></div>
       <span class="btn-text">Get AI feedback →</span>
@@ -380,7 +377,12 @@ function makePrepBar(){
 
 function makeResponseCard(placeholder){
   var div=document.createElement('div'); div.className='response-card';
-  div.innerHTML='<div class="response-label" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px"><span style="font-size:12px;font-weight:700;color:#5A6A7E;letter-spacing:0.06em;text-transform:uppercase">Your spoken response</span><button id="micBtn" onclick="toggleMic()" style="display:flex;align-items:center;gap:6px;background:#F4F6FA;border:1.5px solid #E2E8F0;border-radius:8px;padding:7px 14px;cursor:pointer;font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#1B3F6E;transition:all .15s">🎤 <span id="micLabel">Record voice</span></button></div><textarea class="response-textarea" id="responseText" placeholder="'+placeholder+'" oninput="onResponseInput()"></textarea><div class="response-footer"><span class="wc-text">Words: <span class="wc-num" id="wcNum">0</span></span></div>';
+  div.innerHTML='<div class="response-label" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'+
+    '<span>Your spoken response <span class="response-hint">Write or use microphone</span></span>'+
+    '<button id="micBtn" onclick="toggleMic()" style="display:flex;align-items:center;gap:6px;background:#F4F6FA;border:1.5px solid #E2E8F0;border-radius:8px;padding:7px 14px;cursor:pointer;font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#1B3F6E">'+
+    '🎤 <span id="micLabel">Record</span></button></div>'+
+    '<textarea class="response-textarea" id="responseText" placeholder="'+placeholder+'" oninput="onResponseInput()"></textarea>'+
+    '<div class="response-footer"><span class="wc-text">Words: <span class="wc-num" id="wcNum">0</span></span></div>';
   return div;
 }
 
@@ -405,7 +407,6 @@ function checkEvalReady(){
   document.getElementById('evalBtn').disabled=!(wc>=minW);
 }
 
-document.getElementById('apiKey').addEventListener('input', checkEvalReady);
 
 function startPrepTimer(){
   clearInterval(prepTimerInterval); prepTimeLeft=60;
@@ -517,9 +518,7 @@ Be honest and specific. Reference the actual content of their response.`;
   }
 }
 
-renderPart();
-
-// MICROPHONE
+// MICROPHONE RECORDING
 var _mr=null,_ac=[],_ir=false;
 async function toggleMic(){
   if(_ir){_stopR();}else{await _startR();}
@@ -536,8 +535,10 @@ async function _startR(){
     _mr.start();_ir=true;
     var b=document.getElementById('micBtn'),l=document.getElementById('micLabel');
     if(b){b.style.background='rgba(220,38,38,.1)';b.style.borderColor='#DC2626';b.style.color='#DC2626';}
-    if(l)l.textContent='Stop recording';
-  }catch(e){alert('Please allow microphone access in your browser.');}
+    if(l)l.textContent='Stop';
+  }catch(e){
+    alert('Please allow microphone access in your browser.');
+  }
 }
 function _stopR(){
   if(_mr&&_mr.state!=='inactive')_mr.stop();
@@ -552,16 +553,23 @@ async function _trans(blob){
     var sd=await SB2.auth.getSession();
     var tok=sd.data?.session?.access_token||'';
     var fd=new FormData();fd.append('audio',blob,'rec.webm');
-    var r=await fetch('https://ieltscore-up-api-production.up.railway.app/api/speaking/transcribe',{method:'POST',headers:{'Authorization':'Bearer '+tok},body:fd});
-    if(r.ok){var d=await r.json();var ta=document.getElementById('responseText');if(ta&&d.text){ta.value=(ta.value?ta.value.trimEnd()+' ':'')+d.text;onResponseInput();}}
+    var r=await fetch('https://ieltscore-up-api-production.up.railway.app/api/speaking/transcribe',{
+      method:'POST',headers:{'Authorization':'Bearer '+tok},body:fd
+    });
+    if(r.ok){
+      var d=await r.json();
+      var ta=document.getElementById('responseText');
+      if(ta&&d.text){ta.value=(ta.value?ta.value.trimEnd()+' ':'')+d.text;onResponseInput();}
+    }
   }catch(e){console.log('Transcription error:',e);}
   finally{
     var b=document.getElementById('micBtn'),l=document.getElementById('micLabel');
     if(b){b.style.background='#F4F6FA';b.style.borderColor='#E2E8F0';b.style.color='#1B3F6E';}
-    if(l)l.textContent='Record voice';
+    if(l)l.textContent='Record';
   }
 }
 
+renderPart();
 </script>
 </body>
 </html>
