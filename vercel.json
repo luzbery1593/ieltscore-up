@@ -1,0 +1,14 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/dashboard", "destination": "/dashboard.html" },
+    { "source": "/auth", "destination": "/auth.html" },
+    { "source": "/writing", "destination": "/writing.html" },
+    { "source": "/reading", "destination": "/reading.html" },
+    { "source": "/listening", "destination": "/listening.html" },
+    { "source": "/speaking", "destination": "/speaking.html" },
+    { "source": "/grammar", "destination": "/grammar.html" },
+    { "source": "/mock-exam", "destination": "/mock-exam.html" },
+    { "source": "/certificates", "destination": "/certificates.html" }
+  ]
+}
