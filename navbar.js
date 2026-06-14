@@ -6,18 +6,21 @@
   var SUPABASE_URL = 'https://ystwgkfwydyrefbqjcjd.supabase.co';
   var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk';
 
+  // Dashboard has its own sidebar+topbar layout — exclude it
+  var NAVBAR_PAGES = ['writing.html','reading.html','listening.html','speaking.html','grammar.html','mock-exam.html','certificates.html','profile.html'];
   var PLATFORM_PAGES = ['dashboard.html','writing.html','reading.html','listening.html','speaking.html','grammar.html','mock-exam.html','certificates.html','profile.html'];
 
   var currentPage = window.location.pathname.split('/').pop() || 'index.html';
   var isInsidePlatform = PLATFORM_PAGES.includes(currentPage);
+  var needsNavbar = NAVBAR_PAGES.includes(currentPage);
 
   document.addEventListener('DOMContentLoaded', async function() {
     // Remove any existing navbar from the page
     var old = document.querySelector('.isu-nav');
     if (old) old.remove();
 
-    // Add top padding so content doesn't hide under fixed navbar
-    document.body.style.paddingTop = '64px';
+    // Add top padding only for pages that get the navbar
+    if (needsNavbar) document.body.style.paddingTop = '64px';
 
     var sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     var { data } = await sb.auth.getSession();
@@ -29,8 +32,11 @@
       return;
     }
 
-    if (isInsidePlatform && user) {
+    if (needsNavbar && user) {
       buildPlatformNav(user, sb);
+    } else if (isInsidePlatform && !needsNavbar && !user) {
+      window.location.href = 'auth.html';
+      return;
     } else {
       buildLandingNav(user);
     }
