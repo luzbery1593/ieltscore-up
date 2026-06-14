@@ -128,11 +128,43 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 .next-part-btn.visible{display:block}
 .next-part-btn:hover{background:var(--green-light)}
 </style>
-<link rel="stylesheet" href="navbar.css"/>
 </head>
 <body>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  var sb=supabase.createClient('https://ystwgkfwydyrefbqjcjd.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk');
+  sb.auth.getSession().then(function(r){
+    if(!r.data.session){window.location.href='/auth.html';return;}
+    var user=r.data.session.user;
+    var name=user.user_metadata?.full_name||user.email.split('@')[0];
+    var el=document.getElementById('topUserName');
+    if(el) el.textContent=name;
+  });
+  window._sbSignOut=function(){sb.auth.signOut().then(function(){window.location.href='/index.html';});};
+})();
+</script>
 
+<div class="topbar">
+  <a href="/dashboard.html" class="logo">IELTS<span>Score</span>Up</a>
+  <div style="display:flex;align-items:center;gap:12px"><a href="/dashboard.html" style="font-size:13px;color:var(--muted,#5A6A7E);text-decoration:none;font-weight:500">← Dashboard</a><div style="display:flex;align-items:center;gap:8px;background:#F4F6FA;border:1px solid #E2E8F0;border-radius:100px;padding:5px 12px;cursor:pointer" onclick="window._sbSignOut()"><div style="width:26px;height:26px;border-radius:50%;background:#1B3F6E;color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">L</div><span id="topUserName" style="font-size:13px;font-weight:600;color:#0F1C2E">...</span><span style="font-size:10px;color:#5A6A7E">▾</span></div></div>
+</div>
+
+<div class="page">
+
+  <div class="part-tabs">
+    <button class="part-tab active" onclick="goPart(0,this)" id="ptab0">Part 1<div class="tab-sub">Introduction</div></button>
+    <button class="part-tab" onclick="goPart(1,this)" id="ptab1">Part 2<div class="tab-sub">Long turn</div></button>
+    <button class="part-tab" onclick="goPart(2,this)" id="ptab2">Part 3<div class="tab-sub">Discussion</div></button>
+  </div>
+
+  <div class="part-header">
+    <div class="part-header-left">
+      <div class="part-eyebrow" id="partEyebrow">Part 1</div>
+      <div class="part-title" id="partTitle">Introduction & Interview</div>
+      <div class="part-desc" id="partDesc">Answer questions about yourself and familiar topics. Speak naturally as if talking to an examiner.</div>
+    </div>
     <div class="timer-pill">
       <div class="timer-num" id="partTimer">04:00</div>
       <div class="timer-label">remaining</div>
@@ -367,10 +399,10 @@ function onResponseInput(){
 }
 
 function checkEvalReady(){
-    var el=document.getElementById('responseText');
+  var el=document.getElementById('responseText');
   var wc=el&&el.value.trim()!==''?el.value.trim().split(/\s+/).length:0;
   var minW=currentPart===1?120:40;
-  document.getElementById('evalBtn').disabled=!(key.startsWith('sk-ant-')&&wc>=minW);
+  document.getElementById('evalBtn').disabled=!(wc>=minW);
 }
 
 document.getElementById('apiKey').addEventListener('input', checkEvalReady);
@@ -422,7 +454,7 @@ function getCurrentQuestion(){
 }
 
 async function evaluateResponse(){
-    var response=document.getElementById('responseText').value.trim();
+  var response=document.getElementById('responseText').value.trim();
   var question=getCurrentQuestion();
   var partLabel=partMeta[currentPart].eyebrow;
   var btn=document.getElementById('evalBtn');
@@ -487,8 +519,5 @@ Be honest and specific. Reference the actual content of their response.`;
 
 renderPart();
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
-<script src="navbar.js"></script>
 </body>
 </html>

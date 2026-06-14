@@ -6,7 +6,6 @@
 <title>My Profile — IELTScoreUp</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="navbar.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--blue:#1B3F6E;--blue-light:#2558A0;--green:#0D9E72;--bg:#F4F6FA;--white:#FFFFFF;--dark:#0F1C2E;--muted:#5A6A7E;--border:#E2E8F0;--radius:12px;--radius-lg:20px;--red:#DC2626;--gold:#C9A84C;}
@@ -84,6 +83,21 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 </style>
 </head>
 <body>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  var sb=supabase.createClient('https://ystwgkfwydyrefbqjcjd.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk');
+  sb.auth.getSession().then(function(r){
+    if(!r.data.session){window.location.href='/auth.html';return;}
+    var user=r.data.session.user;
+    var name=user.user_metadata?.full_name||user.email.split('@')[0];
+    var el=document.getElementById('topUserName');
+    if(el) el.textContent=name;
+  });
+  window._sbSignOut=function(){sb.auth.signOut().then(function(){window.location.href='/index.html';});};
+})();
+</script>
 <div class="page">
   <div class="profile-hero">
     <div class="avatar-large" id="avatarLarge">?</div>
@@ -255,9 +269,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
-<script src="navbar.js"></script>
 <script>
 var sb, userToken, userId, billingCycle='monthly';
 

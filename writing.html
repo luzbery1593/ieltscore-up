@@ -70,10 +70,30 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 .cert-banner.visible{display:flex}
 .cert-link{background:var(--blue);color:white;font-size:12px;font-weight:700;padding:6px 14px;border-radius:8px;text-decoration:none;white-space:nowrap;margin-left:auto}
 </style>
-<link rel="stylesheet" href="navbar.css"/>
 </head>
 <body>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  var sb=supabase.createClient('https://ystwgkfwydyrefbqjcjd.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk');
+  sb.auth.getSession().then(function(r){
+    if(!r.data.session){window.location.href='/auth.html';return;}
+    var user=r.data.session.user;
+    var name=user.user_metadata?.full_name||user.email.split('@')[0];
+    var el=document.getElementById('topUserName');
+    if(el) el.textContent=name;
+  });
+  window._sbSignOut=function(){sb.auth.signOut().then(function(){window.location.href='/index.html';});};
+})();
+</script>
+<div class="topbar">
+  <a href="dashboard.html" class="logo">IELTS<span>Score</span>Up</a>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="font-size:13px;color:var(--muted)">Words: <strong id="topWc">0</strong></span>
+    <div style="display:flex;align-items:center;gap:12px"><a href="/dashboard.html" style="font-size:13px;color:var(--muted,#5A6A7E);text-decoration:none;font-weight:500">← Dashboard</a><div style="display:flex;align-items:center;gap:8px;background:#F4F6FA;border:1px solid #E2E8F0;border-radius:100px;padding:5px 12px;cursor:pointer" onclick="window._sbSignOut()"><div style="width:26px;height:26px;border-radius:50%;background:#1B3F6E;color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">L</div><span id="topUserName" style="font-size:13px;font-weight:600;color:#0F1C2E">...</span><span style="font-size:10px;color:#5A6A7E">▾</span></div></div>
+  </div>
+</div>
 <div class="layout">
   <div>
     <div class="panel">
@@ -143,7 +163,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script>
 var task=1,testType='Academic',prompt=null,token=null;
@@ -206,9 +225,5 @@ async function evaluate(){
 }
 init();
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
-<script src="navbar.js"></script>
 </body>
 </html>
