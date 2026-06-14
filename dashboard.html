@@ -47,11 +47,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 .topbar-left{display:flex;align-items:center;gap:12px}
 .page-title{font-size:16px;font-weight:700;color:var(--dark)}
 .topbar-right{display:flex;align-items:center;gap:12px}
-.api-mini{display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:7px 12px}
-.api-mini-label{font-size:11px;font-weight:600;color:var(--muted)}
-.api-mini input{border:none;background:transparent;font-family:'Inter',sans-serif;font-size:12px;color:var(--dark);outline:none;width:160px}
-.api-status{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0;transition:background .3s}
-.api-status.connected{background:var(--green)}
+
 
 /* PAGE CONTENT */
 .page{padding:28px}
@@ -463,24 +459,10 @@ function closeSidebar(){
   document.getElementById('overlay').classList.remove('active');
 }
 
-// API KEY
-function saveKey(val){
-  localStorage.setItem('ielts_api_key',val);
-  document.getElementById('apiStatus').className='api-status'+(val.startsWith('sk-ant-')?' connected':'');
-}
-(function(){
-  var saved=localStorage.getItem('ielts_api_key')||'';
-  if(saved){
-    document.getElementById('apiKeyDash').value=saved;
-    document.getElementById('apiStatus').className='api-status'+(saved.startsWith('sk-ant-')?' connected':'');
-  }
-})();
+
 
 // PROGRESS DATA (stored in localStorage)
-function getProgress(){
-  try{return JSON.parse(localStorage.getItem('ielts_progress'))||{};}
-  catch(e){return{};}
-}
+function getProgress(){ return {}; }
 
 function bandToHeight(b){
   if(!b||b==='—') return 4;
@@ -491,8 +473,21 @@ function bandToPct(b){
   return ((parseFloat(b)-1)/8)*100;
 }
 
-function renderDashboard(){
-  var p=getProgress();
+async function renderDashboard(){
+  // Load real data from Supabase
+  var p={};
+  try{
+    var sb2=getSupabase();
+    var {data:sessions}=await sb2.from('sessions').select('*').eq('user_id',(await sb2.auth.getUser()).data.user?.id||'').order('created_at',{ascending:false});
+    if(sessions){
+      sessions.forEach(function(s){
+        if(!p[s.module]) p[s.module]={sessions:0,band:null};
+        p[s.module].sessions++;
+        if(s.band&&(!p[s.module].band||parseFloat(s.band)>parseFloat(p[s.module].band))) p[s.module].band=s.band;
+      });
+      p.activity=sessions.slice(0,6).map(function(s){return{module:s.module,band:s.band,type:s.subtype,date:new Date(s.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})};});
+    }
+  }catch(e){console.log('Using local data',e);}
   var skills=['writing','reading','listening','speaking','grammar'];
   var bands=[];
   var totalSessions=0;
@@ -597,37 +592,11 @@ window.saveModuleProgress=function(module, data){
   renderDashboard();
 };
 
-// DEMO DATA BUTTON (for testing)
-window.loadDemoData=function(){
-  var demo={
-    writing:{sessions:8,band:'6.5'},
-    reading:{sessions:5,band:'7.0'},
-    listening:{sessions:6,band:'6.0'},
-    speaking:{sessions:4,band:'6.5'},
-    grammar:{sessions:10,band:'7.5'},
-    mock:{sessions:1,band:'6.5'},
-    activity:[
-      {module:'writing',band:'6.5',type:'Task 2 Academic',date:'14 Jun, 10:30'},
-      {module:'reading',band:'7.0',type:'Academic passage',date:'13 Jun, 15:20'},
-      {module:'grammar',band:'7.5',type:'B2 — Inversion',date:'13 Jun, 09:00'},
-      {module:'listening',band:'6.0',type:'Section 3',date:'12 Jun, 14:15'},
-      {module:'mock',band:'6.5',type:'Academic',date:'11 Jun, 11:00'},
-      {module:'speaking',band:'6.5',type:'Part 2',date:'10 Jun, 16:30'}
-    ]
-  };
-  localStorage.setItem('ielts_progress',JSON.stringify(demo));
-  renderDashboard();
-};
+
 
 renderDashboard();
 
-// Auto-load demo if no data (for preview purposes)
-var p=getProgress();
-if(!p.writing && !p.reading) {
-  setTimeout(function(){
-    if(Object.keys(getProgress()).length===0) loadDemoData();
-  }, 800);
-}
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>

@@ -238,6 +238,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
     </div>
   </div>
 
+  <!-- MANAGE SUBSCRIPTION -->
+  <div class="card" id="manageSubCard" style="display:none">
+    <div class="card-title">Manage subscription</div>
+    <div class="card-sub">Update payment method, view invoices, or cancel your subscription.</div>
+    <button class="save-btn" onclick="openBillingPortal()" style="background:var(--green)">
+      Manage subscription →
+    </button>
+  </div>
+
   <!-- DANGER ZONE -->
   <div class="card">
     <div class="card-title" style="color:var(--red)">Danger zone</div>
@@ -307,9 +316,13 @@ function updatePlanUI(plan){
     badge.textContent='✓ Current plan';
     card.appendChild(badge);
   }
-  // Hide upgrade buttons for current plan
   if(plan==='pro'){document.getElementById('upgradeProBtn').style.display='none';}
   if(plan==='intensive'){document.getElementById('upgradeIntBtn').style.display='none';}
+  // Show manage subscription for paid plans
+  if(plan==='pro'||plan==='intensive'){
+    var mc=document.getElementById('manageSubCard');
+    if(mc) mc.style.display='block';
+  }
 }
 
 function setBilling(cycle){
@@ -368,10 +381,26 @@ async function changePassword(){
   finally{btn.classList.remove('loading');btn.disabled=false;}
 }
 
-function upgradePlan(plan){
-  // When Stripe is integrated, this redirects to Stripe checkout
-  // For now show coming soon message
-  alert('Payment integration coming soon! Plan: '+plan+' ('+billingCycle+')\n\nWe will send you an email when payments are ready.');
+async function upgradePlan(plan){
+  var btn=document.getElementById('upgrade'+plan.charAt(0).toUpperCase()+plan.slice(1)+'Btn');
+  if(btn){btn.classList.add('loading');btn.disabled=true;}
+  try{
+    var result=await apiCall('/api/payments/checkout',{plan,billing:billingCycle},userToken);
+    if(result.url) window.location.href=result.url;
+  }catch(e){
+    alert('Payment system coming soon. Contact us at hello@ieltscore-up.com to upgrade.');
+  }finally{
+    if(btn){btn.classList.remove('loading');btn.disabled=false;}
+  }
+}
+
+async function openBillingPortal(){
+  try{
+    var result=await apiCall('/api/payments/portal',{},userToken);
+    if(result.url) window.location.href=result.url;
+  }catch(e){
+    alert('No active subscription found.');
+  }
 }
 
 function confirmDelete(){
@@ -399,7 +428,27 @@ function showAlert(id,msg,type){
   setTimeout(()=>el.classList.remove('visible'),4000);
 }
 
-// Check if coming from billing anchor
+// Handle payment result
+var urlParams=new URLSearchParams(window.location.search);
+if(urlParams.get('payment')==='success'){
+  setTimeout(function(){
+    var el=document.createElement('div');
+    el.style.cssText='position:fixed;top:80px;right:24px;background:#0D9E72;color:white;padding:14px 20px;border-radius:12px;font-size:14px;font-weight:700;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.2)';
+    el.textContent='🎉 Payment successful! Your plan has been upgraded.';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),5000);
+  },500);
+}
+if(urlParams.get('payment')==='cancelled'){
+  setTimeout(function(){
+    var el=document.createElement('div');
+    el.style.cssText='position:fixed;top:80px;right:24px;background:#5A6A7E;color:white;padding:14px 20px;border-radius:12px;font-size:14px;font-weight:700;z-index:999';
+    el.textContent='Payment cancelled. No charge was made.';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),4000);
+  },500);
+}
+
 if(window.location.hash==='#billing'){
   setTimeout(()=>document.getElementById('billing').scrollIntoView({behavior:'smooth'}),500);
 }
