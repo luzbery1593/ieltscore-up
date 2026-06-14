@@ -196,8 +196,18 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 </style>
 </head>
 <body>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Auth check
+(function(){
+  var sb=supabase.createClient('https://ystwgkfwydyrefbqjcjd.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk');
+  sb.auth.getSession().then(function(r){
+    if(!r.data.session){window.location.href='/auth.html';}
+  });
+})();
+</script>
+
+
 <script>
 (function(){
   var sb=supabase.createClient('https://ystwgkfwydyrefbqjcjd.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk');
@@ -261,10 +271,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
     </div>
 
     
-      <div class="api-box-note">Required for AI scoring. Never stored. <a href="https://console.anthropic.com" target="_blank">Get yours free →</a></div>
-    </div>
 
-    <button class="start-btn" id="startBtn" onclick="startExam()" disabled>Begin mock exam →</button>
+    <button class="start-btn" id="startBtn" onclick="startExam()">Begin mock exam →</button>
   </div>
 </div>
 
@@ -611,9 +619,7 @@ function selectType(type, el){
   el.classList.add('selected');
 }
 
-function checkStart(){
-  document.getElementById('startBtn').disabled=false;
-}
+function checkStart(){ document.getElementById('startBtn').disabled=false; }
 
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});
@@ -929,7 +935,7 @@ Speaking Part 3 response: ${a.sp3}`}]
   }
 }
 
-function resetExam(){showScreen('intro');document.getElementById('topTimerPill').style.display='none';}
+function resetExam(){showScreen('intro');document.getElementById('topTimerPill').style.display='none';document.getElementById('startBtn').disabled=false;}
 
 window.speechSynthesis.onvoiceschanged=function(){};
 </script>
