@@ -614,7 +614,7 @@ async function loadUser(){
     var greetEl=document.getElementById('greeting');
     if(nameEl) nameEl.textContent=name;
     if(avatarEl) avatarEl.textContent=initial;
-    if(greetEl){var h=new Date().getHours();greetEl.textContent=(h<12?'Good morning':'h<17'?'Good afternoon':'Good evening')+' 👋';}
+    if(greetEl){var h=new Date().getHours();greetEl.textContent=(h<12?'Good morning':h<17?'Good afternoon':'Good evening')+' 👋';}
     // Load plan
     var {data:profile}=await sb.from('profiles').select('plan,full_name').eq('id',user.id).single();
     if(profile){

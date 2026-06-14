@@ -56,14 +56,14 @@
           <a href="dashboard.html" class="isu-logo">IELTS<span>Score</span>Up</a>
         </div>
         <div class="isu-nav-links">
-          <a href="dashboard.html" class="isu-link ${currentPage==='dashboard.html'?'active':''}">Dashboard</a>
-          <a href="writing.html" class="isu-link ${currentPage==='writing.html'?'active':''}">Writing</a>
-          <a href="reading.html" class="isu-link ${currentPage==='reading.html'?'active':''}">Reading</a>
-          <a href="listening.html" class="isu-link ${currentPage==='listening.html'?'active':''}">Listening</a>
-          <a href="speaking.html" class="isu-link ${currentPage==='speaking.html'?'active':''}">Speaking</a>
-          <a href="grammar.html" class="isu-link ${currentPage==='grammar.html'?'active':''}">Grammar</a>
-          <a href="mock-exam.html" class="isu-link ${currentPage==='mock-exam.html'?'active':''}">Mock Exam</a>
-          <a href="certificates.html" class="isu-link ${currentPage==='certificates.html'?'active':''}">Certificates</a>
+          <a href="/dashboard.html" class="isu-link ${currentPage==='dashboard.html'?'active':''}">Dashboard</a>
+          <a href="/writing.html" class="isu-link ${currentPage==='writing.html'?'active':''}">Writing</a>
+          <a href="/reading.html" class="isu-link ${currentPage==='reading.html'?'active':''}">Reading</a>
+          <a href="/listening.html" class="isu-link ${currentPage==='listening.html'?'active':''}">Listening</a>
+          <a href="/speaking.html" class="isu-link ${currentPage==='speaking.html'?'active':''}">Speaking</a>
+          <a href="/grammar.html" class="isu-link ${currentPage==='grammar.html'?'active':''}">Grammar</a>
+          <a href="/mock-exam.html" class="isu-link ${currentPage==='mock-exam.html'?'active':''}">Mock Exam</a>
+          <a href="/certificates.html" class="isu-link ${currentPage==='certificates.html'?'active':''}">Certificates</a>
         </div>
         <div class="isu-nav-right">
           <div class="isu-user-wrap" onclick="document.getElementById('isuDD').classList.toggle('open')">
@@ -77,9 +77,9 @@
               <div class="isu-dd-email">${user.email}</div>
               <div class="isu-dd-plan" id="isuDDPlan">Free Plan</div>
             </div>
-            <a href="profile.html" class="isu-dd-item">👤 My Profile</a>
+            <a href="/profile.html" class="isu-dd-item">👤 My Profile</a>
             <a href="profile.html#billing" class="isu-dd-item">⚡ Upgrade Plan</a>
-            <a href="certificates.html" class="isu-dd-item">🏆 My Certificates</a>
+            <a href="/certificates.html" class="isu-dd-item">🏆 My Certificates</a>
             <div class="isu-dd-sep"></div>
             <button class="isu-dd-item isu-dd-out" onclick="isuSignOut()">↩ Sign out</button>
           </div>
@@ -87,15 +87,15 @@
       </div>
       <div class="isu-mob" id="isuMob">
         <a href="dashboard.html">Dashboard</a>
-        <a href="writing.html">Writing</a>
-        <a href="reading.html">Reading</a>
-        <a href="listening.html">Listening</a>
-        <a href="speaking.html">Speaking</a>
-        <a href="grammar.html">Grammar</a>
-        <a href="mock-exam.html">Mock Exam</a>
-        <a href="certificates.html">Certificates</a>
+        <a href="/writing.html">Writing</a>
+        <a href="/reading.html">Reading</a>
+        <a href="/listening.html">Listening</a>
+        <a href="/speaking.html">Speaking</a>
+        <a href="/grammar.html">Grammar</a>
+        <a href="/mock-exam.html">Mock Exam</a>
+        <a href="/certificates.html">Certificates</a>
         <div class="isu-mob-sep"></div>
-        <a href="profile.html">My Profile</a>
+        <a href="/profile.html">My Profile</a>
         <button onclick="isuSignOut()" style="padding:12px 24px;background:none;border:none;color:#DC2626;font-size:15px;font-weight:600;cursor:pointer;text-align:left;width:100%">Sign out</button>
       </div>
     `;
