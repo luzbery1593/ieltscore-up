@@ -246,8 +246,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
       <div class="so-card"><div class="so-icon">🎤</div><div class="so-name">Speaking</div><div class="so-time">15 min</div></div>
     </div>
 
-    <div class="api-box">
-      <div class="api-box-label">Anthropic API Key</div>
+    
       <input type="password" id="apiKeyIntro" placeholder="sk-ant-..." oninput="checkStart()"/>
       <div class="api-box-note">Required for AI scoring. Never stored. <a href="https://console.anthropic.com" target="_blank">Get yours free →</a></div>
     </div>
@@ -600,8 +599,7 @@ function selectType(type, el){
 }
 
 function checkStart(){
-  var key=document.getElementById('apiKeyIntro').value.trim();
-  document.getElementById('startBtn').disabled=!key.startsWith('sk-ant-');
+  document.getElementById('startBtn').disabled=false;
 }
 
 function showScreen(id){
@@ -836,17 +834,19 @@ async function finishExam(){
   clearAllTimers();
   document.getElementById('loadingOverlay').classList.add('active');
   var a=collectAnswers();
-  var key=document.getElementById('apiKeyIntro').value.trim();
+  var key='backend';
   var lBand=scoreToBand(a.lScore,a.lTotal);
   var rBand=scoreToBand(a.rScore,a.rTotal);
 
   try{
-    var res=await fetch('https://api.anthropic.com/v1/messages',{
+    var res=await fetch('https://ieltscore-up-api-production.up.railway.app/api/mock/report',{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-6', max_tokens:1400,
-        system:`You are a senior IELTS examiner. Evaluate Writing and Speaking responses from a mock ${examType} IELTS exam and return ONLY JSON — no markdown:
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body:JSON.stringify({examType,lScore:a.lScore,lTotal:a.lTotal,rScore:a.rScore,rTotal:a.rTotal,task1:a.task1,task2:a.task2,t1Prompt:a.t1Prompt,t2Prompt:a.t2Prompt,sp1:a.sp1,sp2:a.sp2,sp3:a.sp3,sp1Q:a.sp1Q,sp2Topic:a.sp2Topic,sp3Q:a.sp3Q})});
+    if(!res.ok){throw new Error('API error');}
+    var data2=await res.json();
+    var r={overall_band:data2.overall_band,writing_band:data2.writing_band,speaking_band:data2.speaking_band,strongest_skill:data2.strongest_skill,priority_skill:data2.priority_skill,writing_feedback:data2.writing_feedback,speaking_feedback:data2.speaking_feedback,rl_feedback:data2.rl_feedback,study_plan:data2.study_plan,exam_ready:data2.exam_ready};
+    if(false){var dummy=`You are a senior IELTS examiner. Evaluate Writing and Speaking responses from a mock ${examType} IELTS exam and return ONLY JSON — no markdown:
 {
   "writing_band": "6.5",
   "speaking_band": "7.0",

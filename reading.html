@@ -150,11 +150,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
   <!-- QUESTIONS -->
   <div class="questions-panel">
 
-    <div class="api-card">
-      <div class="api-label">Anthropic API Key</div>
-      <input type="password" class="api-input" id="apiKey" placeholder="sk-ant-..."/>
-      <div class="api-note">Never stored. <a href="https://console.anthropic.com" target="_blank">Get yours free →</a></div>
-    </div>
+    
 
     <div class="questions-card">
       <div class="questions-header">
@@ -391,8 +387,7 @@ function markAnswers(userAnswers){
 }
 
 async function submitAnswers(){
-  var key=document.getElementById('apiKey').value.trim();
-  if(!key.startsWith('sk-ant-')){alert('Please enter a valid Anthropic API key.');return;}
+  
   var p=passages[currentIdx];
   var userAnswers=getUserAnswers();
   var correct=markAnswers(userAnswers);

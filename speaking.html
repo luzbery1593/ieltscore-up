@@ -160,9 +160,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
   <div id="partContent"></div>
 
   <div class="bottom-bar">
-    <div class="api-wrap">
-      <input type="password" class="api-input" id="apiKey" placeholder="sk-ant-..."/>
-      <div class="api-note">Never stored. <a href="https://console.anthropic.com" target="_blank">Get key →</a></div>
+    
     </div>
     <button class="eval-btn" id="evalBtn" onclick="evaluateResponse()" disabled>
       <div class="spinner"></div>
@@ -471,18 +469,13 @@ Band scores must be one of: 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.
 Be honest and specific. Reference the actual content of their response.`;
 
   try{
-    var res=await fetch('https://api.anthropic.com/v1/messages',{
+    var sb2=getSupabase();var ss=await sb2.auth.getSession();var tok=ss.data?.session?.access_token||'';
+    var res=await fetch('https://ieltscore-up-api-production.up.railway.app/api/speaking/evaluate',{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-6', max_tokens:1000,
-        system:system,
-        messages:[{role:'user',content:'IELTS Speaking '+partLabel+'\n\nQuestion: '+question+'\n\nStudent response:\n'+response}]
-      })
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},
+      body:JSON.stringify({response,question,part:currentPart+1})
     });
-    var data=await res.json();
-    var raw=data.content[0].text.trim().replace(/```json|```/g,'').trim();
-    var r=JSON.parse(raw);
+    var r=await res.json();
 
     document.getElementById('fbScore').textContent=r.overall;
     document.getElementById('fbFC').textContent=r.fluency_coherence;

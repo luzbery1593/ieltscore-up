@@ -173,9 +173,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
   <div id="questionsContainer"></div>
 
   <div class="submit-row">
-    <div class="api-wrap">
-      <input type="password" class="api-input" id="apiKey" placeholder="sk-ant-..."/>
-      <div class="api-note">Never stored. <a href="https://console.anthropic.com" target="_blank">Get key →</a></div>
+    
     </div>
     <button class="submit-btn" id="submitBtn" onclick="getAIReport()" disabled>
       <div class="spinner"></div>
@@ -519,25 +517,13 @@ async function getAIReport(){
     set.map(function(q,i){return'Q'+(i+1)+' — '+q.point+': '+(answered[i]?'attempted':'skipped')}).join('\n');
 
   try{
-    var res=await fetch('https://api.anthropic.com/v1/messages',{
+    var sb2=getSupabase();var ss=await sb2.auth.getSession();var tok=ss.data?.session?.access_token||'';
+    var res=await fetch('https://ieltscore-up-api-production.up.railway.app/api/grammar/report',{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-6', max_tokens:900,
-        system:`You are an IELTS Grammar expert. Analyse results and return ONLY JSON — no markdown:
-{
-  "score_label": "Good — 4 out of 5 correct",
-  "strong_areas": ["area1", "area2"],
-  "weak_areas": ["area1", "area2"],
-  "key_insight": "2 sentences explaining the main grammar pattern the student struggles with.",
-  "ielts_impact": "1-2 sentences on how this grammar affects their IELTS band score.",
-  "study_plan": "3 specific steps to improve, referencing the topic and level."
-}`,
-        messages:[{role:'user',content:results}]
-      })
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},
+      body:JSON.stringify({level:currentLevel,topic:data.topics[currentTopic],correct:correctCount,total:totalQ})
     });
-    var d=await res.json();
-    var r=JSON.parse(d.content[0].text.trim().replace(/```json|```/g,'').trim());
+    var r=await res.json();
     document.getElementById('reportScore').textContent=correctCount+'/'+totalQ;
     document.getElementById('reportLabel').textContent=r.score_label;
     var strong=document.getElementById('strongChips'); strong.innerHTML='';

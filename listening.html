@@ -205,9 +205,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
   </div>
 
   <div class="bottom-row">
-    <div class="api-mini">
-      <input type="password" id="apiKey" placeholder="Anthropic API key (sk-ant-...)"/>
-    </div>
+    
     <button class="submit-btn" id="submitBtn" onclick="submitAnswers()" disabled>
       <div class="spinner"></div>
       <span class="btn-text">Check answers →</span>
@@ -480,8 +478,7 @@ function markAnswers(userAnswers){
 }
 
 async function submitAnswers(){
-  var key=document.getElementById('apiKey').value.trim();
-  if(!key.startsWith('sk-ant-')){alert('Please enter a valid Anthropic API key.');return;}
+  
   var s=sections[currentSection];
   var userAnswers=getUserAnswers();
   var correct=markAnswers(userAnswers);
@@ -502,18 +499,13 @@ async function submitAnswers(){
   }).join('\n\n');
 
   try{
-    var res=await fetch('https://api.anthropic.com/v1/messages',{
+    var sb2=getSupabase();var ss=await sb2.auth.getSession();var tok=ss.data?.session?.access_token||'';
+    var res=await fetch('https://ieltscore-up-api-production.up.railway.app/api/reading/explain',{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-6',max_tokens:1000,
-        system:'You are an IELTS Listening tutor. For each question, give a short explanation (2 sentences max) referencing the audio transcript. Return ONLY a JSON array: [{"q":1,"correct":true,"explanation":"..."}]',
-        messages:[{role:'user',content:'Audio transcript:\n'+s.transcript.replace(/<[^>]+>/g,'')+'\n\nResults:\n'+qText}]
-      })
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},
+      body:JSON.stringify({passage:s.transcript.replace(/<[^>]+>/g,''),questions:s.questions,userAnswers})
     });
-    var data=await res.json();
-    var raw=data.content[0].text.trim().replace(/```json|```/g,'').trim();
-    var exps=JSON.parse(raw);
+    var exps=await res.json();
     var box=document.getElementById('explanationsBox');
     box.innerHTML='<div class="exp-title">AI Explanations</div>';
     exps.forEach(function(e){
