@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>IELTScoreUp — AI-Powered IELTS Training</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1B3F6E;
+  --blue-light:#2558A0;
+  --green:#0D9E72;
+  --green-light:#0FBF8A;
+  --bg:#F4F6FA;
+  --white:#FFFFFF;
+  --dark:#0F1C2E;
+  --muted:#5A6A7E;
+  --border:#E2E8F0;
+  --radius:12px;
+  --radius-lg:20px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--white);color:var(--dark);-webkit-font-smoothing:antialiased}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-mark{width:34px;height:34px;background:linear-gradient(135deg,var(--blue),var(--green));border-radius:8px;display:flex;align-items:center;justify-content:center}
+.logo-mark svg{width:18px;height:18px;fill:white}
+.logo-text{font-size:17px;font-weight:800;color:var(--dark);letter-spacing:-0.3px}
+.logo-text span{color:var(--green)}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:14px;font-weight:500;color:var(--muted);text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:var(--dark)}
+.nav-cta{background:var(--blue);color:white;font-size:14px;font-weight:600;padding:9px 20px;border-radius:8px;text-decoration:none;transition:background .15s}
+.nav-cta:hover{background:var(--blue-light)}
+
+/* HERO */
+.hero{padding:140px 24px 100px;text-align:center;background:var(--white);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(ellipse,rgba(13,158,114,0.07) 0%,transparent 70%);pointer-events:none}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(13,158,114,0.1);color:var(--green);font-size:13px;font-weight:600;padding:6px 14px;border-radius:100px;margin-bottom:28px;letter-spacing:0.02em}
+.hero-eyebrow::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+h1{font-size:clamp(40px,6vw,72px);font-weight:900;line-height:1.05;letter-spacing:-2px;color:var(--dark);max-width:820px;margin:0 auto 24px}
+h1 .accent{color:var(--green)}
+.hero-sub{font-size:18px;color:var(--muted);max-width:520px;margin:0 auto 40px;line-height:1.7;font-weight:400}
+.hero-actions{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.btn-primary{background:var(--blue);color:white;font-size:16px;font-weight:700;padding:16px 36px;border-radius:var(--radius);text-decoration:none;transition:all .15s;letter-spacing:-0.2px}
+.btn-primary:hover{background:var(--blue-light);transform:translateY(-1px)}
+.btn-secondary{background:transparent;color:var(--dark);font-size:15px;font-weight:600;padding:16px 28px;border-radius:var(--radius);text-decoration:none;border:1.5px solid var(--border);transition:all .15s}
+.btn-secondary:hover{border-color:var(--blue);color:var(--blue)}
+
+/* BAND SCORE DEMO */
+.band-demo{max-width:680px;margin:60px auto 0;background:var(--bg);border-radius:var(--radius-lg);padding:32px;border:1px solid var(--border)}
+.band-label{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:16px;letter-spacing:0.05em;text-transform:uppercase}
+.band-track{height:10px;background:#E2E8F0;border-radius:100px;position:relative;overflow:visible}
+.band-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:100px;width:0%;transition:width 1.8s cubic-bezier(.16,1,.3,1)}
+.band-thumb{position:absolute;top:50%;right:-1px;transform:translate(50%,-50%);width:22px;height:22px;background:white;border:3px solid var(--blue);border-radius:50%;box-shadow:0 2px 8px rgba(27,63,110,.25)}
+.band-numbers{display:flex;justify-content:space-between;margin-top:10px}
+.band-numbers span{font-size:11px;color:var(--muted);font-weight:500}
+.band-score-display{display:flex;align-items:baseline;gap:6px;margin-top:20px}
+.band-score-num{font-size:52px;font-weight:900;color:var(--blue);letter-spacing:-2px;transition:all .3s}
+.band-score-label{font-size:14px;font-weight:600;color:var(--green)}
+.band-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.band-tag{background:white;border:1px solid var(--border);border-radius:100px;font-size:12px;font-weight:500;color:var(--muted);padding:4px 12px}
+
+/* STATS */
+.stats{background:var(--blue);padding:60px 24px}
+.stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:32px;text-align:center}
+.stat-num{font-size:40px;font-weight:900;color:white;letter-spacing:-1.5px}
+.stat-label{font-size:13px;color:rgba(255,255,255,0.6);margin-top:4px;font-weight:500}
+
+/* MODULES */
+.modules{padding:100px 24px;background:var(--white)}
+.section-eyebrow{font-size:13px;font-weight:700;color:var(--green);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:14px;text-align:center}
+.section-title{font-size:clamp(28px,4vw,44px);font-weight:800;text-align:center;letter-spacing:-1px;color:var(--dark);max-width:600px;margin:0 auto 16px}
+.section-sub{font-size:16px;color:var(--muted);text-align:center;max-width:480px;margin:0 auto 60px;line-height:1.7}
+.modules-grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.module-card{background:var(--bg);border-radius:var(--radius-lg);padding:28px;border:1.5px solid transparent;transition:all .2s;cursor:pointer;position:relative;overflow:hidden}
+.module-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green),var(--blue));opacity:0;transition:opacity .2s}
+.module-card:hover{border-color:var(--border);background:white;box-shadow:0 8px 32px rgba(27,63,110,.08)}
+.module-card:hover::after{opacity:1}
+.module-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:22px}
+.icon-blue{background:rgba(27,63,110,.1);color:var(--blue)}
+.icon-green{background:rgba(13,158,114,.1);color:var(--green)}
+.module-name{font-size:18px;font-weight:700;color:var(--dark);margin-bottom:8px;letter-spacing:-0.3px}
+.module-desc{font-size:14px;color:var(--muted);line-height:1.65}
+.module-badge{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px;margin-top:14px}
+.badge-green{background:rgba(13,158,114,.1);color:var(--green)}
+.badge-blue{background:rgba(27,63,110,.1);color:var(--blue)}
+
+/* HOW IT WORKS */
+.how{padding:100px 24px;background:var(--bg)}
+.how-inner{max-width:900px;margin:0 auto}
+.steps{display:flex;flex-direction:column;gap:0;margin-top:60px}
+.step{display:grid;grid-template-columns:60px 1fr;gap:24px;padding:32px 0;border-bottom:1px solid var(--border)}
+.step:last-child{border-bottom:none}
+.step-num{width:44px;height:44px;background:var(--blue);color:white;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;flex-shrink:0}
+.step-content h3{font-size:18px;font-weight:700;color:var(--dark);margin-bottom:8px;letter-spacing:-0.3px}
+.step-content p{font-size:15px;color:var(--muted);line-height:1.7}
+
+/* PRICING */
+.pricing{padding:100px 24px;background:var(--white)}
+.plans{max-width:900px;margin:60px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start}
+.plan{background:var(--bg);border-radius:var(--radius-lg);padding:32px;border:1.5px solid transparent}
+.plan.featured{background:var(--blue);border-color:var(--blue);position:relative}
+.plan-popular{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--green);color:white;font-size:11px;font-weight:700;padding:4px 14px;border-radius:100px;white-space:nowrap;letter-spacing:0.05em}
+.plan-name{font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.plan.featured .plan-name{color:rgba(255,255,255,0.6)}
+.plan-price{font-size:44px;font-weight:900;color:var(--dark);letter-spacing:-2px;line-height:1}
+.plan.featured .plan-price{color:white}
+.plan-price span{font-size:16px;font-weight:500;color:var(--muted);letter-spacing:0}
+.plan.featured .plan-price span{color:rgba(255,255,255,0.6)}
+.plan-period{font-size:13px;color:var(--muted);margin-top:4px;margin-bottom:24px}
+.plan.featured .plan-period{color:rgba(255,255,255,0.5)}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.plan-features li{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
+.plan.featured .plan-features li{color:rgba(255,255,255,0.8)}
+.plan-features li::before{content:'';width:16px;height:16px;border-radius:50%;background:var(--green);flex-shrink:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'%3E%3Cpath d='M13 4L6.5 11 3 7.5'  stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E")}
+.plan-btn{display:block;text-align:center;padding:14px;border-radius:var(--radius);font-size:15px;font-weight:700;text-decoration:none;transition:all .15s}
+.plan-btn-outline{background:white;color:var(--blue);border:1.5px solid var(--border)}
+.plan-btn-outline:hover{border-color:var(--blue)}
+.plan-btn-white{background:white;color:var(--blue)}
+.plan-btn-white:hover{background:var(--bg)}
+
+/* TESTIMONIALS */
+.testimonials{padding:100px 24px;background:var(--bg)}
+.testi-grid{max-width:1000px;margin:60px auto 0;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.testi-card{background:white;border-radius:var(--radius-lg);padding:28px;border:1px solid var(--border)}
+.testi-stars{color:var(--green);font-size:16px;margin-bottom:14px;letter-spacing:2px}
+.testi-text{font-size:15px;color:var(--dark);line-height:1.7;margin-bottom:20px;font-style:italic}
+.testi-author{display:flex;align-items:center;gap:12px}
+.testi-avatar{width:36px;height:36px;border-radius:50%;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.testi-name{font-size:14px;font-weight:600;color:var(--dark)}
+.testi-meta{font-size:12px;color:var(--muted)}
+
+/* CTA FINAL */
+.cta-final{padding:100px 24px;background:var(--blue);text-align:center}
+.cta-final h2{font-size:clamp(28px,4vw,48px);font-weight:900;color:white;letter-spacing:-1.5px;margin-bottom:16px;max-width:600px;margin-left:auto;margin-right:auto}
+.cta-final p{font-size:17px;color:rgba(255,255,255,0.65);margin-bottom:40px;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.7}
+.btn-green{background:var(--green);color:white;font-size:16px;font-weight:700;padding:18px 40px;border-radius:var(--radius);text-decoration:none;display:inline-block;transition:all .15s;letter-spacing:-0.2px}
+.btn-green:hover{background:var(--green-light);transform:translateY(-2px)}
+.cta-note{font-size:13px;color:rgba(255,255,255,0.45);margin-top:16px}
+
+/* FOOTER */
+footer{background:var(--dark);padding:40px 24px}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-logo{font-size:15px;font-weight:800;color:white;letter-spacing:-0.3px}
+.footer-logo span{color:var(--green)}
+.footer-links{display:flex;gap:24px}
+.footer-links a{font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none}
+.footer-links a:hover{color:rgba(255,255,255,0.8)}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.25);width:100%;margin-top:8px}
+
+@media(max-width:768px){
+  .stats-inner{grid-template-columns:repeat(2,1fr)}
+  .modules-grid{grid-template-columns:1fr}
+  .plans{grid-template-columns:1fr}
+  .testi-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 24 24"><path d="M12 2L4 7v6c0 5 4 9 8 9s8-4 8-9V7L12 2z"/></svg>
+      </div>
+      <span class="logo-text">IELTS<span>Score</span>Up</span>
+    </a>
+    <div class="nav-links">
+      <a href="#modules">Modules</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+    </div>
+    <a href="#pricing" class="nav-cta">Start free trial</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">AI-Powered IELTS Training</div>
+  <h1>Reach your target<br/><span class="accent">band score</span> faster</h1>
+  <p class="hero-sub">Practice all four skills with instant AI feedback. Academic and General Training. Real exam conditions.</p>
+  <div class="hero-actions">
+    <a href="#pricing" class="btn-primary">Start free — no card needed</a>
+    <a href="#modules" class="btn-secondary">See how it works →</a>
+  </div>
+
+  <div class="band-demo">
+    <div class="band-label">Your predicted band score</div>
+    <div class="band-track">
+      <div class="band-fill" id="bandFill"></div>
+      <div class="band-thumb" id="bandThumb" style="right:100%"></div>
+    </div>
+    <div class="band-numbers">
+      <span>1.0</span><span>2.0</span><span>3.0</span><span>4.0</span><span>5.0</span>
+      <span>6.0</span><span>7.0</span><span>8.0</span><span>9.0</span>
+    </div>
+    <div class="band-score-display">
+      <span class="band-score-num" id="bandNum">0.0</span>
+      <span class="band-score-label">Band score</span>
+    </div>
+    <div class="band-tags">
+      <span class="band-tag">Task Achievement ✓</span>
+      <span class="band-tag">Coherence ✓</span>
+      <span class="band-tag">Lexical Resource ✓</span>
+      <span class="band-tag">Grammar ✓</span>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stats-inner">
+    <div><div class="stat-num">9.0</div><div class="stat-label">Maximum band score</div></div>
+    <div><div class="stat-num">&lt;10s</div><div class="stat-label">AI feedback time</div></div>
+    <div><div class="stat-num">4+1</div><div class="stat-label">Skills + Grammar</div></div>
+    <div><div class="stat-num">Academic<br/>&amp; General</div><div class="stat-label">Both test types</div></div>
+  </div>
+</section>
+
+<section class="modules" id="modules">
+  <div class="section-eyebrow">All skills covered</div>
+  <h2 class="section-title">Everything you need for IELTS</h2>
+  <p class="section-sub">Practice every section with real exam-style content and instant AI feedback on every attempt.</p>
+  <div class="modules-grid">
+    <div class="module-card">
+      <div class="module-icon icon-blue">✍️</div>
+      <div class="module-name">Writing</div>
+      <div class="module-desc">Task 1 (Academic &amp; General) and Task 2 essays. AI evaluates your band score across all four criteria with detailed corrections.</div>
+      <span class="module-badge badge-green">Band 1–9 score</span>
+    </div>
+    <div class="module-card">
+      <div class="module-icon icon-green">📖</div>
+      <div class="module-name">Reading</div>
+      <div class="module-desc">Full-length passages with all question types. AI explains why each answer is right or wrong with direct text references.</div>
+      <span class="module-badge badge-blue">Detailed explanations</span>
+    </div>
+    <div class="module-card">
+      <div class="module-icon icon-blue">🎧</div>
+      <div class="module-name">Listening</div>
+      <div class="module-desc">Real audio recordings across all 4 sections. AI analyses your errors and highlights the exact moment you went wrong.</div>
+      <span class="module-badge badge-green">Error analysis</span>
+    </div>
+    <div class="module-card">
+      <div class="module-icon icon-green">🎤</div>
+      <div class="module-name">Speaking</div>
+      <div class="module-desc">Parts 1, 2 and 3 practice. Respond in text or record your voice. AI evaluates fluency, vocabulary, and coherence.</div>
+      <span class="module-badge badge-blue">Fluency score</span>
+    </div>
+    <div class="module-card">
+      <div class="module-icon icon-blue">📝</div>
+      <div class="module-name">Grammar</div>
+      <div class="module-desc">Targeted grammar exercises graded by IELTS level. AI explains the rule behind every mistake with examples.</div>
+      <span class="module-badge badge-green">Rule explanations</span>
+    </div>
+    <div class="module-card">
+      <div class="module-icon icon-green">⏱️</div>
+      <div class="module-name">Mock Exams</div>
+      <div class="module-desc">Full timed exam simulations for Academic and General Training. Complete performance report with predicted band and improvement plan.</div>
+      <span class="module-badge badge-blue">Full band report</span>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="how">
+  <div class="how-inner">
+    <div class="section-eyebrow">How it works</div>
+    <h2 class="section-title" style="text-align:left;margin:0 0 0 0">From practice to your target score</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Choose your test type and module</h3>
+          <p>Select Academic or General Training. Pick the skill you want to practise — Writing, Reading, Listening, Speaking, or Grammar — and choose your difficulty level.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Complete a real exam-style exercise</h3>
+          <p>Write an essay, read a passage, listen to an audio recording, answer speaking prompts, or complete grammar drills. All content mirrors the real IELTS exam.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Get instant AI feedback</h3>
+          <p>In under 10 seconds, our AI analyses your answer and returns a band score, specific corrections, and explanations — just like a human examiner would.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Track progress and improve</h3>
+          <p>Your dashboard shows your progress across all skills over time. Take a full Mock Exam anytime to see your predicted overall band score.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="section-eyebrow">Pricing</div>
+  <h2 class="section-title">Simple, honest pricing</h2>
+  <p class="section-sub">Start free. Upgrade when you're ready. Cancel anytime.</p>
+  <div class="plans">
+    <div class="plan">
+      <div class="plan-name">Free</div>
+      <div class="plan-price">$0<span>/mo</span></div>
+      <div class="plan-period">Forever free</div>
+      <ul class="plan-features">
+        <li>5 Writing evaluations/month</li>
+        <li>10 Reading exercises</li>
+        <li>Basic feedback</li>
+        <li>Grammar module</li>
+      </ul>
+      <a href="#" class="plan-btn plan-btn-outline">Get started free</a>
+    </div>
+    <div class="plan featured" style="position:relative">
+      <div class="plan-popular">Most popular</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">$19<span>/mo</span></div>
+      <div class="plan-period">Billed monthly</div>
+      <ul class="plan-features">
+        <li>Unlimited Writing + Speaking</li>
+        <li>Full Reading &amp; Listening</li>
+        <li>Detailed AI feedback</li>
+        <li>Grammar module</li>
+        <li>2 Mock Exams/month</li>
+        <li>Progress dashboard</li>
+      </ul>
+      <a href="#" class="plan-btn plan-btn-white">Start 7-day free trial</a>
+    </div>
+    <div class="plan">
+      <div class="plan-name">Intensive</div>
+      <div class="plan-price">$35<span>/mo</span></div>
+      <div class="plan-period">Billed monthly</div>
+      <ul class="plan-features">
+        <li>Everything in Pro</li>
+        <li>Unlimited Mock Exams</li>
+        <li>Voice Speaking analysis</li>
+        <li>Personalised study plan</li>
+        <li>Priority support</li>
+      </ul>
+      <a href="#" class="plan-btn plan-btn-outline">Start 7-day free trial</a>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials">
+  <div class="section-eyebrow">Results</div>
+  <h2 class="section-title">Students who hit their target</h2>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"I went from Band 6.0 to 7.5 in Writing in just 6 weeks. The AI feedback is incredibly specific — it tells you exactly what to fix."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">MR</div>
+        <div><div class="testi-name">Maria R.</div><div class="testi-meta">Target: 7.0 · Achieved: 7.5</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"The Listening module is the best I've found online. Real audio, real question types, and the error analysis helped me understand my weak spots fast."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">AK</div>
+        <div><div class="testi-name">Ahmed K.</div><div class="testi-meta">Target: 6.5 · Achieved: 7.0</div></div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Mock exams here feel like the real thing. I was so prepared on exam day that I wasn't nervous at all. Got an 8.0 overall."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">SL</div>
+        <div><div class="testi-name">Sophie L.</div><div class="testi-meta">Target: 7.5 · Achieved: 8.0</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-final">
+  <h2>Ready to hit your target band score?</h2>
+  <p>Join thousands of students training smarter with AI. Start free today.</p>
+  <a href="#pricing" class="btn-green">Start your free trial</a>
+  <div class="cta-note">No credit card required · Cancel anytime</div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">IELTS<span>Score</span>Up</div>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Contact</a>
+    </div>
+    <div class="footer-copy">© 2025 IELTScoreUp. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var target=7.5,current=0,fill=document.getElementById('bandFill'),
+      num=document.getElementById('bandNum');
+  var pct=(target-1)/8*100;
+  setTimeout(function(){
+    fill.style.width=pct+'%';
+    var start=null;
+    function step(ts){
+      if(!start)start=ts;
+      var p=Math.min((ts-start)/1800,1);
+      var ease=1-Math.pow(1-p,4);
+      current=ease*target;
+      num.textContent=current.toFixed(1);
+      if(p<1)requestAnimationFrame(step);
+      else num.textContent=target.toFixed(1);
+    }
+    requestAnimationFrame(step);
+  },600);
+})();
+</script>
+</body>
+</html>
