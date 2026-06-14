@@ -470,20 +470,27 @@ function bandToPct(b){
 }
 
 async function renderDashboard(){
-  // Load real data from Supabase
   var p={};
   try{
-    var sb2=getSupabase();
-    var {data:sessions}=await sb2.from('sessions').select('*').eq('user_id',(await sb2.auth.getUser()).data.user?.id||'').order('created_at',{ascending:false});
-    if(sessions){
-      sessions.forEach(function(s){
-        if(!p[s.module]) p[s.module]={sessions:0,band:null};
-        p[s.module].sessions++;
-        if(s.band&&(!p[s.module].band||parseFloat(s.band)>parseFloat(p[s.module].band))) p[s.module].band=s.band;
-      });
-      p.activity=sessions.slice(0,6).map(function(s){return{module:s.module,band:s.band,type:s.subtype,date:new Date(s.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})};});
+    if(typeof getSupabase === 'function'){
+      var sb2=getSupabase();
+      var userRes=await sb2.auth.getUser();
+      var uid=userRes?.data?.user?.id;
+      if(uid){
+        var {data:sessions}=await sb2.from('sessions').select('*').eq('user_id',uid).order('created_at',{ascending:false});
+        if(sessions&&sessions.length>0){
+          sessions.forEach(function(s){
+            if(!p[s.module]) p[s.module]={sessions:0,band:null};
+            p[s.module].sessions++;
+            if(s.band&&(!p[s.module].band||parseFloat(s.band)>parseFloat(p[s.module].band))) p[s.module].band=s.band;
+          });
+          p.activity=sessions.slice(0,6).map(function(s){
+            return{module:s.module,band:s.band,type:s.subtype,date:new Date(s.created_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})};
+          });
+        }
+      }
     }
-  }catch(e){console.log('Using local data',e);}
+  }catch(e){console.log('Dashboard data error:',e);}
   var skills=['writing','reading','listening','speaking','grammar'];
   var bands=[];
   var totalSessions=0;
@@ -590,9 +597,10 @@ window.saveModuleProgress=function(module, data){
 
 
 
+
+
+
 renderDashboard();
-
-
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
