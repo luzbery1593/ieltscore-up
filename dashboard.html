@@ -201,10 +201,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
     </a>
 
     <div class="nav-section-label">Account</div>
-    <a class="nav-item" href="#">
+    <a class="nav-item" href="/profile.html">
       <span class="nav-icon">📊</span> My Progress
     </a>
-    <a class="nav-item" href="#">
+    <a class="nav-item" href="/profile.html">
       <span class="nav-icon">⚙️</span> Settings
     </a>
   </nav>
@@ -215,7 +215,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
         <div class="sb-user-name" id="sbUserName">Loading...</div>
         <div class="sb-user-plan" id="sbUserPlan">Free Plan</div>
       </div>
-    </div>
+        <button onclick="doSignOut()" class="nav-item" style="color:rgba(255,255,255,.5);width:100%;margin-top:8px;text-align:left">
+      <span class="nav-icon">↩</span> Sign out
+    </button>
   </div>
 </div>
 
@@ -226,7 +228,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
       <button class="menu-btn" onclick="toggleSidebar()">☰</button>
       <span class="page-title">Dashboard</span>
     </div>
-    <div class="topbar-right"></div>
+    <div class="topbar-right">
+      </div>
+    </div>
   </div>
 
   <div class="page">
@@ -466,8 +470,9 @@ function bandToPct(b){
   return ((parseFloat(b)-1)/8)*100;
 }
 
-async function renderDashboard(){
-  var p={};
+function renderDashboard(p){
+  p = p || {};
+  
   try{
     if(typeof getSupabase === 'function'){
       var sb2=getSupabase();
@@ -597,44 +602,82 @@ window.saveModuleProgress=function(module, data){
 
 
 
-// Load user info into sidebar
-async function loadUser(){
-  try{
-    var SURL='https://ystwgkfwydyrefbqjcjd.supabase.co';
-    var SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk';
-    var sb=supabase.createClient(SURL,SKEY);
-    var {data}=await sb.auth.getSession();
-    if(!data.session){window.location.href='auth.html';return;}
-    var user=data.session.user;
-    var name=user.user_metadata?.full_name||user.email.split('@')[0];
-    var initial=name.charAt(0).toUpperCase();
-    // Update sidebar user info
-    var nameEl=document.getElementById('sbUserName');
-    var avatarEl=document.getElementById('sbAvatar');
-    var greetEl=document.getElementById('greeting');
-    if(nameEl) nameEl.textContent=name;
-    if(avatarEl) avatarEl.textContent=initial;
-    if(greetEl){var h=new Date().getHours();greetEl.textContent=(h<12?'Good morning':h<17?'Good afternoon':'Good evening')+' 👋';}
-    // Load plan
-    var {data:profile}=await sb.from('profiles').select('plan,full_name').eq('id',user.id).single();
-    if(profile){
-      var planEl=document.getElementById('sbUserPlan');
-      if(planEl) planEl.textContent=profile.plan==='pro'?'Pro Plan':profile.plan==='intensive'?'Intensive Plan':'Free Plan';
-      if(profile.full_name&&nameEl) nameEl.textContent=profile.full_name;
+// ── AUTH + USER LOADING ───────────────────────────────────────
+var _SB_URL = 'https://ystwgkfwydyrefbqjcjd.supabase.co';
+var _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk';
+
+function doSignOut(){
+  var sb = supabase.createClient(_SB_URL, _SB_KEY);
+  sb.auth.signOut().then(function(){ window.location.href = '/index.html'; });
+}
+
+async function loadUserAndData(){
+  var sb = supabase.createClient(_SB_URL, _SB_KEY);
+  
+  // Check session
+  var { data: sessionData } = await sb.auth.getSession();
+  if (!sessionData.session) {
+    window.location.href = '/auth.html';
+    return;
+  }
+  
+  var user = sessionData.session.user;
+  var name = user.user_metadata?.full_name || user.email.split('@')[0];
+  var initial = name.charAt(0).toUpperCase();
+  
+  // Update sidebar
+  var avatarEl = document.getElementById('sbAvatar');
+  var nameEl = document.getElementById('sbUserName');
+  var planEl = document.getElementById('sbUserPlan');
+  var greetEl = document.getElementById('greeting');
+  var totalEl = document.getElementById('totalSessions');
+  
+  if (avatarEl) avatarEl.textContent = initial;
+  if (nameEl) nameEl.textContent = name;
+  
+  var h = new Date().getHours();
+  if (greetEl) greetEl.textContent = (h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening') + ' 👋';
+
+  // Load profile
+  try {
+    var { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+    if (profile) {
+      if (nameEl && profile.full_name) nameEl.textContent = profile.full_name;
+      if (planEl) planEl.textContent = profile.plan === 'pro' ? '⚡ Pro Plan' : profile.plan === 'intensive' ? '🚀 Intensive' : '🆓 Free Plan';
     }
-  }catch(e){console.log('User load error:',e);}
+  } catch(e) { console.log('Profile error:', e); }
+
+  // Load sessions
+  try {
+    var { data: sessions } = await sb.from('sessions').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+    if (sessions) {
+      var p = {};
+      sessions.forEach(function(s){
+        if (!p[s.module]) p[s.module] = { sessions: 0, band: null };
+        p[s.module].sessions++;
+        if (s.band && (!p[s.module].band || parseFloat(s.band) > parseFloat(p[s.module].band))) {
+          p[s.module].band = s.band;
+        }
+      });
+      p.activity = sessions.slice(0, 6).map(function(s){
+        return {
+          module: s.module, band: s.band, type: s.subtype,
+          date: new Date(s.created_at).toLocaleDateString('en-GB', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' })
+        };
+      });
+      if (totalEl) totalEl.textContent = sessions.length;
+      renderDashboard(p);
+    } else {
+      renderDashboard({});
+    }
+  } catch(e) {
+    console.log('Sessions error:', e);
+    renderDashboard({});
+  }
 }
 
-// Sign out
-function signOut(){
-  var SURL='https://ystwgkfwydyrefbqjcjd.supabase.co';
-  var SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk';
-  var sb=supabase.createClient(SURL,SKEY);
-  sb.auth.signOut().then(function(){window.location.href='index.html';});
-}
+loadUserAndData();
 
-loadUser();
-renderDashboard();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
