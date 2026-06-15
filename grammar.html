@@ -4,181 +4,178 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Grammar Practice — IELTScoreUp</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --blue:#1B3F6E;--blue-light:#2558A0;--green:#0D9E72;--green-light:#0FBF8A;
-  --bg:#F4F6FA;--white:#FFFFFF;--dark:#0F1C2E;--muted:#5A6A7E;
-  --border:#E2E8F0;--radius:12px;--radius-lg:20px;--red:#DC2626;--amber:#D97706;
-}
+:root{--blue:#1B3F6E;--blue-light:#2558A0;--green:#0D9E72;--bg:#F4F6FA;--white:#fff;--dark:#0F1C2E;--muted:#5A6A7E;--border:#E2E8F0;--radius:12px;--radius-lg:20px;--red:#DC2626;--amber:#D97706}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webkit-font-smoothing:antialiased;min-height:100vh}
 .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-.logo{font-size:16px;font-weight:800;color:var(--dark);text-decoration:none}
-.logo span{color:var(--green)}
-.back-link{font-size:13px;color:var(--muted);text-decoration:none;font-weight:500}
-.back-link:hover{color:var(--dark)}
-
+.logo{font-size:16px;font-weight:800;color:var(--dark);text-decoration:none}.logo span{color:var(--green)}
 .page{max-width:860px;margin:0 auto;padding:32px 24px}
 
-/* LEVEL + TOPIC SELECTOR */
-.selectors{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+/* SETUP */
+.setup-header{margin-bottom:28px}
+.setup-title{font-size:26px;font-weight:900;color:var(--dark);letter-spacing:-.8px;margin-bottom:6px}
+.setup-sub{font-size:14px;color:var(--muted);line-height:1.6}
+.selectors{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
 @media(max-width:600px){.selectors{grid-template-columns:1fr}}
 .selector-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:18px 20px}
-.selector-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px}
+.selector-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
 .pills{display:flex;flex-wrap:wrap;gap:6px}
 .pill{padding:6px 14px;border-radius:100px;border:1.5px solid var(--border);background:var(--white);font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif}
 .pill:hover{border-color:var(--blue);color:var(--blue)}
 .pill.active{border-color:var(--blue);background:rgba(27,63,110,.08);color:var(--blue)}
-.pill.active-green{border-color:var(--green);background:rgba(13,158,114,.08);color:var(--green)}
 
-/* PROGRESS BAR */
+.gen-btn{background:var(--blue);color:white;border:none;padding:13px 32px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;gap:8px;margin-bottom:28px}
+.gen-btn:hover:not(:disabled){background:var(--blue-light)}
+.gen-btn:disabled{opacity:.4;cursor:not-allowed}
+.spinner-sm{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.gen-btn.loading .spinner-sm{display:block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* PROGRESS */
 .progress-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:18px 22px;margin-bottom:20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
 .progress-info{flex:1;min-width:120px}
-.progress-title{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:4px}
+.progress-title{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:3px}
 .progress-sub{font-size:12px;color:var(--muted)}
 .progress-bar-wrap{flex:2;min-width:160px}
-.progress-bar{height:8px;background:var(--border);border-radius:100px;overflow:hidden}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:100px;transition:width .4s ease}
-.progress-nums{display:flex;justify-content:space-between;margin-top:5px}
-.progress-nums span{font-size:11px;color:var(--muted);font-weight:500}
+.prog-bar{height:8px;background:var(--border);border-radius:100px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--blue));border-radius:100px;transition:width .4s ease;width:0%}
+.prog-nums{display:flex;justify-content:space-between;margin-top:5px}
+.prog-num{font-size:11px;color:var(--muted);font-weight:500}
 .score-chip{background:var(--bg);border-radius:var(--radius);padding:8px 14px;text-align:center;flex-shrink:0}
-.score-chip-num{font-size:22px;font-weight:900;color:var(--blue);letter-spacing:-0.5px;line-height:1}
-.score-chip-label{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:0.05em;text-transform:uppercase;margin-top:2px}
+.score-chip-num{font-size:22px;font-weight:900;color:var(--blue);letter-spacing:-.5px;line-height:1}
+.score-chip-label{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-top:2px}
 
-/* QUESTION CARD */
-.question-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;margin-bottom:16px}
-.q-header{padding:16px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+/* QUESTIONS */
+.question-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;margin-bottom:14px}
+.q-header{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .q-type-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;background:rgba(27,63,110,.08);color:var(--blue)}
-.q-num-label{font-size:13px;font-weight:600;color:var(--muted)}
-.q-body{padding:22px}
-.q-grammar-point{font-size:11px;font-weight:700;color:var(--green);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
-.q-text{font-size:16px;font-weight:600;color:var(--dark);line-height:1.6;margin-bottom:16px}
-.q-text .blank{display:inline-block;min-width:80px;border-bottom:2px solid var(--blue);margin:0 4px;text-align:center;font-weight:700;color:var(--blue)}
+.q-num-label{font-size:12px;font-weight:600;color:var(--muted)}
+.q-body{padding:20px}
+.q-point{font-size:11px;font-weight:700;color:var(--green);letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px}
+.q-text{font-size:15px;font-weight:600;color:var(--dark);line-height:1.6;margin-bottom:14px}
 
-/* MCQ OPTIONS */
-.options-grid{display:flex;flex-direction:column;gap:8px}
+.options-grid{display:flex;flex-direction:column;gap:7px}
 .option{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:var(--radius);border:1.5px solid var(--border);cursor:pointer;transition:all .15s;font-size:14px;color:var(--dark)}
 .option:hover{border-color:var(--blue);background:rgba(27,63,110,.03)}
 .option.selected{border-color:var(--blue);background:rgba(27,63,110,.06);color:var(--blue)}
 .option.correct{border-color:var(--green);background:rgba(13,158,114,.08);color:#065f46;pointer-events:none}
 .option.wrong{border-color:var(--red);background:rgba(220,38,38,.06);color:var(--red);pointer-events:none}
-.option input{accent-color:var(--blue);width:15px;height:15px;flex-shrink:0}
 .option-letter{width:24px;height:24px;border-radius:6px;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--muted);flex-shrink:0;transition:all .15s}
 .option.selected .option-letter{background:var(--blue);color:white}
 .option.correct .option-letter{background:var(--green);color:white}
 .option.wrong .option-letter{background:var(--red);color:white}
+.option input{display:none}
 
-/* FILL IN BLANK */
-.fill-wrap{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.fill-wrap{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .fill-input{border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-family:'Inter',sans-serif;font-size:15px;color:var(--dark);outline:none;transition:border-color .15s;min-width:180px;font-weight:600}
 .fill-input:focus{border-color:var(--blue)}
 .fill-input.correct{border-color:var(--green);background:rgba(13,158,114,.06);color:#065f46}
 .fill-input.wrong{border-color:var(--red);background:rgba(220,38,38,.05);color:var(--red)}
-.fill-check-btn{background:var(--blue);color:white;border:none;padding:10px 18px;border-radius:var(--radius);font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s}
-.fill-check-btn:hover{background:var(--blue-light)}
-.fill-check-btn:disabled{opacity:.4;cursor:not-allowed}
+.check-btn{background:var(--blue);color:white;border:none;padding:10px 16px;border-radius:var(--radius);font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s}
+.check-btn:hover{background:var(--blue-light)}
+.check-btn:disabled{opacity:.4;cursor:not-allowed}
 
-/* ERROR CORRECTION */
-.error-sentence{background:var(--bg);border-radius:var(--radius);padding:14px 16px;font-size:15px;color:var(--dark);line-height:1.7;margin-bottom:12px;border-left:3px solid var(--amber)}
-.error-sentence .error-word{color:var(--red);text-decoration:underline;font-weight:600}
-.correction-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-family:'Inter',sans-serif;font-size:14px;color:var(--dark);outline:none;transition:border-color .15s}
+.error-sentence{background:var(--bg);border-radius:var(--radius);padding:14px 16px;font-size:15px;color:var(--dark);line-height:1.7;margin-bottom:10px;border-left:3px solid var(--amber)}
+.error-word{color:var(--red);text-decoration:underline;font-weight:600}
+.correction-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-family:'Inter',sans-serif;font-size:14px;color:var(--dark);outline:none;transition:border-color .15s;margin-bottom:8px}
 .correction-input:focus{border-color:var(--blue)}
 .correction-input.correct{border-color:var(--green);background:rgba(13,158,114,.06)}
 .correction-input.wrong{border-color:var(--red);background:rgba(220,38,38,.05)}
 
-/* FEEDBACK INLINE */
-.q-feedback{margin-top:14px;padding:12px 14px;border-radius:var(--radius);font-size:13px;line-height:1.65;display:none}
+.q-feedback{margin-top:12px;padding:11px 13px;border-radius:var(--radius);font-size:13px;line-height:1.65;display:none}
 .q-feedback.visible{display:block}
 .q-feedback.fb-correct{background:rgba(13,158,114,.08);border-left:3px solid var(--green);color:#064e3b}
 .q-feedback.fb-wrong{background:rgba(220,38,38,.06);border-left:3px solid var(--red);color:#7f1d1d}
-.fb-rule{font-weight:700;margin-bottom:4px}
+.fb-rule{font-weight:700;margin-bottom:3px}
 
-/* SUBMIT + RESULTS */
-.submit-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:16px 20px;margin-bottom:16px}
-.api-wrap{flex:1;min-width:180px}
-.api-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:9px 13px;font-family:'Inter',sans-serif;font-size:13px;color:var(--dark);outline:none;transition:border-color .15s;background:var(--bg)}
-.api-input:focus{border-color:var(--blue);background:var(--white)}
-.api-note{font-size:11px;color:var(--muted);margin-top:4px}
-.api-note a{color:var(--blue);text-decoration:none}
-.submit-btn{background:var(--blue);color:white;border:none;padding:11px 22px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;gap:8px;white-space:nowrap}
+/* REPORT */
+.submit-row{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.submit-btn{background:var(--blue);color:white;border:none;padding:11px 22px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;gap:8px}
 .submit-btn:hover:not(:disabled){background:var(--blue-light)}
 .submit-btn:disabled{opacity:.45;cursor:not-allowed}
 .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:none}
 .submit-btn.loading .spinner{display:block}
-@keyframes spin{to{transform:rotate(360deg)}}
 
-/* FINAL REPORT */
 .report-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;display:none;margin-bottom:16px}
 .report-card.visible{display:block}
 .report-top{background:var(--blue);padding:24px;text-align:center}
 .report-score{font-size:56px;font-weight:900;color:white;letter-spacing:-2px;line-height:1}
 .report-label{font-size:13px;color:rgba(255,255,255,.6);margin-top:4px}
 .report-body{padding:22px;display:flex;flex-direction:column;gap:14px}
-.report-section{border-top:1px solid var(--border);padding-top:14px}
-.report-section:first-child{border-top:none;padding-top:0}
-.report-sec-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
+.report-sec{border-top:1px solid var(--border);padding-top:14px}
+.report-sec:first-child{border-top:none;padding-top:0}
+.report-sec-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px}
 .report-sec-content{font-size:14px;color:var(--dark);line-height:1.75}
-.weak-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
-.weak-chip{background:rgba(220,38,38,.08);color:var(--red);font-size:12px;font-weight:600;padding:4px 12px;border-radius:100px}
-.strong-chip{background:rgba(13,158,114,.08);color:var(--green);font-size:12px;font-weight:600;padding:4px 12px;border-radius:100px}
-
+.chip-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:5px}
+.chip-strong{background:rgba(13,158,114,.08);color:var(--green);font-size:12px;font-weight:600;padding:4px 12px;border-radius:100px}
+.chip-weak{background:rgba(220,38,38,.08);color:var(--red);font-size:12px;font-weight:600;padding:4px 12px;border-radius:100px}
 .retry-btn{width:100%;background:var(--bg);color:var(--blue);border:1.5px solid var(--blue);padding:12px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;margin-bottom:16px;display:none}
 .retry-btn.visible{display:block}
 .retry-btn:hover{background:var(--blue);color:white}
+
+.dots{display:flex;gap:6px;align-items:center}
+.dots span{width:7px;height:7px;background:var(--blue);border-radius:50%;animation:bounce 1.2s infinite}
+.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
 </style>
 <link rel="stylesheet" href="navbar.css"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 </head>
 <body>
-
-<script>
-(function(){
-  var sb=supabase.createClient('https://ystwgkfwydyrefbqjcjd.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk');
-  sb.auth.getSession().then(function(r){
-    if(!r.data.session){window.location.href='/auth.html';return;}
-    var user=r.data.session.user;
-    var name=user.user_metadata?.full_name||user.email.split('@')[0];
-    var el=document.getElementById('topUserName');
-    if(el) el.textContent=name;
-  });
-  window._sbSignOut=function(){sb.auth.signOut().then(function(){window.location.href='/index.html';});};
-})();
-</script>
-
 <div class="topbar">
   <a href="/dashboard.html" class="logo">IELTS<span>Score</span>Up</a>
-  <div style="display:flex;align-items:center;gap:12px"><a href="/dashboard.html" style="font-size:13px;color:var(--muted,#5A6A7E);text-decoration:none;font-weight:500">← Dashboard</a><div style="display:flex;align-items:center;gap:8px;background:#F4F6FA;border:1px solid #E2E8F0;border-radius:100px;padding:5px 12px;cursor:pointer" onclick="window._sbSignOut()"><div style="width:26px;height:26px;border-radius:50%;background:#1B3F6E;color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">L</div><span id="topUserName" style="font-size:13px;font-weight:600;color:#0F1C2E">...</span><span style="font-size:10px;color:#5A6A7E">▾</span></div></div>
+  <a href="/dashboard.html" style="font-size:13px;color:var(--muted);text-decoration:none;font-weight:500">← Dashboard</a>
 </div>
 
 <div class="page">
+  <div class="setup-header">
+    <div class="setup-title">📝 Grammar Practice</div>
+    <div class="setup-sub">AI generates a fresh set of exercises every time. Choose your level and a grammar topic, then answer all questions to get your personalised report.</div>
+  </div>
 
   <div class="selectors">
     <div class="selector-card">
       <div class="selector-label">Level</div>
       <div class="pills" id="levelPills">
-        <button class="pill active" onclick="setLevel('B1',this)">B1 — Intermediate</button>
-        <button class="pill" onclick="setLevel('B2',this)">B2 — Upper-Int</button>
+        <button class="pill" onclick="setLevel('B1',this)">B1 — Intermediate</button>
+        <button class="pill active" onclick="setLevel('B2',this)">B2 — Upper-Int</button>
         <button class="pill" onclick="setLevel('C1',this)">C1 — Advanced</button>
       </div>
     </div>
     <div class="selector-card">
-      <div class="selector-label">Grammar topic</div>
-      <div class="pills" id="topicPills"></div>
+      <div class="selector-label">Grammar topic <span style="font-weight:400;color:var(--muted)">(optional — leave blank for random)</span></div>
+      <div class="pills" id="topicPills">
+        <button class="pill active" onclick="setTopic('',this)" id="topicRandom">🎲 Random</button>
+        <button class="pill" onclick="setTopic('present perfect vs past simple',this)">Present perfect</button>
+        <button class="pill" onclick="setTopic('conditional sentences',this)">Conditionals</button>
+        <button class="pill" onclick="setTopic('passive voice in academic writing',this)">Passive voice</button>
+        <button class="pill" onclick="setTopic('relative clauses',this)">Relative clauses</button>
+        <button class="pill" onclick="setTopic('modal verbs for speculation',this)">Modal verbs</button>
+        <button class="pill" onclick="setTopic('reported speech',this)">Reported speech</button>
+        <button class="pill" onclick="setTopic('articles',this)">Articles</button>
+        <button class="pill" onclick="setTopic('discourse markers and cohesion',this)">Discourse markers</button>
+        <button class="pill" onclick="setTopic('comparison structures',this)">Comparisons</button>
+        <button class="pill" onclick="setTopic('gerunds and infinitives',this)">Gerunds & infinitives</button>
+      </div>
     </div>
   </div>
 
-  <div class="progress-card">
+  <button class="gen-btn" id="genBtn" onclick="generateExercises()">
+    <div class="spinner-sm"></div>
+    <span id="genBtnText">✨ Generate exercises</span>
+  </button>
+
+  <div class="progress-card" id="progressCard" style="display:none">
     <div class="progress-info">
       <div class="progress-title" id="progressTitle">Grammar practice</div>
-      <div class="progress-sub" id="progressSub">Answer all questions to get your report</div>
+      <div class="progress-sub" id="progressSub">Answer all questions to get your AI report</div>
     </div>
     <div class="progress-bar-wrap">
-      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-      <div class="progress-nums"><span id="progressDone">0 done</span><span id="progressTotal">10 questions</span></div>
+      <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+      <div class="prog-nums"><span class="prog-num" id="progDone">0 done</span><span class="prog-num" id="progTotal">5 questions</span></div>
     </div>
     <div class="score-chip">
       <div class="score-chip-num" id="liveScore">0/0</div>
@@ -188,13 +185,11 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 
   <div id="questionsContainer"></div>
 
-  <div class="submit-row">
-    
-    </div>
+  <div class="submit-row" id="submitRow" style="display:none">
     <button class="submit-btn" id="submitBtn" onclick="getAIReport()" disabled>
-      <div class="spinner"></div>
-      <span class="btn-text">Get full AI report →</span>
+      <div class="spinner"></div><span class="btn-text">Get full AI report →</span>
     </button>
+    <span style="font-size:13px;color:var(--muted)" id="submitHint">Answer all questions to unlock</span>
   </div>
 
   <div class="report-card" id="reportCard">
@@ -203,368 +198,224 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
       <div class="report-label" id="reportLabel">—</div>
     </div>
     <div class="report-body">
-      <div class="report-section">
-        <div class="report-sec-label">Strong areas</div>
-        <div class="weak-chips" id="strongChips"></div>
-      </div>
-      <div class="report-section">
-        <div class="report-sec-label">Needs work</div>
-        <div class="weak-chips" id="weakChips"></div>
-      </div>
-      <div class="report-section">
-        <div class="report-sec-label">Key grammar insight</div>
-        <div class="report-sec-content" id="reportInsight">—</div>
-      </div>
-      <div class="report-section">
-        <div class="report-sec-label">IELTS impact</div>
-        <div class="report-sec-content" id="reportIelts">—</div>
-      </div>
-      <div class="report-section">
-        <div class="report-sec-label">Study plan</div>
-        <div class="report-sec-content" id="reportPlan">—</div>
-      </div>
+      <div class="report-sec"><div class="report-sec-label">Strong areas</div><div class="chip-row" id="strongChips"></div></div>
+      <div class="report-sec"><div class="report-sec-label">Needs work</div><div class="chip-row" id="weakChips"></div></div>
+      <div class="report-sec"><div class="report-sec-label">Key grammar insight</div><div class="report-sec-content" id="reportInsight">—</div></div>
+      <div class="report-sec"><div class="report-sec-label">IELTS impact</div><div class="report-sec-content" id="reportIelts">—</div></div>
+      <div class="report-sec"><div class="report-sec-label">Study plan</div><div class="report-sec-content" id="reportPlan">—</div></div>
     </div>
   </div>
-  <button class="retry-btn" id="retryBtn" onclick="retrySet()">Try another set →</button>
-
+  <button class="retry-btn" id="retryBtn" onclick="generateExercises()">✨ Generate new exercises →</button>
 </div>
 
 <script>
-var currentLevel='B1', currentTopic=0;
-var answeredCount=0, correctCount=0, totalQ=0;
-var answered={};
+var API = 'https://ieltscore-up-api-production.up.railway.app';
+var currentLevel = 'B2';
+var currentTopic = '';
+var exercises = [];
+var answeredCount = 0, correctCount = 0;
+var answered = {};
 
-var grammarData={
-  B1:{
-    topics:['Present perfect','Conditionals','Passive voice','Articles','Prepositions'],
-    sets:[
-      // Present perfect
-      [
-        {type:'mcq',point:'Present perfect vs past simple',text:'She _____ to Paris three times.',options:['went','has gone','had gone','goes'],answer:'B'},
-        {type:'fill',point:'Present perfect with "since"',text:'He _____ (work) here since 2018.',answer:'has worked'},
-        {type:'mcq',point:'Present perfect with "already"',text:'I _____ already finished my homework.',options:['have','had','has','did'],answer:'A'},
-        {type:'error',point:'Present perfect formation',sentence:'They has lived in London for five years.',error:'has lived',answer:'have lived'},
-        {type:'fill',point:'Present perfect with "ever"',text:'Have you ever _____ (visit) Japan?',answer:'visited'}
-      ],
-      // Conditionals
-      [
-        {type:'mcq',point:'First conditional',text:'If it rains tomorrow, we _____ stay at home.',options:['will','would','should','might'],answer:'A'},
-        {type:'fill',point:'Second conditional',text:'If I _____ (be) you, I would study harder.',answer:'were'},
-        {type:'mcq',point:'Third conditional',text:'If she had studied harder, she _____ passed the exam.',options:['would have','will have','had','would'],answer:'A'},
-        {type:'error',point:'Second conditional formation',sentence:'If he would have more time, he would travel more.',error:'would have',answer:'had'},
-        {type:'fill',point:'Zero conditional',text:'Water _____ (boil) if you heat it to 100°C.',answer:'boils'}
-      ],
-      // Passive voice
-      [
-        {type:'mcq',point:'Present simple passive',text:'The report _____ every month.',options:['is written','writes','has written','wrote'],answer:'A'},
-        {type:'fill',point:'Past simple passive',text:'The building _____ (construct) in 1890.',answer:'was constructed'},
-        {type:'mcq',point:'Passive with modal verb',text:'The problem _____ be solved immediately.',options:['must','must be','is must','has must'],answer:'B'},
-        {type:'error',point:'Passive voice agent',sentence:'The letter was written from the manager.',error:'from',answer:'by'},
-        {type:'fill',point:'Present perfect passive',text:'The results _____ (announce) already.',answer:'have been announced'}
-      ],
-      // Articles
-      [
-        {type:'mcq',point:'Definite vs indefinite article',text:'I saw _____ interesting film last night.',options:['a','an','the','—'],answer:'B'},
-        {type:'fill',point:'Article with superlatives',text:'She is _____ best student in the class.',answer:'the'},
-        {type:'mcq',point:'No article with abstract nouns',text:'_____ knowledge is power.',options:['A','An','The','—'],answer:'D'},
-        {type:'error',point:'Article with unique nouns',sentence:'The sun rises in a east.',error:'a east',answer:'the east'},
-        {type:'fill',point:'First vs second mention',text:'I bought _____ car yesterday. _____ car is red.',answer:'a / The'}
-      ],
-      // Prepositions
-      [
-        {type:'mcq',point:'Prepositions of time',text:'The meeting is _____ Monday morning.',options:['in','on','at','by'],answer:'B'},
-        {type:'fill',point:'Prepositions of place',text:'The book is _____ the shelf.',answer:'on'},
-        {type:'mcq',point:'Dependent prepositions',text:'She is very good _____ mathematics.',options:['in','at','on','for'],answer:'B'},
-        {type:'error',point:'Preposition after adjective',sentence:'I am interested on learning new languages.',error:'on',answer:'in'},
-        {type:'fill',point:'Prepositions with transport',text:'We travelled _____ plane to the conference.',answer:'by'}
-      ]
-    ]
-  },
-  B2:{
-    topics:['Perfect tenses','Inversion','Reported speech','Relative clauses','Linking words'],
-    sets:[
-      [
-        {type:'mcq',point:'Past perfect vs past simple',text:'By the time she arrived, everyone _____ left.',options:['had','has','was','did'],answer:'A'},
-        {type:'fill',point:'Future perfect',text:'By next year, I _____ (complete) my degree.',answer:'will have completed'},
-        {type:'mcq',point:'Perfect continuous',text:'He _____ working on this project for six months.',options:['has been','had been','was','is'],answer:'A'},
-        {type:'error',point:'Past perfect with "after"',sentence:'After he had ate dinner, he went for a walk.',error:'had ate',answer:'had eaten'},
-        {type:'fill',point:'Future perfect continuous',text:'By midnight, they _____ (drive) for twelve hours.',answer:'will have been driving'}
-      ],
-      [
-        {type:'mcq',point:'Negative inversion',text:'Never _____ such a beautiful sunset.',options:['I have seen','have I seen','I had seen','did I see'],answer:'B'},
-        {type:'fill',point:'Inversion with "not only"',text:'Not only _____ (she/finish) the report, but she also presented it.',answer:'did she finish'},
-        {type:'mcq',point:'Inversion with "hardly"',text:'Hardly _____ sat down when the phone rang.',options:['she had','had she','she has','has she'],answer:'B'},
-        {type:'error',point:'Conditional inversion',sentence:'Should you need help, please you contact us.',error:'please you contact',answer:'please contact'},
-        {type:'fill',point:'Inversion with "so"',text:'So difficult _____ the exam that many students failed.',answer:'was'}
-      ],
-      [
-        {type:'mcq',point:'Reported speech tense shift',text:'She said she _____ tired.',options:['is','was','were','has been'],answer:'B'},
-        {type:'fill',point:'Reported question',text:'He asked me where I _____ (live).',answer:'lived'},
-        {type:'mcq',point:'Reporting verbs',text:'He _____ her to submit the form by Friday.',options:['told','said','spoke','talked'],answer:'A'},
-        {type:'error',point:'Reported command',sentence:'She told him that he should to leave immediately.',error:'should to leave',answer:'should leave'},
-        {type:'fill',point:'Reported speech with modal',text:'She said she _____ (can) help us the next day.',answer:'could'}
-      ],
-      [
-        {type:'mcq',point:'Defining relative clause',text:'The woman _____ lives next door is a doctor.',options:['who','which','whom','whose'],answer:'A'},
-        {type:'fill',point:'Non-defining relative clause',text:'My brother, _____ is an engineer, lives in Berlin.',answer:'who'},
-        {type:'mcq',point:'Relative pronoun as object',text:'The book _____ I recommended has won an award.',options:['who','which','whose','whom'],answer:'B'},
-        {type:'error',point:'Reduced relative clause',sentence:'The report written by him was approved, which it covered all the key points.',error:'which it covered',answer:'which covered'},
-        {type:'fill',point:'Whose in relative clauses',text:'The student _____ essay won the prize is in my class.',answer:'whose'}
-      ],
-      [
-        {type:'mcq',point:'Contrast linking words',text:'_____ the bad weather, we enjoyed the trip.',options:['Despite','Although','However','Even though'],answer:'A'},
-        {type:'fill',point:'Result linking words',text:'The results were poor; _____, the team remained optimistic.',answer:'nevertheless'},
-        {type:'mcq',point:'Addition linking words',text:'The plan is costly. _____, it is time-consuming.',options:['Furthermore','Despite','Although','Because'],answer:'A'},
-        {type:'error',point:'Concession clause',sentence:'Despite of the difficulties, she succeeded.',error:'Despite of',answer:'Despite'},
-        {type:'fill',point:'Purpose linking words',text:'She studied hard _____ order to pass the exam.',answer:'in'}
-      ]
-    ]
-  },
-  C1:{
-    topics:['Mixed conditionals','Subjunctive','Emphasis','Nominalisation','Complex structures'],
-    sets:[
-      [
-        {type:'mcq',point:'Mixed conditional (past→present)',text:'If I had taken that job, I _____ in New York now.',options:['would be','would have been','will be','had been'],answer:'A'},
-        {type:'fill',point:'Mixed conditional (present→past)',text:'If she _____ (be) more careful, she would not have made that mistake.',answer:'were'},
-        {type:'mcq',point:'Implied conditional',text:'_____ a little more time, I could have finished the project.',options:['Given','Having','Being','With having'],answer:'A'},
-        {type:'error',point:'Inverted conditional (past)',sentence:'Had I known the truth, I would told her.',error:'would told',answer:'would have told'},
-        {type:'fill',point:'Mixed conditional with modal',text:'If he _____ (study) medicine, he might be a doctor by now.',answer:'had studied'}
-      ],
-      [
-        {type:'mcq',point:'Subjunctive with "recommend"',text:'The doctor recommended that he _____ more rest.',options:['takes','take','took','to take'],answer:'B'},
-        {type:'fill',point:'Subjunctive with "suggest"',text:'She suggested that the report _____ (submit) by Friday.',answer:'be submitted'},
-        {type:'mcq',point:'Subjunctive with "essential"',text:'It is essential that every student _____ the exam.',options:['passes','pass','is passing','passed'],answer:'B'},
-        {type:'error',point:'Formal subjunctive',sentence:'It is vital that he takes his medication regularly.',error:'takes',answer:'take'},
-        {type:'fill',point:'Subjunctive with "insist"',text:'She insisted that the meeting _____ (postpone).',answer:'be postponed'}
-      ],
-      [
-        {type:'mcq',point:'Cleft sentence for emphasis',text:'_____ the manager who made the final decision.',options:['It was','That was','There was','What was'],answer:'A'},
-        {type:'fill',point:'Emphatic "do"',text:'I _____ (do) appreciate your help with the project.',answer:'do'},
-        {type:'mcq',point:'What-cleft',text:'_____ we need is more funding for the project.',options:['What','That','Which','How'],answer:'A'},
-        {type:'error',point:'Fronting for emphasis',sentence:'Such a difficult problem it was that no one could solve it.',error:'it was that',answer:'was it that'},
-        {type:'fill',point:'Negative emphasis',text:'Little _____ (know) that the situation would deteriorate.',answer:'did he know'}
-      ],
-      [
-        {type:'mcq',point:'Verb to noun nominalisation',text:'Which is the correct nominalisation of "to reduce"?',options:['reducing','reduction','reduced','reductional'],answer:'B'},
-        {type:'fill',point:'Nominalisation in academic writing',text:'The _____ (decide) to increase funding was controversial.',answer:'decision'},
-        {type:'mcq',point:'Abstract nominalisation',text:'The _____ of the new policy led to significant changes.',options:['implement','implementation','implementing','implemented'],answer:'B'},
-        {type:'error',point:'Nominalisation with preposition',sentence:'There was a significantly increase in unemployment.',error:'significantly',answer:'significant'},
-        {type:'fill',point:'Nominalisation chain',text:'The rapid _____ (develop) of AI has raised ethical questions.',answer:'development'}
-      ],
-      [
-        {type:'mcq',point:'Participle clause (result)',text:'The experiment failed, _____ months of research.',options:['wasting','to waste','wasted','having wasted'],answer:'A'},
-        {type:'fill',point:'Absolute clause',text:'The deadline _____ (pass), the team had no choice but to submit.',answer:'having passed'},
-        {type:'mcq',point:'Noun clause as subject',text:'_____ he would resign surprised everyone.',options:['That','What','Which','How'],answer:'A'},
-        {type:'error',point:'Dangling participle',sentence:'Having finished the report, the results were submitted.',error:'Having finished the report, the results',answer:'Having finished the report, we submitted the results'},
-        {type:'fill',point:'Complex nominal group',text:'The _____ (propose) solution to the problem proved effective.',answer:'proposed'}
-      ]
-    ]
-  }
-};
+async function init(){ await requireLogin(); }
+init();
 
 function setLevel(level, el){
-  currentLevel=level; currentTopic=0;
-  document.querySelectorAll('#levelPills .pill').forEach(function(p){p.classList.remove('active')});
+  currentLevel = level;
+  document.querySelectorAll('#levelPills .pill').forEach(function(p){ p.classList.remove('active'); });
   el.classList.add('active');
-  renderTopics(); renderQuestions();
 }
 
-function setTopic(idx, el){
-  currentTopic=idx;
-  document.querySelectorAll('#topicPills .pill').forEach(function(p){p.classList.remove('active-green','active');p.classList.add('pill')});
-  el.classList.add('active-green');
-  renderQuestions();
+function setTopic(topic, el){
+  currentTopic = topic;
+  document.querySelectorAll('#topicPills .pill').forEach(function(p){ p.classList.remove('active'); });
+  el.classList.add('active');
 }
 
-function renderTopics(){
-  var data=grammarData[currentLevel];
-  var pills=document.getElementById('topicPills');
-  pills.innerHTML='';
-  data.topics.forEach(function(t,i){
-    var btn=document.createElement('button');
-    btn.className='pill'+(i===0?' active-green':'');
-    btn.textContent=t;
-    btn.onclick=function(){setTopic(i,btn)};
-    pills.appendChild(btn);
-  });
-}
-
-function renderQuestions(){
-  var data=grammarData[currentLevel];
-  var set=data.sets[currentTopic]||data.sets[0];
-  totalQ=set.length; answeredCount=0; correctCount=0; answered={};
-  document.getElementById('progressTitle').textContent=data.topics[currentTopic]+' — '+currentLevel;
-  document.getElementById('progressTotal').textContent=totalQ+' questions';
-  document.getElementById('progressDone').textContent='0 done';
-  document.getElementById('progressFill').style.width='0%';
-  document.getElementById('liveScore').textContent='0/0';
+async function generateExercises(){
+  var btn = document.getElementById('genBtn');
+  btn.classList.add('loading'); btn.disabled = true;
+  document.getElementById('genBtnText').textContent = 'Generating...';
+  document.getElementById('questionsContainer').innerHTML = '<div style="background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:40px;text-align:center"><div class="dots" style="justify-content:center;margin-bottom:14px"><span></span><span></span><span></span></div><div style="font-size:14px;color:var(--muted)">AI is generating your exercises...</div></div>';
+  document.getElementById('progressCard').style.display = 'none';
+  document.getElementById('submitRow').style.display = 'none';
   document.getElementById('reportCard').classList.remove('visible');
   document.getElementById('retryBtn').classList.remove('visible');
-  document.getElementById('submitBtn').disabled=true;
+  answeredCount = 0; correctCount = 0; answered = {};
 
-  var container=document.getElementById('questionsContainer');
-  container.innerHTML='';
-  set.forEach(function(q,i){renderQuestion(q,i,container);});
+  try {
+    var r = await apiCall('/api/grammar/generate', { level: currentLevel, topic: currentTopic || null });
+    exercises = Array.isArray(r) ? r : [];
+    if(exercises.length === 0) throw new Error('No exercises returned');
+    renderExercises();
+  } catch(e){
+    document.getElementById('questionsContainer').innerHTML = '<div style="background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:32px;text-align:center;color:var(--red);font-size:14px">⚠️ Could not generate exercises: '+e.message+'. <button onclick="generateExercises()" style="color:var(--blue);background:none;border:none;cursor:pointer;font-weight:600;font-family:Inter,sans-serif">Try again</button></div>';
+  } finally {
+    btn.classList.remove('loading'); btn.disabled = false;
+    document.getElementById('genBtnText').textContent = '✨ Generate new exercises';
+  }
 }
 
-function renderQuestion(q,i,container){
-  var card=document.createElement('div'); card.className='question-card'; card.id='qcard'+i;
-  var typeLabel=q.type==='mcq'?'Multiple choice':q.type==='fill'?'Fill in the blank':'Error correction';
-  card.innerHTML='<div class="q-header"><span class="q-type-badge">'+typeLabel+'</span><span class="q-num-label">Question '+(i+1)+'</span></div><div class="q-body"><div class="q-grammar-point">'+q.point+'</div></div>';
-  var body=card.querySelector('.q-body');
+function renderExercises(){
+  var container = document.getElementById('questionsContainer');
+  container.innerHTML = '';
+  var topicLabel = exercises[0]?.point || currentTopic || 'Grammar';
+  document.getElementById('progressTitle').textContent = currentLevel + ' — ' + topicLabel;
+  document.getElementById('progressSub').textContent = 'Answer all '+exercises.length+' questions to get your AI report';
+  document.getElementById('progTotal').textContent = exercises.length+' questions';
+  document.getElementById('progressCard').style.display = 'flex';
+  document.getElementById('submitRow').style.display = 'flex';
+  document.getElementById('submitBtn').disabled = true;
+  updateProgress();
 
-  if(q.type==='mcq'){
-    var qText=document.createElement('div'); qText.className='q-text'; qText.textContent=q.text;
-    var opts=document.createElement('div'); opts.className='options-grid';
-    q.options.forEach(function(opt,j){
-      var div=document.createElement('div'); div.className='option'; div.id='opt_'+i+'_'+j;
-      div.innerHTML='<span class="option-letter">'+String.fromCharCode(65+j)+'</span>'+opt;
-      div.onclick=function(){
+  exercises.forEach(function(q, i){ buildQuestion(q, i, container); });
+}
+
+function buildQuestion(q, i, container){
+  var card = document.createElement('div'); card.className = 'question-card';
+  var typeName = q.type==='mcq'?'Multiple choice':q.type==='fill'?'Fill in the blank':'Error correction';
+  card.innerHTML = '<div class="q-header"><span class="q-type-badge">'+typeName+'</span><span class="q-num-label">Question '+(i+1)+' of '+exercises.length+'</span></div>';
+  var body = document.createElement('div'); body.className = 'q-body';
+  var point = document.createElement('div'); point.className = 'q-point'; point.textContent = q.point||'';
+  body.appendChild(point);
+
+  if(q.type === 'mcq'){
+    var qtext = document.createElement('div'); qtext.className = 'q-text'; qtext.textContent = q.text;
+    var opts = document.createElement('div'); opts.className = 'options-grid';
+    (q.options||[]).forEach(function(opt, j){
+      var letters = ['A','B','C','D'];
+      var div = document.createElement('div'); div.className = 'option'; div.id = 'opt_'+i+'_'+j;
+      div.innerHTML = '<span class="option-letter">'+letters[j]+'</span><span>'+opt+'</span>';
+      div.onclick = function(){
         if(answered[i]) return;
-        document.querySelectorAll('[id^="opt_'+i+'_"]').forEach(function(x){x.classList.remove('selected')});
+        document.querySelectorAll('[id^="opt_'+i+'_"]').forEach(function(x){ x.classList.remove('selected'); });
         div.classList.add('selected');
-        checkAnswer(i,String.fromCharCode(65+j),q.answer,card);
+        checkAnswerMCQ(i, opt, q, card);
       };
       opts.appendChild(div);
     });
-    body.appendChild(qText); body.appendChild(opts);
-  } else if(q.type==='fill'){
-    var qText=document.createElement('div'); qText.className='q-text'; qText.textContent=q.text;
-    var wrap=document.createElement('div'); wrap.className='fill-wrap';
-    var inp=document.createElement('input'); inp.type='text'; inp.className='fill-input'; inp.id='fill_'+i; inp.placeholder='Type answer...';
-    var btn=document.createElement('button'); btn.className='fill-check-btn'; btn.textContent='Check';
-    btn.onclick=function(){
+    body.appendChild(qtext); body.appendChild(opts);
+  } else if(q.type === 'fill'){
+    var qtext = document.createElement('div'); qtext.className = 'q-text'; qtext.textContent = q.text;
+    var wrap = document.createElement('div'); wrap.className = 'fill-wrap';
+    var inp = document.createElement('input'); inp.type='text'; inp.className='fill-input'; inp.id='fill_'+i; inp.placeholder='Type your answer...';
+    var btn = document.createElement('button'); btn.className='check-btn'; btn.textContent='Check';
+    btn.onclick = function(){
       if(answered[i]) return;
-      var val=inp.value.trim();
-      var correct=val.toLowerCase()===q.answer.toLowerCase();
+      var val = inp.value.trim();
+      var correct = val.toLowerCase() === q.answer.toLowerCase();
       inp.classList.add(correct?'correct':'wrong');
-      inp.disabled=true; btn.disabled=true;
-      checkAnswer(i,val,q.answer,card,correct);
+      inp.disabled = true; btn.disabled = true;
+      checkAnswerFill(i, val, q, card, correct);
     };
-    inp.onkeydown=function(e){if(e.key==='Enter')btn.click();};
+    inp.onkeydown = function(e){ if(e.key==='Enter') btn.click(); };
     wrap.appendChild(inp); wrap.appendChild(btn);
-    body.appendChild(qText); body.appendChild(wrap);
-  } else if(q.type==='error'){
-    var qText=document.createElement('div'); qText.className='q-text'; qText.textContent='Find and correct the error in this sentence:';
-    var sent=document.createElement('div'); sent.className='error-sentence';
-    sent.innerHTML=q.sentence.replace(q.error,'<span class="error-word">'+q.error+'</span>');
-    var inp=document.createElement('input'); inp.type='text'; inp.className='correction-input'; inp.id='err_'+i; inp.placeholder='Write the corrected word or phrase...';
-    var btn=document.createElement('button'); btn.className='fill-check-btn'; btn.textContent='Check'; btn.style.marginTop='8px';
-    btn.onclick=function(){
+    body.appendChild(qtext); body.appendChild(wrap);
+  } else {
+    // Error correction
+    var qtext = document.createElement('div'); qtext.className = 'q-text'; qtext.textContent = 'Find and correct the grammatical error in this sentence:';
+    var sent = document.createElement('div'); sent.className = 'error-sentence';
+    var errorWord = q.error || '';
+    sent.innerHTML = (q.sentence||'').replace(errorWord, '<span class="error-word">'+errorWord+'</span>');
+    var inp = document.createElement('input'); inp.type='text'; inp.className='correction-input'; inp.id='err_'+i; inp.placeholder='Type the corrected word or phrase...';
+    var btn = document.createElement('button'); btn.className='check-btn'; btn.textContent='Check';
+    btn.onclick = function(){
       if(answered[i]) return;
-      var val=inp.value.trim();
-      var correct=val.toLowerCase()===q.answer.toLowerCase();
+      var val = inp.value.trim();
+      var correct = val.toLowerCase() === (q.answer||'').toLowerCase();
       inp.classList.add(correct?'correct':'wrong');
-      inp.disabled=true; btn.disabled=true;
-      checkAnswer(i,val,q.answer,card,correct);
+      inp.disabled = true; btn.disabled = true;
+      checkAnswerFill(i, val, q, card, correct);
     };
-    inp.onkeydown=function(e){if(e.key==='Enter')btn.click();};
-    body.appendChild(qText); body.appendChild(sent); body.appendChild(inp); body.appendChild(btn);
+    inp.onkeydown = function(e){ if(e.key==='Enter') btn.click(); };
+    body.appendChild(qtext); body.appendChild(sent); body.appendChild(inp); body.appendChild(btn);
   }
 
-  var feedback=document.createElement('div'); feedback.className='q-feedback'; feedback.id='fb_'+i;
+  var feedback = document.createElement('div'); feedback.className = 'q-feedback'; feedback.id = 'fb_'+i;
   body.appendChild(feedback);
+  card.appendChild(body);
   container.appendChild(card);
 }
 
-function checkAnswer(i, userAns, correctAns, card, preChecked){
-  var isCorrect=preChecked!==undefined?preChecked:userAns===correctAns;
-  answered[i]=true; answeredCount++;
+function checkAnswerMCQ(i, selected, q, card){
+  if(answered[i]) return;
+  answered[i] = true;
+  var isCorrect = selected === q.answer;
   if(isCorrect) correctCount++;
+  answeredCount++;
 
-  var data=grammarData[currentLevel];
-  var set=data.sets[currentTopic]||data.sets[0];
-  var q=set[i];
+  document.querySelectorAll('[id^="opt_'+i+'_"]').forEach(function(div){
+    var text = div.querySelectorAll('span')[1]?.textContent;
+    div.onclick = null;
+    if(text === q.answer) div.classList.add('correct');
+    else if(div.classList.contains('selected') && !isCorrect) div.classList.add('wrong');
+    div.classList.remove('selected');
+  });
 
-  if(q.type==='mcq'){
-    var correctIdx=correctAns.charCodeAt(0)-65;
-    var userIdx=userAns.charCodeAt(0)-65;
-    document.querySelectorAll('[id^="opt_'+i+'_"]').forEach(function(x){x.classList.remove('selected')});
-    var correctEl=document.getElementById('opt_'+i+'_'+correctIdx);
-    if(correctEl) correctEl.classList.add('correct');
-    if(!isCorrect){var wrongEl=document.getElementById('opt_'+i+'_'+userIdx);if(wrongEl)wrongEl.classList.add('wrong');}
-  }
-
-  var fb=document.getElementById('fb_'+i);
-  fb.className='q-feedback visible '+(isCorrect?'fb-correct':'fb-wrong');
-  fb.innerHTML='<div class="fb-rule">'+(isCorrect?'✓ Correct!':'✗ Incorrect — correct answer: '+correctAns)+'</div>'+
-    (q.tip||getDefaultTip(q,isCorrect));
-
+  showFeedback(i, isCorrect, q);
   updateProgress();
-  if(answeredCount===totalQ){
-    document.getElementById('submitBtn').disabled=false;
-  }
+  if(answeredCount === exercises.length) enableReport();
 }
 
-function getDefaultTip(q,correct){
-  if(correct) return 'Well done. Move on to the next question.';
-  return 'Review the rule for <strong>'+q.point+'</strong> and try similar exercises.';
+function checkAnswerFill(i, val, q, card, isCorrect){
+  if(answered[i] && answered[i]!==undefined && answered[i]===true) return;
+  answered[i] = true;
+  if(isCorrect) correctCount++;
+  answeredCount++;
+  showFeedback(i, isCorrect, q);
+  updateProgress();
+  if(answeredCount === exercises.length) enableReport();
+}
+
+function showFeedback(i, isCorrect, q){
+  var fb = document.getElementById('fb_'+i);
+  fb.className = 'q-feedback visible ' + (isCorrect?'fb-correct':'fb-wrong');
+  fb.innerHTML = '<div class="fb-rule">'+(isCorrect?'✓ Correct!':'✗ Incorrect — correct answer: <strong>'+(q.answer||'')+'</strong>')+'</div>'+
+    'Review the rule for <strong>'+q.point+'</strong>.';
 }
 
 function updateProgress(){
-  var pct=Math.round(answeredCount/totalQ*100);
-  document.getElementById('progressFill').style.width=pct+'%';
-  document.getElementById('progressDone').textContent=answeredCount+' done';
-  document.getElementById('liveScore').textContent=correctCount+'/'+answeredCount;
+  var pct = exercises.length>0?Math.round(answeredCount/exercises.length*100):0;
+  document.getElementById('progFill').style.width = pct+'%';
+  document.getElementById('progDone').textContent = answeredCount+' done';
+  document.getElementById('liveScore').textContent = correctCount+'/'+answeredCount;
 }
 
-document.getElementById('apiKey').addEventListener('input',function(){
-  if(answeredCount===totalQ){
-    
-  }
-});
+function enableReport(){
+  document.getElementById('submitBtn').disabled = false;
+  document.getElementById('submitHint').textContent = 'All questions answered!';
+}
 
 async function getAIReport(){
-  var data=grammarData[currentLevel];
-  var set=data.sets[currentTopic]||data.sets[0];
-  var topic=data.topics[currentTopic];
-  var btn=document.getElementById('submitBtn');
-  btn.classList.add('loading'); btn.disabled=true;
-  btn.querySelector('.btn-text').textContent='Generating report...';
+  var btn = document.getElementById('submitBtn');
+  btn.classList.add('loading'); btn.disabled = true;
+  btn.querySelector('.btn-text').textContent = 'Generating report...';
+  var topicUsed = exercises[0]?.point || currentTopic || 'Grammar';
 
-  var summary=set.map(function(q,i){
-    var userEl=q.type==='mcq'?document.querySelector('input[name="q'+i+'"]:checked'):null;
-    return 'Q'+(i+1)+' ['+q.point+']: '+(answered[i]?'answered':'not answered');
-  }).join('\n');
-
-  var results='Score: '+correctCount+'/'+totalQ+' ('+Math.round(correctCount/totalQ*100)+'%)\nLevel: '+currentLevel+'\nTopic: '+topic+'\n\nQuestion breakdown:\n'+
-    set.map(function(q,i){return'Q'+(i+1)+' — '+q.point+': '+(answered[i]?'attempted':'skipped')}).join('\n');
-
-  try{
-    var sb2=getSupabase();var ss=await sb2.auth.getSession();var tok=ss.data?.session?.access_token||'';
-    var res=await fetch('https://ieltscore-up-api-production.up.railway.app/api/grammar/report',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},
-      body:JSON.stringify({level:currentLevel,topic:data.topics[currentTopic],correct:correctCount,total:totalQ})
+  try {
+    var r = await apiCall('/api/grammar/report', {
+      level: currentLevel,
+      topic: topicUsed,
+      correct: correctCount,
+      total: exercises.length
     });
-    var r=await res.json();
-    document.getElementById('reportScore').textContent=correctCount+'/'+totalQ;
-    document.getElementById('reportLabel').textContent=r.score_label;
-    var strong=document.getElementById('strongChips'); strong.innerHTML='';
-    (r.strong_areas||[]).forEach(function(a){var c=document.createElement('span');c.className='strong-chip';c.textContent=a;strong.appendChild(c);});
-    var weak=document.getElementById('weakChips'); weak.innerHTML='';
-    (r.weak_areas||[]).forEach(function(a){var c=document.createElement('span');c.className='weak-chip';c.textContent=a;weak.appendChild(c);});
-    document.getElementById('reportInsight').textContent=r.key_insight;
-    document.getElementById('reportIelts').textContent=r.ielts_impact;
-    document.getElementById('reportPlan').textContent=r.study_plan;
+    document.getElementById('reportScore').textContent = correctCount+'/'+exercises.length;
+    document.getElementById('reportLabel').textContent = r.score_label || '';
+    var strong = document.getElementById('strongChips'); strong.innerHTML='';
+    (r.strong_areas||[]).forEach(function(a){ var c=document.createElement('span');c.className='chip-strong';c.textContent=a;strong.appendChild(c); });
+    var weak = document.getElementById('weakChips'); weak.innerHTML='';
+    (r.weak_areas||[]).forEach(function(a){ var c=document.createElement('span');c.className='chip-weak';c.textContent=a;weak.appendChild(c); });
+    document.getElementById('reportInsight').textContent = r.key_insight||'';
+    document.getElementById('reportIelts').textContent = r.ielts_impact||'';
+    document.getElementById('reportPlan').textContent = r.study_plan||'';
     document.getElementById('reportCard').classList.add('visible');
     document.getElementById('retryBtn').classList.add('visible');
     document.getElementById('reportCard').scrollIntoView({behavior:'smooth',block:'start'});
-  }catch(e){alert('Error: '+e.message);}
-  finally{btn.classList.remove('loading');btn.querySelector('.btn-text').textContent='Get full AI report →';}
+  } catch(e){ alert('Error generating report: ' + e.message); }
+  finally {
+    btn.classList.remove('loading');
+    btn.querySelector('.btn-text').textContent = 'Get full AI report →';
+  }
 }
-
-function retrySet(){
-  currentTopic=(currentTopic+1)%(grammarData[currentLevel].sets.length);
-  document.querySelectorAll('#topicPills .pill').forEach(function(p,i){
-    p.classList.remove('active-green','active');
-    if(i===currentTopic) p.classList.add('active-green');
-  });
-  renderQuestions();
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-
-renderTopics(); renderQuestions();
 </script>
 <script src="navbar.js"></script>
 </body>

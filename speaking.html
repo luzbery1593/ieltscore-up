@@ -4,156 +4,115 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Speaking Practice — IELTScoreUp</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --blue:#1B3F6E;--blue-light:#2558A0;--green:#0D9E72;--green-light:#0FBF8A;
-  --bg:#F4F6FA;--white:#FFFFFF;--dark:#0F1C2E;--muted:#5A6A7E;
-  --border:#E2E8F0;--radius:12px;--radius-lg:20px;--red:#DC2626;--amber:#D97706;
-}
+:root{--blue:#1B3F6E;--blue-light:#2558A0;--green:#0D9E72;--green-light:#0FBF8A;--bg:#F4F6FA;--white:#fff;--dark:#0F1C2E;--muted:#5A6A7E;--border:#E2E8F0;--radius:12px;--radius-lg:20px;--red:#DC2626;--amber:#D97706}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webkit-font-smoothing:antialiased;min-height:100vh}
 .topbar{background:var(--white);border-bottom:1px solid var(--border);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-.logo{font-size:16px;font-weight:800;color:var(--dark);text-decoration:none}
-.logo span{color:var(--green)}
-.back-link{font-size:13px;color:var(--muted);text-decoration:none;font-weight:500}
-.back-link:hover{color:var(--dark)}
-
+.logo{font-size:16px;font-weight:800;color:var(--dark);text-decoration:none}.logo span{color:var(--green)}
 .page{max-width:860px;margin:0 auto;padding:32px 24px}
 
-/* PART TABS */
 .part-tabs{display:flex;gap:8px;margin-bottom:28px}
 .part-tab{flex:1;padding:12px 8px;border-radius:var(--radius);border:1.5px solid var(--border);background:var(--white);font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;text-align:center;transition:all .15s;font-family:'Inter',sans-serif;line-height:1.4}
 .part-tab .tab-sub{font-size:11px;font-weight:500;margin-top:2px;opacity:.7}
 .part-tab.active{border-color:var(--blue);background:rgba(27,63,110,.06);color:var(--blue)}
 .part-tab.done{border-color:var(--green);background:rgba(13,158,114,.06);color:var(--green)}
 
-/* PART HEADER */
-.part-header{background:var(--blue);border-radius:var(--radius-lg);padding:28px 32px;margin-bottom:20px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.part-header-left{}
-.part-eyebrow{font-size:11px;font-weight:700;color:rgba(255,255,255,.55);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px}
-.part-title{font-size:22px;font-weight:900;color:white;letter-spacing:-0.5px;margin-bottom:6px}
-.part-desc{font-size:14px;color:rgba(255,255,255,.65);line-height:1.6;max-width:480px}
+.part-header{background:var(--blue);border-radius:var(--radius-lg);padding:24px 28px;margin-bottom:20px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.part-eyebrow{font-size:11px;font-weight:700;color:rgba(255,255,255,.55);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.part-title{font-size:20px;font-weight:900;color:white;margin-bottom:4px}
+.part-desc{font-size:13px;color:rgba(255,255,255,.65);line-height:1.6;max-width:440px}
 .timer-pill{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:100px;padding:8px 18px;text-align:center;flex-shrink:0}
-.timer-num{font-size:26px;font-weight:900;color:white;letter-spacing:-1px;font-variant-numeric:tabular-nums;line-height:1}
-.timer-label{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
+.timer-num{font-size:24px;font-weight:900;color:white;letter-spacing:-1px;font-variant-numeric:tabular-nums;line-height:1}
+.timer-label{font-size:10px;color:rgba(255,255,255,.5);margin-top:2px}
 .timer-num.warning{color:#FCA5A5}
 
-/* TOPIC NAV */
-.topic-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.topic-nav-btn{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s}
-.topic-nav-btn:hover{border-color:var(--blue);color:var(--blue)}
-.topic-counter{font-size:13px;color:var(--muted);font-weight:500}
+.question-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:24px;margin-bottom:14px;position:relative}
+.q-label{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.q-main{font-size:17px;font-weight:700;color:var(--dark);line-height:1.55;margin-bottom:6px}
+.q-sub{font-size:13px;color:var(--muted);line-height:1.6}
+.new-q-btn{position:absolute;top:18px;right:18px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;gap:5px}
+.new-q-btn:hover{border-color:var(--blue);color:var(--blue)}
+.new-q-btn:disabled{opacity:.4;cursor:not-allowed}
+.generating-badge{font-size:11px;color:var(--muted);font-style:italic}
 
-/* QUESTION CARD */
-.question-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:24px;margin-bottom:16px}
-.q-label{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px}
-.q-main{font-size:18px;font-weight:700;color:var(--dark);line-height:1.5;letter-spacing:-0.2px;margin-bottom:8px}
-.q-sub{font-size:14px;color:var(--muted);line-height:1.6}
-
-/* CUE CARD (Part 2) */
-.cue-card{background:var(--bg);border-radius:var(--radius);padding:20px;border:2px dashed var(--border);margin-bottom:16px}
-.cue-card-title{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:12px}
-.cue-card-topic{font-size:16px;font-weight:800;color:var(--blue);margin-bottom:14px;letter-spacing:-0.3px}
-.cue-bullets{list-style:none;display:flex;flex-direction:column;gap:8px}
+.cue-card{background:var(--bg);border-radius:var(--radius);padding:20px;border:2px dashed var(--border);margin-bottom:14px}
+.cue-title{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.cue-topic{font-size:16px;font-weight:800;color:var(--dark);margin-bottom:12px}
+.cue-bullets{list-style:none;display:flex;flex-direction:column;gap:7px}
 .cue-bullets li{display:flex;align-items:flex-start;gap:8px;font-size:14px;color:var(--dark)}
-.cue-bullets li::before{content:'•';color:var(--blue);font-weight:700;flex-shrink:0;margin-top:1px}
-.cue-note{font-size:13px;color:var(--muted);margin-top:14px;font-style:italic}
+.cue-bullets li::before{content:'•';color:var(--blue);font-weight:700;flex-shrink:0}
+.cue-note{font-size:12px;color:var(--muted);margin-top:12px;font-style:italic}
 
-/* PREP TIMER (Part 2) */
-.prep-bar{background:var(--bg);border-radius:var(--radius);padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:16px;border:1px solid var(--border)}
-.prep-icon{font-size:18px}
-.prep-text{font-size:13px;color:var(--dark);font-weight:500;flex:1}
+.prep-bar{background:var(--bg);border-radius:var(--radius);padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:14px;border:1px solid var(--border)}
 .prep-timer{font-size:18px;font-weight:800;color:var(--blue);font-variant-numeric:tabular-nums}
 .prep-timer.done{color:var(--green)}
-.prep-btn{background:var(--blue);color:white;border:none;padding:7px 16px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s}
-.prep-btn:hover{background:var(--blue-light)}
+.prep-btn{background:var(--blue);color:white;border:none;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif}
 
-/* PART 3 FOLLOW-UPS */
-.followup-list{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
-.followup-item{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);padding:14px 16px;cursor:pointer;transition:all .15s}
-.followup-item:hover{border-color:var(--blue);background:rgba(27,63,110,.02)}
-.followup-item.active{border-color:var(--blue);background:rgba(27,63,110,.04)}
-.followup-num{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:4px}
+.followup-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.followup-item{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);padding:13px 16px;cursor:pointer;transition:all .15s}
+.followup-item:hover,.followup-item.active{border-color:var(--blue);background:rgba(27,63,110,.03)}
+.followup-num{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:3px}
 .followup-q{font-size:14px;font-weight:600;color:var(--dark);line-height:1.5}
 
-/* RESPONSE AREA */
-.response-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:24px;margin-bottom:16px}
-.response-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
-.response-hint{font-size:11px;color:var(--muted);font-weight:400;font-style:italic}
-.response-textarea{width:100%;min-height:140px;border:1.5px solid var(--border);border-radius:var(--radius);padding:14px;font-family:'Inter',sans-serif;font-size:15px;color:var(--dark);line-height:1.8;resize:vertical;outline:none;transition:border-color .15s}
+.response-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:22px;margin-bottom:14px}
+.response-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.response-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.mic-btn{display:flex;align-items:center;gap:6px;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:7px 14px;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--blue);transition:all .15s}
+.mic-btn:hover{border-color:var(--blue)}
+.mic-btn.recording{background:rgba(220,38,38,.08);border-color:var(--red);color:var(--red)}
+.response-textarea{width:100%;min-height:140px;border:1.5px solid var(--border);border-radius:var(--radius);padding:13px;font-family:'Inter',sans-serif;font-size:15px;color:var(--dark);line-height:1.8;resize:vertical;outline:none;transition:border-color .15s}
 .response-textarea:focus{border-color:var(--blue)}
-.response-textarea::placeholder{color:var(--muted);font-size:14px}
-.response-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
-.wc-text{font-size:13px;color:var(--muted)}
+.wc-text{font-size:12px;color:var(--muted);margin-top:8px}
 .wc-num{font-weight:700;color:var(--dark)}
 
-/* BOTTOM BAR */
-.bottom-bar{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:16px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-.api-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius);padding:9px 13px;font-family:'Inter',sans-serif;font-size:13px;color:var(--dark);outline:none;transition:border-color .15s;background:var(--bg)}
-.api-input:focus{border-color:var(--blue);background:var(--white)}
-.api-note{font-size:11px;color:var(--muted);margin-top:4px}
-.api-note a{color:var(--blue);text-decoration:none}
-.eval-btn{background:var(--blue);color:white;border:none;padding:12px 24px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.eval-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.eval-btn{flex:1;background:var(--blue);color:white;border:none;padding:13px 20px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px;min-width:180px}
 .eval-btn:hover:not(:disabled){background:var(--blue-light)}
 .eval-btn:disabled{opacity:.45;cursor:not-allowed}
 .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:none}
 .eval-btn.loading .spinner{display:block}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* FEEDBACK */
-.feedback-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;display:none}
+.feedback-card{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden;display:none;margin-bottom:14px}
 .feedback-card.visible{display:block}
-.fb-band-bar{background:var(--blue);padding:22px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.fb-band{background:var(--blue);padding:22px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
 .fb-overall{display:flex;align-items:baseline;gap:8px}
 .fb-score{font-size:52px;font-weight:900;color:white;letter-spacing:-2px;line-height:1}
-.fb-score-label{font-size:14px;color:rgba(255,255,255,.6)}
-.fb-criteria{display:flex;gap:20px;flex-wrap:wrap}
-.fb-criterion{text-align:center}
-.fb-c-score{font-size:22px;font-weight:800;color:white;letter-spacing:-0.5px}
-.fb-c-label{font-size:10px;color:rgba(255,255,255,.5);font-weight:600;letter-spacing:0.05em;text-transform:uppercase;margin-top:2px;max-width:80px;line-height:1.3}
-.fb-body{padding:22px 24px;display:flex;flex-direction:column;gap:18px}
-.fb-section{border-top:1px solid var(--border);padding-top:16px}
-.fb-section:first-child{border-top:none;padding-top:0}
-.fb-sec-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
+.fb-score-label{font-size:13px;color:rgba(255,255,255,.6)}
+.fb-criteria{display:flex;gap:18px;flex-wrap:wrap}
+.fb-crit{text-align:center}
+.fb-crit-score{font-size:20px;font-weight:800;color:white}
+.fb-crit-label{font-size:10px;color:rgba(255,255,255,.5);font-weight:600;letter-spacing:.05em;text-transform:uppercase;max-width:70px;line-height:1.3;margin-top:2px}
+.fb-body{padding:20px 24px;display:flex;flex-direction:column;gap:16px}
+.fb-sec{border-top:1px solid var(--border);padding-top:14px}
+.fb-sec:first-child{border-top:none;padding-top:0}
+.fb-sec-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px}
 .fb-sec-content{font-size:14px;color:var(--dark);line-height:1.75}
 .fb-example{background:var(--bg);border-radius:var(--radius);padding:14px;font-size:14px;color:var(--dark);line-height:1.75;border-left:3px solid var(--green)}
-.fb-vocab{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.vocab-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
 .vocab-chip{background:rgba(27,63,110,.08);color:var(--blue);font-size:12px;font-weight:600;padding:4px 12px;border-radius:100px}
-
-.next-part-btn{width:100%;background:var(--green);color:white;border:none;padding:14px;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;margin-top:16px;display:none}
+.next-part-btn{width:100%;background:var(--green);color:white;border:none;padding:13px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;margin-top:14px;display:none}
 .next-part-btn.visible{display:block}
 .next-part-btn:hover{background:var(--green-light)}
+
+.dots{display:flex;gap:6px;align-items:center}
+.dots span{width:6px;height:6px;background:var(--muted);border-radius:50%;animation:bounce 1.2s infinite}
+.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
 </style>
 <link rel="stylesheet" href="navbar.css"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 </head>
 <body>
-
-<script>
-(function(){
-  var sb=supabase.createClient('https://ystwgkfwydyrefbqjcjd.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk');
-  sb.auth.getSession().then(function(r){
-    if(!r.data.session){window.location.href='/auth.html';return;}
-    var user=r.data.session.user;
-    var name=user.user_metadata?.full_name||user.email.split('@')[0];
-    var el=document.getElementById('topUserName');
-    if(el) el.textContent=name;
-  });
-  window._sbSignOut=function(){sb.auth.signOut().then(function(){window.location.href='/index.html';});};
-})();
-</script>
-
 <div class="topbar">
   <a href="/dashboard.html" class="logo">IELTS<span>Score</span>Up</a>
-  <div style="display:flex;align-items:center;gap:12px"><a href="/dashboard.html" style="font-size:13px;color:var(--muted,#5A6A7E);text-decoration:none;font-weight:500">← Dashboard</a><div style="display:flex;align-items:center;gap:8px;background:#F4F6FA;border:1px solid #E2E8F0;border-radius:100px;padding:5px 12px;cursor:pointer" onclick="window._sbSignOut()"><div style="width:26px;height:26px;border-radius:50%;background:#1B3F6E;color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">L</div><span id="topUserName" style="font-size:13px;font-weight:600;color:#0F1C2E">...</span><span style="font-size:10px;color:#5A6A7E">▾</span></div></div>
+  <a href="/dashboard.html" style="font-size:13px;color:var(--muted);text-decoration:none;font-weight:500">← Dashboard</a>
 </div>
 
 <div class="page">
-
   <div class="part-tabs">
     <button class="part-tab active" onclick="goPart(0,this)" id="ptab0">Part 1<div class="tab-sub">Introduction</div></button>
     <button class="part-tab" onclick="goPart(1,this)" id="ptab1">Part 2<div class="tab-sub">Long turn</div></button>
@@ -161,10 +120,10 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
   </div>
 
   <div class="part-header">
-    <div class="part-header-left">
+    <div>
       <div class="part-eyebrow" id="partEyebrow">Part 1</div>
       <div class="part-title" id="partTitle">Introduction & Interview</div>
-      <div class="part-desc" id="partDesc">Answer questions about yourself and familiar topics. Speak naturally as if talking to an examiner.</div>
+      <div class="part-desc" id="partDesc">Answer questions about yourself and familiar topics.</div>
     </div>
     <div class="timer-pill">
       <div class="timer-num" id="partTimer">04:00</div>
@@ -174,404 +133,322 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 
   <div id="partContent"></div>
 
-  <div class="bottom-bar">
+  <div class="eval-row">
     <button class="eval-btn" id="evalBtn" onclick="evaluateResponse()" disabled>
-      <div class="spinner"></div>
-      <span class="btn-text">Get AI feedback →</span>
+      <div class="spinner"></div><span class="btn-text">Get AI feedback →</span>
     </button>
   </div>
 
   <div class="feedback-card" id="feedbackCard">
-    <div class="fb-band-bar">
+    <div class="fb-band">
       <div class="fb-overall">
         <div class="fb-score" id="fbScore">—</div>
         <div class="fb-score-label">Band score</div>
       </div>
       <div class="fb-criteria">
-        <div class="fb-criterion"><div class="fb-c-score" id="fbFC">—</div><div class="fb-c-label">Fluency & Coherence</div></div>
-        <div class="fb-criterion"><div class="fb-c-score" id="fbLP">—</div><div class="fb-c-label">Lexical Precision</div></div>
-        <div class="fb-criterion"><div class="fb-c-score" id="fbGR">—</div><div class="fb-c-label">Grammatical Range</div></div>
-        <div class="fb-criterion"><div class="fb-c-score" id="fbP">—</div><div class="fb-c-label">Pronunciation</div></div>
+        <div class="fb-crit"><div class="fb-crit-score" id="fbFC">—</div><div class="fb-crit-label">Fluency & Coherence</div></div>
+        <div class="fb-crit"><div class="fb-crit-score" id="fbLP">—</div><div class="fb-crit-label">Lexical Precision</div></div>
+        <div class="fb-crit"><div class="fb-crit-score" id="fbGR">—</div><div class="fb-crit-label">Grammatical Range</div></div>
+        <div class="fb-crit"><div class="fb-crit-score" id="fbP">—</div><div class="fb-crit-label">Pronunciation</div></div>
       </div>
     </div>
     <div class="fb-body">
-      <div class="fb-section">
-        <div class="fb-sec-label">What you did well</div>
-        <div class="fb-sec-content" id="fbStrengths">—</div>
-      </div>
-      <div class="fb-section">
-        <div class="fb-sec-label">What to improve</div>
-        <div class="fb-sec-content" id="fbImprovements">—</div>
-      </div>
-      <div class="fb-section">
-        <div class="fb-sec-label">Improved example response</div>
-        <div class="fb-example" id="fbExample">—</div>
-      </div>
-      <div class="fb-section">
-        <div class="fb-sec-label">Vocabulary to use next time</div>
-        <div class="fb-vocab" id="fbVocab"></div>
-      </div>
-      <div class="fb-section">
-        <div class="fb-sec-label">Next steps</div>
-        <div class="fb-sec-content" id="fbNext">—</div>
-      </div>
+      <div class="fb-sec"><div class="fb-sec-label">What you did well</div><div class="fb-sec-content" id="fbStrengths">—</div></div>
+      <div class="fb-sec"><div class="fb-sec-label">What to improve</div><div class="fb-sec-content" id="fbImprovements">—</div></div>
+      <div class="fb-sec"><div class="fb-sec-label">Improved example response</div><div class="fb-example" id="fbExample">—</div></div>
+      <div class="fb-sec"><div class="fb-sec-label">Vocabulary to use next time</div><div class="vocab-chips" id="fbVocab"></div></div>
+      <div class="fb-sec"><div class="fb-sec-label">Next steps</div><div class="fb-sec-content" id="fbNext">—</div></div>
     </div>
-    <button class="next-part-btn" id="nextPartBtn" onclick="goNextPart()">Continue to next part →</button>
+    <div style="padding:0 24px 20px">
+      <button class="next-part-btn" id="nextPartBtn" onclick="goNextPart()">Continue to next part →</button>
+    </div>
   </div>
-
 </div>
 
 <script>
-var currentPart=0, topicIdx=0, followupIdx=0, timerInterval=null;
+var API = 'https://ieltscore-up-api-production.up.railway.app';
+var currentPart = 0;
+var timerInterval = null;
+var prepTimerInterval = null;
+var currentQuestion = null;
+var followupIdx = 0;
+var _mr = null, _ac = [], _isRecording = false;
 
-var partMeta=[
-  {eyebrow:'Part 1',title:'Introduction & Interview',desc:'Answer questions about yourself and familiar topics. Speak naturally as if talking to an examiner.',time:240,placeholder:'Write your spoken response here. Aim for 2–3 sentences per question. Be natural and personal.'},
-  {eyebrow:'Part 2',title:'Individual Long Turn',desc:'You have 1 minute to prepare, then speak for 1–2 minutes on the topic given.',time:120,placeholder:'Write what you would say in your 2-minute long turn. Aim for at least 150 words covering all the bullet points.'},
-  {eyebrow:'Part 3',title:'Two-Way Discussion',desc:'Discuss abstract questions related to the Part 2 topic. Give developed, reasoned answers.',time:300,placeholder:'Write your response to the selected question. Aim for 3–5 sentences with reasons and examples.'}
+var partMeta = [
+  {eyebrow:'Part 1',title:'Introduction & Interview',desc:'Answer questions about yourself and familiar topics. Speak naturally as if talking to an examiner.',time:240,placeholder:'Write or record your spoken response. Aim for 2–3 sentences. Be natural and personal.'},
+  {eyebrow:'Part 2',title:'Individual Long Turn',desc:'You have 1 minute to prepare, then speak for 1–2 minutes on the cue card topic.',time:120,placeholder:'Write your 2-minute long turn. Cover all the bullet points. Aim for at least 150 words.'},
+  {eyebrow:'Part 3',title:'Two-Way Discussion',desc:'Discuss abstract questions linked to the Part 2 topic. Give developed, reasoned answers.',time:300,placeholder:'Write your response. Aim for 3–5 sentences with reasons and examples.'}
 ];
 
-var topics={
-  part1:[
-    {label:'Topic: Hometown & Living',question:'Let\'s talk about where you live. Can you describe your hometown or the area where you live now?',sub:'Talk about what it\'s like, what you like or dislike about it, and how long you\'ve lived there.'},
-    {label:'Topic: Work & Study',question:'Do you work or are you a student at the moment?',sub:'Tell me about what you do and what you enjoy or find challenging about it.'},
-    {label:'Topic: Free Time & Hobbies',question:'What do you enjoy doing in your free time?',sub:'Describe your hobbies or interests and explain why you enjoy them.'}
-  ],
-  part2:[
-    {
-      topic:'Describe a skill you would like to learn.',
-      bullets:['What the skill is','Why you want to learn it','How you would go about learning it','How this skill would benefit you'],
-      note:'You will have 1 minute to prepare. Then speak for 1 to 2 minutes.'
-    },
-    {
-      topic:'Describe a memorable journey or trip you have taken.',
-      bullets:['Where you went','Who you went with','What you did there','Why this journey was memorable'],
-      note:'You will have 1 minute to prepare. Then speak for 1 to 2 minutes.'
-    },
-    {
-      topic:'Describe a person who has had a significant influence on your life.',
-      bullets:['Who this person is','How you know them','What they have done that influenced you','Why their influence has been important'],
-      note:'You will have 1 minute to prepare. Then speak for 1 to 2 minutes.'
-    }
-  ],
-  part3:[
-    {
-      intro:'Let\'s discuss some broader questions about learning and skills.',
-      questions:[
-        'Why do you think it\'s important for people to keep learning new skills throughout their lives?',
-        'How has technology changed the way people learn new skills compared to the past?',
-        'Do you think schools do enough to teach students practical life skills? Why or why not?',
-        'Some people say natural talent is more important than hard work when learning a skill. Do you agree?'
-      ]
-    },
-    {
-      intro:'Now let\'s talk about travel and its effects on society.',
-      questions:[
-        'How has international travel changed the way people understand other cultures?',
-        'Do you think tourism always has a positive effect on local communities? Why or why not?',
-        'How might travel change in the future due to environmental concerns?',
-        'Some people prefer to travel alone rather than in groups. What are the advantages and disadvantages of each?'
-      ]
-    },
-    {
-      intro:'Let\'s discuss the role of influential people in society.',
-      questions:[
-        'What qualities do you think make a person truly influential in society?',
-        'Do you think social media has changed the kind of people who become influential? In what way?',
-        'Should schools teach students about influential historical figures? Why or why not?',
-        'Some people believe parents are the most important influence in a child\'s life. Do you agree?'
-      ]
-    }
-  ]
-};
-
-var prepTimerInterval=null, prepTimeLeft=60;
+async function init(){ await requireLogin(); }
+init();
 
 function goPart(idx, el){
-  currentPart=idx; topicIdx=0; followupIdx=0;
-  document.querySelectorAll('.part-tab').forEach(function(t){t.classList.remove('active')});
+  currentPart = idx;
+  document.querySelectorAll('.part-tab').forEach(function(t){ t.classList.remove('active'); });
   el.classList.add('active');
-  clearInterval(timerInterval);
-  renderPart();
+  clearInterval(timerInterval); clearInterval(prepTimerInterval);
+  currentQuestion = null; followupIdx = 0;
   resetFeedback();
+  renderPart();
+  generateQuestion();
 }
 
 function goNextPart(){
-  if(currentPart<2){
-    var nextIdx=currentPart+1;
-    goPart(nextIdx, document.getElementById('ptab'+nextIdx));
-    document.getElementById('ptab'+currentPart).classList.add('done');
-  }
+  var next = currentPart + 1;
+  if(next > 2) return;
+  document.getElementById('ptab'+currentPart).classList.add('done');
+  goPart(next, document.getElementById('ptab'+next));
 }
 
 function renderPart(){
-  var m=partMeta[currentPart];
-  document.getElementById('partEyebrow').textContent=m.eyebrow;
-  document.getElementById('partTitle').textContent=m.title;
-  document.getElementById('partDesc').textContent=m.desc;
+  var m = partMeta[currentPart];
+  document.getElementById('partEyebrow').textContent = m.eyebrow;
+  document.getElementById('partTitle').textContent = m.title;
+  document.getElementById('partDesc').textContent = m.desc;
   startPartTimer(m.time);
-  var c=document.getElementById('partContent');
-  c.innerHTML='';
+  document.getElementById('evalBtn').disabled = true;
+  document.getElementById('partContent').innerHTML = '';
+}
 
-  if(currentPart===0){
-    var t=topics.part1[topicIdx%topics.part1.length];
-    var topicNav=makeTopicNav(topics.part1.length,'part1');
-    var qCard=makeQuestionCard('Examiner Question',t.question,t.sub);
-    var resp=makeResponseCard(m.placeholder);
-    c.appendChild(topicNav); c.appendChild(qCard); c.appendChild(resp);
-  } else if(currentPart===1){
-    var t=topics.part2[topicIdx%topics.part2.length];
-    var topicNav=makeTopicNav(topics.part2.length,'part2');
-    var cue=document.createElement('div'); cue.className='cue-card';
-    cue.innerHTML='<div class="cue-card-title">Talk about the following topic:</div><div class="cue-card-topic">'+t.topic+'</div><ul class="cue-bullets">'+t.bullets.map(function(b){return'<li>'+b+'</li>'}).join('')+'</ul><div class="cue-note">'+t.note+'</div>';
-    var prep=makePrepBar();
-    var resp=makeResponseCard(m.placeholder);
-    c.appendChild(topicNav); c.appendChild(cue); c.appendChild(prep); c.appendChild(resp);
+async function generateQuestion(){
+  var c = document.getElementById('partContent');
+
+  // Show loading state
+  var loadingDiv = document.createElement('div');
+  loadingDiv.id = 'qLoading';
+  loadingDiv.style = 'background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);padding:24px;margin-bottom:14px;display:flex;align-items:center;gap:12px';
+  loadingDiv.innerHTML = '<div class="dots"><span></span><span></span><span></span></div><span style="font-size:13px;color:var(--muted)">Generating new question with AI...</span>';
+
+  // Keep response card if exists, insert loading before it
+  var existing = document.getElementById('responseCardWrap');
+  if(existing){
+    c.insertBefore(loadingDiv, existing);
+  } else {
+    c.appendChild(loadingDiv);
+    buildResponseCard(c);
+  }
+
+  try {
+    var r = await apiCall('/api/speaking/generate', { part: currentPart + 1 });
+    currentQuestion = r;
+    document.getElementById('qLoading').remove();
+    renderQuestionCard(r);
+  } catch(e) {
+    document.getElementById('qLoading').innerHTML = '<span style="font-size:13px;color:var(--red)">⚠️ Could not generate question. <button onclick="generateQuestion()" style="color:var(--blue);background:none;border:none;cursor:pointer;font-weight:600;font-family:Inter,sans-serif">Try again</button></span>';
+  }
+}
+
+function renderQuestionCard(data){
+  var c = document.getElementById('partContent');
+  var existing = document.getElementById('questionCardWrap');
+  if(existing) existing.remove();
+
+  var wrap = document.createElement('div'); wrap.id = 'questionCardWrap';
+
+  if(currentPart === 0){
+    // Part 1 — single question
+    var card = document.createElement('div'); card.className = 'question-card';
+    card.innerHTML = '<button class="new-q-btn" onclick="generateQuestion()" id="newQBtn">✨ New question</button>'+
+      '<div class="q-label">Examiner question</div>'+
+      '<div class="q-main">'+data.question+'</div>'+
+      (data.sub?'<div class="q-sub">'+data.sub+'</div>':'');
+    wrap.appendChild(card);
+  } else if(currentPart === 1){
+    // Part 2 — cue card
+    var newBtn = document.createElement('div');
+    newBtn.style = 'display:flex;justify-content:flex-end;margin-bottom:8px';
+    newBtn.innerHTML = '<button class="new-q-btn" onclick="generateQuestion()" id="newQBtn">✨ New topic</button>';
+    var cue = document.createElement('div'); cue.className = 'cue-card';
+    cue.innerHTML = '<div class="cue-title">Talk about the following topic:</div>'+
+      '<div class="cue-topic">'+(data.topic||'')+'</div>'+
+      '<ul class="cue-bullets">'+(data.bullets||[]).map(function(b){return'<li>'+b+'</li>';}).join('')+'</ul>'+
+      '<div class="cue-note">'+(data.note||'You have 1 minute to prepare. Speak for 1–2 minutes.')+'</div>';
+    // Prep timer
+    var prep = document.createElement('div'); prep.className = 'prep-bar'; prep.id = 'prepBar';
+    prep.innerHTML = '<span style="font-size:18px">📝</span><span style="font-size:13px;font-weight:500;color:var(--dark);flex:1">Preparation time</span><span class="prep-timer" id="prepTimerNum">1:00</span><button class="prep-btn" onclick="skipPrep()">Start speaking</button>';
+    wrap.appendChild(newBtn); wrap.appendChild(cue); wrap.appendChild(prep);
     startPrepTimer();
   } else {
-    var t=topics.part3[topicIdx%topics.part3.length];
-    var topicNav=makeTopicNav(topics.part3.length,'part3');
-    var intro=document.createElement('div');
-    intro.style.cssText='font-size:14px;color:var(--muted);margin-bottom:14px;font-style:italic';
-    intro.textContent=t.intro;
-    var flist=document.createElement('div'); flist.className='followup-list';
-    t.questions.forEach(function(q,i){
-      var item=document.createElement('div');
-      item.className='followup-item'+(i===0?' active':'');
-      item.id='fitem'+i;
-      item.innerHTML='<div class="followup-num">Question '+(i+1)+'</div><div class="followup-q">'+q+'</div>';
-      item.onclick=function(){
-        document.querySelectorAll('.followup-item').forEach(function(x){x.classList.remove('active')});
-        item.classList.add('active'); followupIdx=i;
-        updateResponsePlaceholder();
+    // Part 3 — follow-up questions
+    var newBtn = document.createElement('div');
+    newBtn.style = 'display:flex;justify-content:flex-end;margin-bottom:8px';
+    newBtn.innerHTML = '<button class="new-q-btn" onclick="generateQuestion()" id="newQBtn">✨ New questions</button>';
+    var intro = document.createElement('div');
+    intro.style = 'font-size:13px;color:var(--muted);margin-bottom:12px;font-style:italic';
+    intro.textContent = "Let's discuss some broader questions related to this topic.";
+    var flist = document.createElement('div'); flist.className = 'followup-list';
+    var questions = [data.question, data.sub].filter(Boolean);
+    questions.forEach(function(q, i){
+      var item = document.createElement('div');
+      item.className = 'followup-item' + (i===0?' active':'');
+      item.id = 'fitem'+i;
+      item.innerHTML = '<div class="followup-num">Question '+(i+1)+'</div><div class="followup-q">'+q+'</div>';
+      item.onclick = function(){
+        document.querySelectorAll('.followup-item').forEach(function(x){ x.classList.remove('active'); });
+        item.classList.add('active'); followupIdx = i;
         resetFeedback();
+        var ta = document.getElementById('responseTextarea');
+        if(ta){ ta.value=''; updateWC(); }
       };
       flist.appendChild(item);
     });
-    var resp=makeResponseCard(m.placeholder);
-    c.appendChild(topicNav); c.appendChild(intro); c.appendChild(flist); c.appendChild(resp);
+    wrap.appendChild(newBtn); wrap.appendChild(intro); wrap.appendChild(flist);
   }
-  checkEvalReady();
+
+  c.insertBefore(wrap, document.getElementById('responseCardWrap'));
 }
 
-function makeTopicNav(total, part){
-  var div=document.createElement('div'); div.className='topic-nav';
-  var prev=document.createElement('button'); prev.className='topic-nav-btn'; prev.textContent='← Prev topic';
-  prev.onclick=function(){topicIdx=(topicIdx-1+total)%total; clearInterval(prepTimerInterval); renderPart(); resetFeedback();};
-  var ctr=document.createElement('span'); ctr.className='topic-counter';
-  ctr.textContent='Topic '+(topicIdx%total+1)+' of '+total;
-  var next=document.createElement('button'); next.className='topic-nav-btn'; next.textContent='Next topic →';
-  next.onclick=function(){topicIdx=(topicIdx+1)%total; clearInterval(prepTimerInterval); renderPart(); resetFeedback();};
-  div.appendChild(prev); div.appendChild(ctr); div.appendChild(next);
-  return div;
+function buildResponseCard(container){
+  var wrap = document.createElement('div'); wrap.id = 'responseCardWrap';
+  var card = document.createElement('div'); card.className = 'response-card';
+  card.innerHTML = '<div class="response-top">'+
+    '<span class="response-label">Your spoken response <span style="font-size:11px;color:var(--muted);font-weight:400;font-style:italic">Write or use microphone</span></span>'+
+    '<button class="mic-btn" id="micBtn" onclick="toggleMic()">🎤 <span id="micLabel">Record</span></button>'+
+    '</div>'+
+    '<textarea class="response-textarea" id="responseTextarea" placeholder="'+partMeta[currentPart].placeholder+'" oninput="updateWC()"></textarea>'+
+    '<div class="wc-text">Words: <span class="wc-num" id="wcNum">0</span></div>';
+  wrap.appendChild(card);
+  container.appendChild(wrap);
 }
 
-function makeQuestionCard(label, question, sub){
-  var div=document.createElement('div'); div.className='question-card';
-  div.innerHTML='<div class="q-label">'+label+'</div><div class="q-main">'+question+'</div>'+(sub?'<div class="q-sub">'+sub+'</div>':'');
-  return div;
-}
-
-function makePrepBar(){
-  var div=document.createElement('div'); div.className='prep-bar'; div.id='prepBar';
-  div.innerHTML='<span class="prep-icon">📝</span><span class="prep-text">Preparation time</span><span class="prep-timer" id="prepTimerNum">1:00</span><button class="prep-btn" onclick="skipPrep()">Start speaking</button>';
-  return div;
-}
-
-function makeResponseCard(placeholder){
-  var div=document.createElement('div'); div.className='response-card';
-  div.innerHTML='<div class="response-label" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'+
-    '<span>Your spoken response <span class="response-hint">Write or use microphone</span></span>'+
-    '<button id="micBtn" onclick="toggleMic()" style="display:flex;align-items:center;gap:6px;background:#F4F6FA;border:1.5px solid #E2E8F0;border-radius:8px;padding:7px 14px;cursor:pointer;font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#1B3F6E">'+
-    '🎤 <span id="micLabel">Record</span></button></div>'+
-    '<textarea class="response-textarea" id="responseText" placeholder="'+placeholder+'" oninput="onResponseInput()"></textarea>'+
-    '<div class="response-footer"><span class="wc-text">Words: <span class="wc-num" id="wcNum">0</span></span></div>';
-  return div;
-}
-
-function updateResponsePlaceholder(){
-  var el=document.getElementById('responseText');
-  if(el) el.placeholder=partMeta[currentPart].placeholder;
-}
-
-function onResponseInput(){
-  var el=document.getElementById('responseText');
+function updateWC(){
+  var el = document.getElementById('responseTextarea');
   if(!el) return;
-  var wc=el.value.trim()===''?0:el.value.trim().split(/\s+/).length;
-  var wn=document.getElementById('wcNum');
-  if(wn) wn.textContent=wc;
-  checkEvalReady();
+  var wc = el.value.trim()===''?0:el.value.trim().split(/\s+/).length;
+  var wn = document.getElementById('wcNum'); if(wn) wn.textContent = wc;
+  var min = currentPart===1?120:40;
+  document.getElementById('evalBtn').disabled = !(wc >= min);
 }
 
-function checkEvalReady(){
-  var el=document.getElementById('responseText');
-  var wc=el&&el.value.trim()!==''?el.value.trim().split(/\s+/).length:0;
-  var minW=currentPart===1?120:40;
-  document.getElementById('evalBtn').disabled=!(wc>=minW);
+function getCurrentQuestionText(){
+  if(!currentQuestion) return '';
+  if(currentPart === 0) return currentQuestion.question + (currentQuestion.sub?' '+currentQuestion.sub:'');
+  if(currentPart === 1) return 'Describe: '+currentQuestion.topic+'. Cover: '+(currentQuestion.bullets||[]).join(', ')+'.';
+  var qs = [currentQuestion.question, currentQuestion.sub].filter(Boolean);
+  return qs[followupIdx] || qs[0];
 }
 
+async function evaluateResponse(){
+  var response = document.getElementById('responseTextarea').value.trim();
+  var question = getCurrentQuestionText();
+  var btn = document.getElementById('evalBtn');
+  btn.classList.add('loading'); btn.disabled = true;
+  btn.querySelector('.btn-text').textContent = 'Evaluating...';
 
-function startPrepTimer(){
-  clearInterval(prepTimerInterval); prepTimeLeft=60;
-  prepTimerInterval=setInterval(function(){
-    prepTimeLeft--;
-    var el=document.getElementById('prepTimerNum');
-    if(el){
-      var m=Math.floor(prepTimeLeft/60),s=prepTimeLeft%60;
-      el.textContent=m+':'+(s<10?'0':'')+s;
-      if(prepTimeLeft<=0){clearInterval(prepTimerInterval);el.textContent='0:00';el.className='prep-timer done';}
-    } else {clearInterval(prepTimerInterval);}
-  },1000);
-}
-
-function skipPrep(){
-  clearInterval(prepTimerInterval);
-  var el=document.getElementById('prepTimerNum');
-  if(el){el.textContent='0:00';el.className='prep-timer done';}
-}
-
-function startPartTimer(seconds){
-  clearInterval(timerInterval);
-  var left=seconds;
-  function update(){
-    var m=Math.floor(left/60),s=left%60;
-    var el=document.getElementById('partTimer');
-    el.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
-    el.className='timer-num'+(left<=30?' warning':'');
+  try {
+    var r = await apiCall('/api/speaking/evaluate', { response, question, part: currentPart + 1 });
+    document.getElementById('fbScore').textContent = r.overall;
+    document.getElementById('fbFC').textContent = r.fluency_coherence;
+    document.getElementById('fbLP').textContent = r.lexical_precision;
+    document.getElementById('fbGR').textContent = r.grammatical_range;
+    document.getElementById('fbP').textContent = r.pronunciation_note;
+    document.getElementById('fbStrengths').textContent = r.strengths;
+    document.getElementById('fbImprovements').textContent = r.improvements;
+    document.getElementById('fbExample').textContent = r.example;
+    document.getElementById('fbNext').textContent = r.next_steps;
+    var vocab = document.getElementById('fbVocab'); vocab.innerHTML = '';
+    (r.vocabulary||[]).forEach(function(w){ var c=document.createElement('span');c.className='vocab-chip';c.textContent=w;vocab.appendChild(c); });
+    document.getElementById('feedbackCard').classList.add('visible');
+    document.getElementById('feedbackCard').scrollIntoView({behavior:'smooth',block:'start'});
+    if(currentPart < 2) document.getElementById('nextPartBtn').classList.add('visible');
+    document.getElementById('ptab'+currentPart).classList.add('done');
+  } catch(e){
+    alert('Error evaluating: ' + e.message);
+  } finally {
+    btn.classList.remove('loading');
+    btn.querySelector('.btn-text').textContent = 'Get AI feedback →';
+    updateWC();
   }
-  update();
-  timerInterval=setInterval(function(){left--;update();if(left<=0)clearInterval(timerInterval);},1000);
 }
 
 function resetFeedback(){
   document.getElementById('feedbackCard').classList.remove('visible');
   document.getElementById('nextPartBtn').classList.remove('visible');
-  var el=document.getElementById('responseText');
-  if(el){el.value='';var wn=document.getElementById('wcNum');if(wn)wn.textContent='0';}
-  checkEvalReady();
 }
 
-function getCurrentQuestion(){
-  if(currentPart===0){var t=topics.part1[topicIdx%topics.part1.length];return t.question+' '+t.sub;}
-  if(currentPart===1){var t=topics.part2[topicIdx%topics.part2.length];return'Describe: '+t.topic+'. Cover: '+t.bullets.join(', ')+'.';}
-  var t=topics.part3[topicIdx%topics.part3.length];return t.questions[followupIdx%t.questions.length];
+// ── PREP TIMER ─────────────────────────────────────────────
+var prepTimeLeft = 60;
+function startPrepTimer(){
+  clearInterval(prepTimerInterval); prepTimeLeft = 60;
+  prepTimerInterval = setInterval(function(){
+    prepTimeLeft--;
+    var el = document.getElementById('prepTimerNum');
+    if(!el){ clearInterval(prepTimerInterval); return; }
+    var m=Math.floor(prepTimeLeft/60),s=prepTimeLeft%60;
+    el.textContent = m+':'+(s<10?'0':'')+s;
+    if(prepTimeLeft<=0){ clearInterval(prepTimerInterval); el.textContent='0:00'; el.className='prep-timer done'; }
+  },1000);
+}
+function skipPrep(){
+  clearInterval(prepTimerInterval);
+  var el = document.getElementById('prepTimerNum');
+  if(el){ el.textContent='0:00'; el.className='prep-timer done'; }
 }
 
-async function evaluateResponse(){
-  var response=document.getElementById('responseText').value.trim();
-  var question=getCurrentQuestion();
-  var partLabel=partMeta[currentPart].eyebrow;
-  var btn=document.getElementById('evalBtn');
-  btn.classList.add('loading'); btn.disabled=true;
-  btn.querySelector('.btn-text').textContent='Evaluating...';
-
-  var system=`You are an expert IELTS Speaking examiner. Evaluate the student's written spoken response for IELTS ${partLabel} and return ONLY a JSON object — no markdown, no extra text.
-
-Return exactly:
-{
-  "overall": "6.5",
-  "fluency_coherence": "6.5",
-  "lexical_precision": "7.0",
-  "grammatical_range": "6.0",
-  "pronunciation_note": "6.5",
-  "strengths": "2-3 sentences on what they did well.",
-  "improvements": "2-3 sentences with specific issues found in their response.",
-  "example": "Write a stronger version of part of their response, showing better vocabulary and grammar.",
-  "vocabulary": ["word or phrase 1", "word or phrase 2", "word or phrase 3", "word or phrase 4"],
-  "next_steps": "2 actionable things to practise before the exam."
-}
-
-Band scores must be one of: 4.0, 4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0
-Be honest and specific. Reference the actual content of their response.`;
-
-  try{
-    var sb2=getSupabase();var ss=await sb2.auth.getSession();var tok=ss.data?.session?.access_token||'';
-    var res=await fetch('https://ieltscore-up-api-production.up.railway.app/api/speaking/evaluate',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},
-      body:JSON.stringify({response,question,part:currentPart+1})
-    });
-    var r=await res.json();
-
-    document.getElementById('fbScore').textContent=r.overall;
-    document.getElementById('fbFC').textContent=r.fluency_coherence;
-    document.getElementById('fbLP').textContent=r.lexical_precision;
-    document.getElementById('fbGR').textContent=r.grammatical_range;
-    document.getElementById('fbP').textContent=r.pronunciation_note;
-    document.getElementById('fbStrengths').textContent=r.strengths;
-    document.getElementById('fbImprovements').textContent=r.improvements;
-    document.getElementById('fbExample').textContent=r.example;
-    document.getElementById('fbNext').textContent=r.next_steps;
-    var vocab=document.getElementById('fbVocab');
-    vocab.innerHTML='';
-    (r.vocabulary||[]).forEach(function(w){
-      var chip=document.createElement('span');chip.className='vocab-chip';chip.textContent=w;vocab.appendChild(chip);
-    });
-
-    document.getElementById('feedbackCard').classList.add('visible');
-    document.getElementById('feedbackCard').scrollIntoView({behavior:'smooth',block:'start'});
-    if(currentPart<2) document.getElementById('nextPartBtn').classList.add('visible');
-    document.getElementById('ptab'+currentPart).classList.add('done');
-  }catch(e){
-    alert('Error: '+e.message);
-  }finally{
-    btn.classList.remove('loading');
-    btn.querySelector('.btn-text').textContent='Get AI feedback →';
-    checkEvalReady();
+// ── PART TIMER ──────────────────────────────────────────────
+function startPartTimer(seconds){
+  clearInterval(timerInterval);
+  var left = seconds;
+  function update(){
+    var m=Math.floor(left/60),s=left%60;
+    var el=document.getElementById('partTimer');
+    if(!el) return;
+    el.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    el.className='timer-num'+(left<=30?' warning':'');
   }
+  update();
+  timerInterval=setInterval(function(){ left--; update(); if(left<=0) clearInterval(timerInterval); },1000);
 }
 
-// MICROPHONE RECORDING
-var _mr=null,_ac=[],_ir=false;
+// ── MICROPHONE ──────────────────────────────────────────────
 async function toggleMic(){
-  if(_ir){_stopR();}else{await _startR();}
+  if(_isRecording){ _stopRecording(); } else { await _startRecording(); }
 }
-async function _startR(){
-  try{
-    var stream=await navigator.mediaDevices.getUserMedia({audio:true});
-    _ac=[];_mr=new MediaRecorder(stream);
-    _mr.ondataavailable=function(e){if(e.data.size>0)_ac.push(e.data);};
-    _mr.onstop=async function(){
-      stream.getTracks().forEach(function(t){t.stop();});
-      await _trans(new Blob(_ac,{type:'audio/webm'}));
+async function _startRecording(){
+  try {
+    var stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    _ac = []; _mr = new MediaRecorder(stream);
+    _mr.ondataavailable = function(e){ if(e.data.size>0) _ac.push(e.data); };
+    _mr.onstop = async function(){
+      stream.getTracks().forEach(function(t){ t.stop(); });
+      await _transcribe(new Blob(_ac,{type:'audio/webm'}));
     };
-    _mr.start();_ir=true;
-    var b=document.getElementById('micBtn'),l=document.getElementById('micLabel');
-    if(b){b.style.background='rgba(220,38,38,.1)';b.style.borderColor='#DC2626';b.style.color='#DC2626';}
-    if(l)l.textContent='Stop';
-  }catch(e){
-    alert('Please allow microphone access in your browser.');
-  }
+    _mr.start(); _isRecording = true;
+    var btn=document.getElementById('micBtn'), lbl=document.getElementById('micLabel');
+    if(btn) btn.classList.add('recording');
+    if(lbl) lbl.textContent = 'Stop';
+  } catch(e){ alert('Please allow microphone access in your browser.'); }
 }
-function _stopR(){
-  if(_mr&&_mr.state!=='inactive')_mr.stop();
-  _ir=false;
-  var b=document.getElementById('micBtn'),l=document.getElementById('micLabel');
-  if(b){b.style.background='rgba(217,119,6,.1)';b.style.borderColor='#D97706';b.style.color='#D97706';}
-  if(l)l.textContent='Processing...';
+function _stopRecording(){
+  if(_mr && _mr.state!=='inactive') _mr.stop();
+  _isRecording = false;
+  var btn=document.getElementById('micBtn'), lbl=document.getElementById('micLabel');
+  if(btn) btn.classList.remove('recording');
+  if(lbl) lbl.textContent = 'Processing...';
 }
-async function _trans(blob){
-  try{
-    var SB2=supabase.createClient('https://ystwgkfwydyrefbqjcjd.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk');
-    var sd=await SB2.auth.getSession();
-    var tok=sd.data?.session?.access_token||'';
-    var fd=new FormData();fd.append('audio',blob,'rec.webm');
-    var r=await fetch('https://ieltscore-up-api-production.up.railway.app/api/speaking/transcribe',{
-      method:'POST',headers:{'Authorization':'Bearer '+tok},body:fd
+async function _transcribe(blob){
+  var lbl = document.getElementById('micLabel');
+  try {
+    var token = await getToken();
+    var fd = new FormData(); fd.append('audio', blob, 'rec.webm');
+    var r = await fetch(API+'/api/speaking/transcribe', {
+      method:'POST', headers:{'Authorization':'Bearer '+token}, body:fd
     });
     if(r.ok){
-      var d=await r.json();
-      var ta=document.getElementById('responseText');
-      if(ta&&d.text){ta.value=(ta.value?ta.value.trimEnd()+' ':'')+d.text;onResponseInput();}
+      var d = await r.json();
+      var ta = document.getElementById('responseTextarea');
+      if(ta && d.text){ ta.value = (ta.value?ta.value.trimEnd()+' ':'')+d.text; updateWC(); }
     }
-  }catch(e){console.log('Transcription error:',e);}
-  finally{
-    var b=document.getElementById('micBtn'),l=document.getElementById('micLabel');
-    if(b){b.style.background='#F4F6FA';b.style.borderColor='#E2E8F0';b.style.color='#1B3F6E';}
-    if(l)l.textContent='Record';
-  }
+  } catch(e){ console.error('Transcription error:', e); }
+  finally { if(lbl) lbl.textContent = 'Record'; var btn=document.getElementById('micBtn'); if(btn) btn.classList.remove('recording'); }
 }
 
+// ── INIT PART ───────────────────────────────────────────────
 renderPart();
+var c = document.getElementById('partContent');
+buildResponseCard(c);
+generateQuestion();
 </script>
 <script src="navbar.js"></script>
 </body>
