@@ -194,13 +194,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 .loading-text{color:rgba(255,255,255,.8);font-size:16px;font-weight:500}
 .loading-sub{color:rgba(255,255,255,.45);font-size:13px}
 </style>
+<link rel="stylesheet" href="navbar.css"/>
 </head>
 <body>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 // Auth check
 (function(){
-  var sb=supabase.createClient('https://ystwgkfwydyrefbqjcjd.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk');
+  var sb=getSupabase();
   sb.auth.getSession().then(function(r){
     if(!r.data.session){window.location.href='/auth.html';}
   });
@@ -210,7 +211,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 
 <script>
 (function(){
-  var sb=supabase.createClient('https://ystwgkfwydyrefbqjcjd.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk');
+  var sb=getSupabase();
   sb.auth.getSession().then(function(r){
     if(!r.data.session){window.location.href='/auth.html';return;}
     var user=r.data.session.user;
@@ -939,5 +940,9 @@ function resetExam(){showScreen('intro');document.getElementById('topTimerPill')
 
 window.speechSynthesis.onvoiceschanged=function(){};
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="navbar.js"></script>
 </body>
 </html>

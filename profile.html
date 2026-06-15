@@ -81,13 +81,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 .profile-info .email{font-size:14px;color:var(--muted);margin-top:2px}
 .profile-info .plan-pill{display:inline-block;font-size:12px;font-weight:700;padding:3px 12px;border-radius:100px;background:rgba(27,63,110,.08);color:var(--blue);margin-top:6px}
 </style>
+<link rel="stylesheet" href="navbar.css"/>
 </head>
 <body>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 (function(){
-  var sb=supabase.createClient('https://ystwgkfwydyrefbqjcjd.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk');
+  var sb=getSupabase();
   sb.auth.getSession().then(function(r){
     if(!r.data.session){window.location.href='/auth.html';return;}
     var user=r.data.session.user;
@@ -466,5 +467,9 @@ if(window.location.hash==='#billing'){
 
 init();
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="navbar.js"></script>
 </body>
 </html>
