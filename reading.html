@@ -117,13 +117,14 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 .reset-btn:hover{border-color:var(--blue);color:var(--blue)}
 </style>
 <link rel="stylesheet" href="navbar.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
 </head>
 <body>
 
-
 <script>
 (function(){
-  var sb=getSupabase();
+  var sb=supabase.createClient('https://ystwgkfwydyrefbqjcjd.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk');
   sb.auth.getSession().then(function(r){
     if(!r.data.session){window.location.href='/auth.html';return;}
     var user=r.data.session.user;
@@ -472,9 +473,6 @@ function nextPassage(){currentIdx=(currentIdx+1)%passages.length;renderPassage()
 
 renderPassage();
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
 <script src="navbar.js"></script>
 </body>
 </html>
