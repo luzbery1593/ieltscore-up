@@ -121,7 +121,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
         <textarea class="essay-area" id="essay" placeholder="Write your answer here..." oninput="updateWC()"></textarea>
         <div class="area-footer">
           <span class="wc">Words: <strong id="wc" style="color:var(--dark)">0</strong> <span id="wcMin" style="font-size:11px;color:var(--muted)">/min 150</span></span>
-          <button class="submit-btn" id="submitBtn" onclick="evaluate()" disabled>
+          <button class="submit-btn" id="submitBtn" onclick="submitEssay()" disabled>
             <div class="spinner"></div><span>Evaluate with AI →</span>
           </button>
         </div>
@@ -198,7 +198,7 @@ function updateWC(){
 }
 function bw(b){return((parseFloat(b)-1)/8*100).toFixed(1)+'%'}
 function bd(b){var n=parseFloat(b);return n>=8.5?'Expert':n>=7.5?'Very good':n>=6.5?'Competent':n>=5.5?'Modest':n>=4.5?'Limited':'Below basic';}
-async function evaluate(){
+async function submitEssay(){
   var essay=document.getElementById('essay').value.trim();
   var btn=document.getElementById('submitBtn');btn.classList.add('loading');btn.disabled=true;
   document.getElementById('emptyState').style.display='none';
