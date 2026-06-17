@@ -12,12 +12,8 @@
   document.addEventListener('DOMContentLoaded', async function() {
     if (needsNavbar) document.body.style.paddingTop = '64px';
 
-    // Use getSupabase() from config.js if available, else create instance
-    var sb = (typeof getSupabase === 'function') ? getSupabase() : supabase.createClient(
-      'https://ystwgkfwydyrefbqjcjd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk',
-      { auth: { storageKey: 'ieltscore-up-auth' } }
-    );
+    // config.js siempre se carga antes de navbar.js en todas las páginas de la plataforma
+    var sb = getSupabase();
 
     var { data } = await sb.auth.getSession();
     var user = data?.session?.user || null;
@@ -114,11 +110,7 @@
   }
 
   window.isuSignOut = async function() {
-    var sb = (typeof getSupabase === 'function') ? getSupabase() : supabase.createClient(
-      'https://ystwgkfwydyrefbqjcjd.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk',
-      { auth: { storageKey: 'ieltscore-up-auth' } }
-    );
+    var sb = getSupabase();
     await sb.auth.signOut();
     localStorage.clear();
     window.location.href = '/index.html';

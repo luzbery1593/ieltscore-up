@@ -281,10 +281,9 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);-webk
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
 <script>
-var SUPABASE_URL='https://ystwgkfwydyrefbqjcjd.supabase.co';
-var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzdHdna2Z3eWR5cmVmYnFqY2pkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0NDI5NjksImV4cCI6MjA5NzAxODk2OX0.9Lt-SwbxLruBuISA25bGxqPLL0no6alX8NqllJrMytk';
-var sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'ieltscore-up-auth'}});
+var sb=getSupabase();
 
 // Handle OAuth callback (Google, etc.) and existing sessions
 sb.auth.onAuthStateChange(function(event, session){

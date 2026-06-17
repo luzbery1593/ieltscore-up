@@ -9,6 +9,7 @@
     { "source": "/speaking", "destination": "/speaking.html" },
     { "source": "/grammar", "destination": "/grammar.html" },
     { "source": "/mock-exam", "destination": "/mock-exam.html" },
-    { "source": "/certificates", "destination": "/certificates.html" }
+    { "source": "/certificates", "destination": "/certificates.html" },
+    { "source": "/profile", "destination": "/profile.html" }
   ]
 }
